@@ -1,0 +1,48 @@
+# OS X
+.DS_Store*
+Icon?
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+.directory
+*~
+
+
+# npm
+node_modules
+*.log
+*.gz
+    
+# env
+.env
+
+# Coveralls
+coverage
+
+# Benchmarking
+benchmarks/graphs
+
+# swp
+*.swp
+*.swn
+*.swo
+
+# vscode
+*.vscode
+
+package-lock.json
+
+BookingStack.js
+
+#uploads
+uploads
+
+#test
+test.js
+#keyfile
+firebase-admin

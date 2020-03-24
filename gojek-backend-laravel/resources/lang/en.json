@@ -1,0 +1,8 @@
+{
+  "itemTotalName": "Item Total",
+  "topayName"    : "TO PAY",
+  "shortDes"     : "Too Many Items",
+  "longDesc"     : "Clear Items From Cart",
+  "success"      : "Success",
+  "failure"      : "Failure"
+}
