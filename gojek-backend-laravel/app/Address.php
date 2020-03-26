@@ -8,6 +8,6 @@ use DB;
 
 class Address extends Model
 {
-    protected $table='Address';
+    protected $table='UserAddress';
 
 }
