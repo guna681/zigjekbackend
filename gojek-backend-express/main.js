@@ -1,12 +1,13 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const path = require('path')
 
 require('./controller/Admin/AdminAuthController')()
 require('./controller/AuthController')()
 
 app.use(cors())
-// app.use('/', express.static(path.join(__dirname, '/public')))
+app.use('/', express.static(path.join(__dirname, '/public')))
 
 const bodyParser = require('body-parser')
 
@@ -32,7 +33,6 @@ async function auth (request, response, next) {
       error.msg = 'Unauthorized access'
       return response.status(401).send(error)
     } else {
-      console.log(auth.data)
       request.params.auth = auth.data
       // var authenticate = await this.apiServicesAuthCtrl(request)
       // if (authenticate.error) {
