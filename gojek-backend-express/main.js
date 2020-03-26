@@ -14,7 +14,6 @@ const bodyParser = require('body-parser')
 const { check, validationResult } = require('express-validator/check')
 const http = require('http').Server(app)
 
-
 require('dotenv').config()
 
 app.use(bodyParser.json())
