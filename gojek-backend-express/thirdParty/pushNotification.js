@@ -2,14 +2,14 @@ module.exports = function () {
   require('dotenv').config()
   var admin = require('firebase-admin')
 
-  var serviceAccount = require('../firebase-admin-sdk.json')
+  var serviceAccount = require('../keyFile/firebase-admin-sdk.json')
 
   if (!admin.apps.length) {
     console.log('firebase admin initialized')
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
       databaseURL: 'https://gettaxi-user-bde6a.firebaseio.com'
-    }) 
+    })
   }
 
   this.sendPushNotificationByDeviceType = (deviceInfo, content, sound) => {

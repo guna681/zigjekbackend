@@ -2,19 +2,20 @@ module.exports = function (server, validator) {
   const basePath = '/api/users/'
   const UserController = require('../controller/UserController.js')
   const PromoCodesCtrl = require('../controller/PromoCodesCtrl.js')
-  const PeekChargesController = require('../controller/PeekChargesController.js')
+  const PeekChargesCtrl = require('../controller/PeekChargesController.js')
+  const SerivceCtrl = require('../controller/ServiceController.js')
   const ErrorController = require('../Utils/error.js')
 
-
-  var userController = new UserController();
-  var errorController = new ErrorController();
+  var userController = new UserController()
+  var errorController = new ErrorController()
   var promoCodesCtrl = new PromoCodesCtrl()
-  var peekChargesController = new PeekChargesController()
+  var peekChargesCtrl = new PeekChargesCtrl()
+  var serviceCtrl = new SerivceCtrl()
 
   server.get(basePath + 'config', (request, response) => {
     userController.appSetting((result) => {
       const lang = request.headers.lang
-     errorController.ctrlHandler([result], result.error, lang, (message) => {
+      errorController.ctrlHandler([result], result.error, lang, (message) => {
         return response.send(message)
       })
     })
@@ -45,8 +46,6 @@ module.exports = function (server, validator) {
       })
     }
   })
-
-//done
 
   server.post(basePath + 'signup', [
     validator.check('mobile')
@@ -102,8 +101,6 @@ module.exports = function (server, validator) {
     }
   })
 
-//done
-
   server.post(basePath + 'otpVerify', [
     validator.check('mobile')
       .isLength({ min: 6, max: 15 }).withMessage('NUMERIC_LIMIT: $[1] $[2] $[3],mobile,6,15')
@@ -128,7 +125,7 @@ module.exports = function (server, validator) {
       errorController.requestHandler(error.array(), true, lang, (message) => {
         return response.send(message)
       })
-    } else { 
+    } else {
       var body = request.body
       userController.otpValidate(body, (result) => {
         errorController.ctrlHandler([result], result.error, lang, (message) => {
@@ -717,11 +714,20 @@ module.exports = function (server, validator) {
         return response.send(message)
       })
     } else {
-      peekChargesController.peekChargesRedeemCtrl(body, (result) => {
+      peekChargesCtrl.peekChargesRedeemCtrl(body, (result) => {
         errorController.ctrlHandler([result], result.error, lang, (message) => {
           return response.send(message)
         })
       })
     }
+  })
+
+  server.get(basePath + `serviceListing`, server.auth, (request, response) => {
+    const lang = request.headers.lang
+    serviceCtrl.getServiceList((result) => {
+      errorController.ctrlHandler([result], result.error, lang, (message) => {
+        return response.send(message)
+      })
+    })
   })
 }
