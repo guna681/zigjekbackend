@@ -13,8 +13,11 @@
 
 $app = new Illuminate\Foundation\Application(
     realpath(__DIR__.'/../')
+    
 );
-
+$app->useEnvironmentPath(
+    dirname('/var/www/html/zigjekbackend_krishna/.env')
+  );
 /*
 |--------------------------------------------------------------------------
 | Bind Important Interfaces
