@@ -1,7 +1,7 @@
 module.exports = function () {
   const WalletService = require('../../services/Admin/WalletService')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var walletService = new WalletService();
   var common = new Common();

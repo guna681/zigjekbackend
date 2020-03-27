@@ -1,7 +1,7 @@
 module.exports = function () {
  const BannerAdsService = require('../../services/Admin/BannerAdsService')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var bannerAdsService = new BannerAdsService();
   var common = new Common();

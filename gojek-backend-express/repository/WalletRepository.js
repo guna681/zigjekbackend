@@ -1,5 +1,5 @@
 module.exports = function () {
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var wallet = 'Wallet'
   var withdrawal = 'WithDrawal'

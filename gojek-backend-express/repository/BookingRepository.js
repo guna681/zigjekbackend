@@ -2,7 +2,7 @@ module.exports = function () {
   const rideVehicleType = 'RideVehicleType'
   const booking = 'Booking'
 
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   var config = {
     client: 'mysql2',
     connection: {

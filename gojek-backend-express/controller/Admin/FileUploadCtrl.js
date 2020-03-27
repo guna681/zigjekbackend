@@ -1,7 +1,7 @@
 module.exports = function () {
   const FileUploadService = require('../../services/Admin/FileUploadService')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var fileUploadService = new FileUploadService();
   

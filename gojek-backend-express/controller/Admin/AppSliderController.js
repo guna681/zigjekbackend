@@ -1,7 +1,7 @@
 module.exports = function () {
   const AppSliderService = require('../../services/Admin/AppSliderService')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 var appSliderService = new AppSliderService();
 var common = new Common();
   this.appSliderAddCtrl = (req, callback) => {

@@ -2,7 +2,7 @@ module.exports = function (app, validator) {
   const basePath = '/api/admin'
   const ErrorHandler         = require('../Utils/error')
   const Common                  = require('../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   const AdminAppConfigCtrl      = require('../controller/Admin/AdminAppConfigCtrl')
   const AdminAuthController     = require('../controller/Admin/AdminAuthController')
   const LocalizationController  = require('../controller/Admin/LocalizationController')

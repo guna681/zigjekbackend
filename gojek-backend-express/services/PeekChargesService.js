@@ -4,7 +4,7 @@ module.exports = function () {
 
   var peekChargesRepository = new PeekChargesRepository()
   var common = new Common()
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   this.peekChargesRedeemService = async (data, callback) => {
     var response = {}
     try {

@@ -1,7 +1,7 @@
 module.exports = function () {
   const ProviderSerice = require('../../services/Admin/ProvidersService')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var providerService = new ProviderSerice();
   

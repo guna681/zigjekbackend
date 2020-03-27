@@ -1,7 +1,7 @@
 module.exports = function () {
   const ServiceTypeRepository = require('../../repository/Admin/ServiceTypeRepository')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var serviceTypeRepository = new ServiceTypeRepository();
   var common = new Common();

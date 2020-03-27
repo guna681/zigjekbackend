@@ -1,7 +1,7 @@
 module.exports = function () {
   const AdminAppConfigRepository = require('../../repository/Admin/AdminAppConfigRepository')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var adminAppConfigRepository = new AdminAppConfigRepository();
   var common = new Common();

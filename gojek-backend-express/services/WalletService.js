@@ -1,5 +1,5 @@
 module.exports = function () {
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   const WalletRepository = require('../repository/WalletRepository')
 
   var walletRepository = new WalletRepository();

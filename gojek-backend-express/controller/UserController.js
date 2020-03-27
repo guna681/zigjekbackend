@@ -11,7 +11,7 @@ module.exports = function () {
   const TrackingService = require('../services/TrackingService')
   const PushNotification = require('../thirdParty/pushNotification')
   const RatingService = require('../services/RatingServices')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   var ratingService = new RatingService()
   var pushNotification = new PushNotification()
   var trackingService = new TrackingService()

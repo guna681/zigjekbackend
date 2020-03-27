@@ -2,7 +2,7 @@ module.exports = function () {
   const serviceTitle = 'ServiceTitle'
   const serviceCategory = 'ServiceCategory'
 
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   var config = {
     client: 'mysql2',
     connection: {

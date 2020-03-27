@@ -1,7 +1,7 @@
 module.exports = function () {
   const EmailTemplateRepository = require('../../repository/Admin/EmailTemplateRepository')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var emailTemplateRepository = new EmailTemplateRepository();
   var common = new Common();

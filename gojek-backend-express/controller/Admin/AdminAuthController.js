@@ -1,7 +1,7 @@
 module.exports = function () {
   const AdminAuthService = require('../../services/Admin/AdminAuthService')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var adminAuthService = new AdminAuthService();
   var common = new Common();

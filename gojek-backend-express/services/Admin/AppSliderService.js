@@ -1,7 +1,7 @@
 module.exports = function () {
   const AppSliderRepository = require('../../repository/Admin/AppSliderRepository')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var appSliderRepository = new AppSliderRepository();
   var common = new Common();

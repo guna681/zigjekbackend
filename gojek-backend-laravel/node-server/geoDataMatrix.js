@@ -1,6 +1,6 @@
 
 module.exports = function () {
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   const googleMapsClient = require('@google/maps').createClient({
     key: process.env.GMAP_KEY,
     Promise: Promise

@@ -1,7 +1,7 @@
 module.exports = function () {
   const PeekChargesRepository = require('../../repository/Admin/peekChargesRepository')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var peekChargesRepository = new PeekChargesRepository();
   var common = new Common();

@@ -1,5 +1,5 @@
 module.exports = function () {
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   const ProviderVehicleRepository = require('../repository/ProviderVehicleRepository')
 
   var providerVehicleRepository = new ProviderVehicleRepository()

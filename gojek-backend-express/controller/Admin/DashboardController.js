@@ -1,7 +1,7 @@
 module.exports = function () {
   const DashboardService = require('../../services/Admin/DashboardService')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var dashboardService = new DashboardService();
   var common = new Common();

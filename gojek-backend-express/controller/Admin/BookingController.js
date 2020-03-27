@@ -1,7 +1,7 @@
 module.exports = function () {
   const BookingService = require('../../services/Admin/BookingService')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var bookingService = new BookingService();
   var common = new Common();

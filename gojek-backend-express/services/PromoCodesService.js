@@ -4,7 +4,7 @@ module.exports = function () {
 
   var promoCodesRepository = new PromoCodesRepository()
   var common = new Common()
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   this.usersPromoCodesListService = async (data, callback) => {
     var response = {}
     try {

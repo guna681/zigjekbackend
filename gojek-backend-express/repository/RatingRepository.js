@@ -1,7 +1,7 @@
 module.exports = function () {
   const review = 'Review'
 
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   const config = {
     client: 'mysql2',
     connection: {

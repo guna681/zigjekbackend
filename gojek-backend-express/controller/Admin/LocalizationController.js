@@ -1,7 +1,7 @@
 module.exports = function () {
   const LocalizationService = require('../../services/Admin/LocalizationService')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var localizationService = new LocalizationService();
   var common = new Common();
