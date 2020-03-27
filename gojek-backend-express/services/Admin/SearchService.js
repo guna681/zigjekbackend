@@ -1,7 +1,7 @@
 module.exports = function () {
   const SearchRepository = require('../../repository/Admin/SearchRepository')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var searchRepository = new SearchRepository();
   var common = new Common();

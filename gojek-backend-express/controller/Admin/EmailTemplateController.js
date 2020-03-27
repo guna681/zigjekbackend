@@ -1,7 +1,7 @@
 module.exports = function () {
   const EmailTemplateService = require('../../services/Admin/EmailTemplateService')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var emailTemplateService = new EmailTemplateService();
   var common = new Common();

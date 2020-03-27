@@ -1,5 +1,5 @@
 module.exports = function () {
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   var whichCountry = require('which-country')
   const googleMapsClient = require('@google/maps').createClient({
     key: process.env.MAP_API_KEY,

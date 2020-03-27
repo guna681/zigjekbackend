@@ -1,7 +1,7 @@
 module.exports = function () {
   const ReviewManagementService = require('../../services/Admin/ReviewManagementService')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var reviewManagementService = new ReviewManagementService();
   var common = new Common();

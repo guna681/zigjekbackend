@@ -2,7 +2,7 @@ module.exports = function () {
   const UsersRepository = require('../../repository/Admin/UsersRepository')
   const Common = require('../../Utils/common')
   const PushNotification = require('../../thirdParty/pushNotification')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   const usersRepository = new UsersRepository();
   const common = new Common();

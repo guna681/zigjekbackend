@@ -1,7 +1,7 @@
 module.exports = function () {
   const PromoCodesRepository = require('../../repository/Admin/PromoCodesRepository')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var promoCodesRepository = new PromoCodesRepository();
   var common = new Common();

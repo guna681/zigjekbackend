@@ -2,7 +2,7 @@ module.exports = function () {
  const PromoCodesService = require('../services/PromoCodesService')
  var promoCodesService = new PromoCodesService()
   require('../Utils/common')()
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   this.usersPromoCodesListCtrl = (data, callback) => {
     var response = {}
     promoCodesService.usersPromoCodesListService(data, (result) => {

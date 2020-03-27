@@ -1,7 +1,7 @@
 module.exports = function () {
   const PromoCodesService = require('../../services/Admin/PromoCodesService')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var promoCodesService = new PromoCodesService();
   var common = new Common();

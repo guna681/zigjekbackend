@@ -4,7 +4,7 @@ module.exports = function (http) {
   require('../services/BookingService')()
   require('../Utils/error')()
   require('../Utils/common')()
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   // setInterval(() => {
   //   updateProivderLocationSimulation(() => {})

@@ -1,7 +1,7 @@
 var mysql = require('mysql2')
 var migration = require('mysql-migrations')
 var path = require('path')
-require('dotenv').config()
+require('dotenv').config({ path: './../.env' })
 var connection = mysql.createPool({
   connectionLimit: process.env.DB_CONNTECTION_LIMT,
   host: process.env.DB_HOST,

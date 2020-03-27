@@ -3,7 +3,7 @@ module.exports = function () {
   const multer = require('multer')
   const uuid = require('uuid/v4')
   const jwt = require('jsonwebtoken')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   const s2 = require('s2-geometry').S2
   const moment = require('moment')
   const authy = require('authy')(process.env.TWILIO_KEY)

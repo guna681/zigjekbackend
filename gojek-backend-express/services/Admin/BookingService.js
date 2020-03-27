@@ -1,7 +1,7 @@
 module.exports = function () {
   const BookingRepository = require('../../repository/Admin/BookingRepository')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var bookingRepository = new BookingRepository();
   var common = new Common();

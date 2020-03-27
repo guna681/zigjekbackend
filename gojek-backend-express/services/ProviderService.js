@@ -1,5 +1,5 @@
 module.exports = function () {
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   const Common = require('../Utils/common')
   const GeoHelper = require('../thirdParty/geoHelper')
   const PushNotification = require('../thirdParty/pushNotification')

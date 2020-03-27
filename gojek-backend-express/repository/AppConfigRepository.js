@@ -3,7 +3,7 @@ module.exports = function () {
   const slider = 'AppSlider'
   const emailTemplate = 'EmailTemplate'
 
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   const config = {
     client: 'mysql2',
     connection: {

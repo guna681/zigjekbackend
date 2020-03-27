@@ -1,5 +1,5 @@
 module.exports = function () {
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   const TransactionRepository = require('../repository/TransactionRepository')
   const Common = require('../Utils/common')
 

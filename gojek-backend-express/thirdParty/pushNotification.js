@@ -1,5 +1,5 @@
 module.exports = function () {
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   var admin = require('firebase-admin')
 
   var serviceAccount = require('../keyFile/firebase-admin-sdk.json')

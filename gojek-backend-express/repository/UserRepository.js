@@ -1,5 +1,5 @@
 module.exports = function () {
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   const users = 'Users'
   const userDevice = 'UserDevices'

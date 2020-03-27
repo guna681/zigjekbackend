@@ -1,7 +1,7 @@
 module.exports = function () {
   const VehicleService = require('../../services/Admin/VehicleService')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var vehicleService = new VehicleService();
   var common = new Common();

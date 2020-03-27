@@ -1,7 +1,7 @@
 module.exports = function () {
   const PeekChargesService = require('../../services/Admin/peekChargesService')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var peekChargesService = new PeekChargesService();
   var common = new Common();

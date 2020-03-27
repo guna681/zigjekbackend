@@ -1,7 +1,7 @@
 module.exports = function () {
   const VehicleRepository = require('../../repository/Admin/VehicleRepository')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var vehicleRepository = new VehicleRepository();
   var common = new Common();

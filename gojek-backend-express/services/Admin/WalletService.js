@@ -1,7 +1,7 @@
 module.exports = function () {
   const WalletRepository = require('../../repository/Admin/WalletRepository')
   const Common = require('../../Utils/common')
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
 
   var walletRepository = new WalletRepository();
   var common = new Common();

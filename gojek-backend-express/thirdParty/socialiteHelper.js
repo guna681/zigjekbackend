@@ -1,6 +1,6 @@
 
 module.exports = function () {
-  require('dotenv').config()
+  require('dotenv').config({ path: './../.env' })
   var FB = require('fb').default
   FB.extend({ appId: process.env.FACEBOOK_APP_ID, appSecret: process.env.FACEBOOK_SECRET })
 
