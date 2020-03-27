@@ -270,15 +270,11 @@ class UserRepository
         $address=Address::where(['userId'=>$data->userId,'currentAddress'=>1])->first();
         if($userAddress->CurrentAddressId && $address){
 
-            $query=DB::select(DB::raw("select fullAddress,id,userId,location,houseFlatNo,landMark,latitude,longitude,type,(
-                6371 * acos (
-                cos ( radians('$data->latitude') )
-                * cos( radians( Address.latitude ) )
-                * cos( radians( Address.longitude ) - radians('$data->longitude') )
-                + sin ( radians('$data->latitude') )
-                * sin( radians( Address.latitude ) )
-              )
-          ) AS distance from Address where Address.userId='$data->userId' and Address.unSaved = '0' and  Address.id Having distance < '$data->getAddressDistance'ORDER by distance asc"));
+            $query=DB::select(DB::raw("select fullAddress,id,userId,location,houseFlatNo,landMark,latitude,longitude,type,
+            ST_Distance_Sphere(
+                point('$data->longitude', '$data->latitude'),
+                point(Address.longitude, Address.latitude)
+            ) AS distance from Address where Address.userId='$data->userId' and Address.unSaved = '0' and  Address.id Having distance < '$data->getAddressDistance' ORDER by distance asc"));
 
            if(sizeof($query)==0){
              

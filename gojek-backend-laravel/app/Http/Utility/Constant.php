@@ -9,7 +9,7 @@ final class Constant{
 
    const LOGIN_SETTING               = 'isOtpLogin';
    const TERMS_AND_CONDITIONS        = 'termsConditions';
-   Const GET_ADDRESS_DISTANCE        = 'getAddressDistance';
+   Const GET_ADDRESS_DISTANCE        = 'MAX_RANGE';
    Const OUTLET_RADIUS               = 'outletRadius';
    Const SHOW_RATING_POPUP_AFTER     = 'showRatingPopupAfter';
    Const PICKUP_TIME                 = 'pickupTime';
