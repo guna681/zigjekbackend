@@ -7,6 +7,6 @@ use DB;
 
 class Setting extends Model
 {
-    protected $table='Setting';
+    protected $table='AppConfig';
 
   }
