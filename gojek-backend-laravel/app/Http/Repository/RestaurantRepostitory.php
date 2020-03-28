@@ -33,20 +33,22 @@ class RestaurantRepostitory
 
     /*****api restaurants function*****/
 
-    public function getNearOutletsRestaurants($data)
+    public function getNearOutletsRestaurants($request)
     {
 
 
-        $getUser = User::where('id', $data)->first();
-
+        $getUser = User::where('id', $request->userId)->first();
         if ($getUser->CurrentAddressId) {
             $latLong = Address::where('id', $getUser->CurrentAddressId)->first();
+        } else if (!$getUser->latitude && !$getUser->longitude) {
+            $latLong = $request;
         } else {
             $latLong = $getUser;
         }
 
         $latitude   = $latLong->latitude;
         $longitude  = $latLong->longitude;
+    
         $setting    = new SettingRepostitory();
         $radius     = $setting->getValue(Constant::OUTLET_RADIUS);
 
@@ -140,7 +142,7 @@ class RestaurantRepostitory
     {
         $perPage = Constant::PERPAGE;
         $path    = url('/').'/images/';
-        $data    = Restaurant::select(DB::raw("id,CONCAT('$path',image)as RestaurantImage,name as RestaurantName"))
+        $data    = Restaurant::select(DB::raw("id,CONCAT('$path',image)as RestaurantImage,name as RestaurantName,averageRating"))
                              ->paginate($perPage, ['*'], 'page', $pageNumber);
 
         return $data;

@@ -28,15 +28,15 @@ use App\Cuisines;
 Class RestaurantService
 {
 
-    public function getRestaurant($userId)
+    public function getRestaurant($request)
     {
         $restaurantRepostitory  = new RestaurantRepostitory();
         $orderRepostitory  = new OrderRepostitory();
-        $restaurantDetails      = $restaurantRepostitory->getNearOutletsRestaurants($userId);
-        $ratings                = $orderRepostitory->findRatingStatus($userId);
+        $restaurantDetails      = $restaurantRepostitory->getNearOutletsRestaurants($request);
+        // $ratings                = $orderRepostitory->findRatingStatus($request->userId);
        
         $data                   = new DataService();
-        $data->address          = array($restaurantRepostitory->getAddress($userId));
+        $data->address          = array($restaurantRepostitory->getAddress($request->userId));
         if (!$restaurantDetails->isEmpty()) {
             $data->error            = Common::error_false;
             $data->errorMessage     = trans('validation.isRestaurant');
@@ -108,32 +108,33 @@ Class RestaurantService
                 }
             }
 
-            if ($ratings) {
-                $deliveryTime = strtotime($ratings->deliveredTime);
-                $currentdate = date("Y-m-d h:i:sa");
-                $currentTime = strtotime($currentdate);
-                $checkTime = round(abs($deliveryTime - $currentTime) / 60,2);
+            // if ($ratings) {
+            //     $deliveryTime = strtotime($ratings->deliveredTime);
+            //     $currentdate = date("Y-m-d h:i:sa");
+            //     $currentTime = strtotime($currentdate);
+            //     $checkTime = round(abs($deliveryTime - $currentTime) / 60,2);
 
-                $setting=new SettingRepostitory();
-                $ratingPopupTime=$setting->getValue(Constant::SHOW_RATING_POPUP_AFTER); 
-                if ($checkTime > $ratingPopupTime) {
-            $data->ratings            =array($ratings);
-            $data->ratingPending      =Common::error_true;
-                } else {
-            $data->ratingPending      =Common::error_false;
-            $data->ratings            =[];
-                }
+            //     $setting=new SettingRepostitory();
+            //     $ratingPopupTime=$setting->getValue(Constant::SHOW_RATING_POPUP_AFTER); 
+            //     if ($checkTime > $ratingPopupTime) {
+            // $data->ratings            =array($ratings);
+            // $data->ratingPending      =Common::error_true;
+            //     } else {
+            // $data->ratingPending      =Common::error_false;
+            // $data->ratings            =[];
+            //     }
 
-            } else {
-            $data->ratingPending      =Common::error_false;
-            $data->ratings            =[];
-            }
+            // } else {
+            // $data->ratingPending      =Common::error_false;
+            // $data->ratings            =[];
+            // }
 
-            $data->cartCount        = $restaurantRepostitory->getCartCount($userId);
+            $data->cartCount        = $restaurantRepostitory->getCartCount($request->userId);
             $data->restaurantCount  = count($listRestaurants);
             $data->banners          = $offerBanners;
-            $data->listRestaurants  = $listRestaurants;
-
+            $data->totalPage        = ceil(count($listRestaurants)/15);
+            $menuItems = array_slice( $listRestaurants, $request->page_offset , 15 );
+            $data->listRestaurants  = $menuItems;
         } else {
             $data->error           = Common::error_true;
             $data->errorMessage    = trans('validation.noRestaurant');
