@@ -1,12 +1,10 @@
 module.exports = function (server, validator) {
   const basePath = '/api/booking/'
   const ErrorController = require('../Utils/error')
-  const GeoHelper = require('../thirdParty/geoHelper')
   const BookingController = require('../controller/BookingController')
 
-  var errorController = new ErrorController();
-  var geoHelper = new GeoHelper();
-  var bookingController = new BookingController();
+  var errorController = new ErrorController()
+  var bookingController = new BookingController()
 
   setInterval(async () => {
     bookingController.bookingHandler((result) => {

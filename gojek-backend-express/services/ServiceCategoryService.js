@@ -32,9 +32,13 @@ module.exports = function () {
           services.push(title)
         })
 
+        var data = {}
+        data.banner = ['http://134.209.147.250:3000/images/banner/banner1.png', 'http://134.209.147.250:3000/images/banner/banner2.png']
+        data.serviceList = services
+
         response.error = false
         response.msg = 'VALID'
-        response.data = services
+        response.data = data
       }
       callback(response)
     } catch (err) {

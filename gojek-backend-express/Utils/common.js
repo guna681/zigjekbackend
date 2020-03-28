@@ -61,6 +61,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       needle.post(process.env.PASSPORT_URL + 'oauth/token', data,
         function (error, response) {
+          console.log(error, response)
           if (error) {
             resolve(error)
           } else {
