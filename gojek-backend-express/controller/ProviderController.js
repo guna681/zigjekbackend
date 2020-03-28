@@ -1,15 +1,14 @@
 module.exports = function () {
   const TrackingService = require('../services/TrackingService')
-  const AppConfigService =  require('../services/AppConfigService')
+  const AppConfigService = require('../services/AppConfigService')
   const ProviderService = require('../services/ProviderService')
-  const RatingServices = require('../services/RatingServices')
   const BookingService = require('../services/BookingService')
   const WalletService = require('../services/WalletService')
   const TransactionServices = require('../services/TransactionServices')
   const ProviderVehicleService = require('../services/ProviderVehicleService')
   const PushNotification = require('../thirdParty/pushNotification')
- const Common = require('../Utils/common')
-  const UserService =  require('../services/UserService');
+  const Common = require('../Utils/common')
+  const UserService = require('../services/UserService')
   const RatingService = require('../services/RatingServices')
   const PaymentHelper = require('../thirdParty/paymentHelper')
 
@@ -19,7 +18,6 @@ module.exports = function () {
   var appConfigService = new AppConfigService()
   var trackingService = new TrackingService()
   var providerService = new ProviderService()
-  var ratingServices = new RatingServices()
   var bookingService = new BookingService()
   var walletService = new WalletService()
   var transactionServices = new TransactionServices()
@@ -759,6 +757,22 @@ module.exports = function () {
     var response = {}
     var data = req
     providerService.getProviderBookingStacksService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.updateProviderFinancailInfoCtrl = async (req, callback) => {
+    var response = {}
+    var data = req
+    providerService.createProviderPaymentService(data, (result) => {
       if (result.error) {
         response.error = true
         response.msg = result.msg

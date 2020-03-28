@@ -33,7 +33,20 @@ module.exports = function () {
         })
 
         var data = {}
-        data.banner = ['http://134.209.147.250:3000/images/banner/banner1.png', 'http://134.209.147.250:3000/images/banner/banner2.png']
+        data.banner = [
+          {
+            image: 'http://134.209.147.250:3000/images/banner/banner1.png',
+            type: 'CATEGORY',
+            categoryId: 1,
+            webUrl: null
+          },
+          {
+            image: 'http://134.209.147.250:3000/images/banner/banner2.png',
+            type: 'WEB',
+            categoryId: null,
+            webUrl: 'https://www.google.com'
+          }
+        ]
         data.serviceList = services
 
         response.error = false

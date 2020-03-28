@@ -2,12 +2,10 @@ module.exports = function () {
   require('dotenv').config({ path: './../.env' })
   const Common = require('../Utils/common')
   const GeoHelper = require('../thirdParty/geoHelper')
-  const PushNotification = require('../thirdParty/pushNotification')
   const ProviderRespository = require('../repository/ProviderRespository')
   const WalletRepository = require('../repository/WalletRepository')
   const ProviderVehicleRepository = require('../repository/ProviderVehicleRepository')
 
-  var pushNotification = new PushNotification()
   var common = new Common()
   var geoHelper = new GeoHelper()
   var providerRespository = new ProviderRespository()
@@ -1037,16 +1035,16 @@ module.exports = function () {
       switch (docType) {
         case 'provider':
           docType = 'provider'
-          var recentUploads = await providerRespository.fetchProviderDocumentExist(providerId)
-          if (recentUploads.error) {
-            recentUploads.result = []
-          }
           break
         case 'vehicle':
           docType = 'vehicle'
           break
         case 'bank':
           docType = 'bank'
+      }
+      var recentUploads = await providerRespository.fetchProviderDocumentExist(providerId)
+      if (recentUploads.error) {
+        recentUploads.result = []
       }
       var document = await providerRespository.fetchProviderDocList(docType)
       if (document.error) {
@@ -1075,6 +1073,7 @@ module.exports = function () {
     } catch (err) {
       err.error = true
       err.msg = 'OOPS'
+      console.log(err)
       callback(response)
     }
   }
@@ -1326,5 +1325,30 @@ module.exports = function () {
         resolve(err)
       }
     })
+  }
+
+  this.createProviderPaymentService = async (data, callback) => {
+    var response = {}
+    try {
+      var providerInfo = JSON.parse(data.data)
+      var value = Object.keys(providerInfo).map(element => {
+        return { PaymentField: element, Value: providerInfo[element], ProviderId: data.auth.Id }
+      })
+
+      var updateInfo = await providerRespository.insertFinancialInfo(value)
+
+      if (updateInfo.error) {
+        response.error = true
+        response.msg = 'OOPS'
+      } else {
+        response.error = false
+        response.msg = 'VALID'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
   }
 }

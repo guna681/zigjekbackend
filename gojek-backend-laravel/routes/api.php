@@ -60,7 +60,7 @@ Route::get('getVerfiyEmail/{otpNumber}','UserController@getVerfiyEmail');
 Route::get('getStaticpages','UserController@getStaticpages');
 
 
-
+Route::post('createUserToken', 'UserController@createTokenCtrl');
 
 // address  module
 Route::get('getAddress','UserController@getAddress')->middleware('auth:api');

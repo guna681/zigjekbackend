@@ -34,14 +34,14 @@ async function auth (request, response, next) {
       return response.status(401).send(error)
     } else {
       request.params.auth = auth.data
-      // var authenticate = await this.apiServicesAuthCtrl(request)
-      // if (authenticate.error) {
-      //   error.error = true
-      //   error.msg = 'Unauthorized accesss'
-      //   return response.status(401).send(error)
-      // } else {
-      next()
-      // }
+      var authenticate = await this.apiServicesAuthCtrl(request)
+      if (authenticate.error) {
+        error.error = true
+        error.msg = 'Unauthorized accesss'
+        return response.status(401).send(error)
+      } else {
+        next()
+      }
     }
   } catch (err) {
     err.error = true
