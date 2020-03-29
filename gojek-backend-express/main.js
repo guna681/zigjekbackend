@@ -27,7 +27,7 @@ app.use('/', function (request, response, next) {
 async function auth (request, response, next) {
   var error = {}
   try {
-    var auth = await this.getPayloadFromToken(request.headers.access_token, process.env.JWT_SECRET)
+    var auth = await this.getPayloadFromToken(request.headers.access_token)
     if (auth.error) {
       error.error = true
       error.msg = 'Unauthorized access'
@@ -37,9 +37,10 @@ async function auth (request, response, next) {
       var authenticate = await this.apiServicesAuthCtrl(request)
       if (authenticate.error) {
         error.error = true
-        error.msg = 'Unauthorized accesss'
+        error.msg = 'Unauthorized accesx'
         return response.status(401).send(error)
       } else {
+        request.params.auth = authenticate.data
         next()
       }
     }
@@ -53,7 +54,7 @@ async function auth (request, response, next) {
 async function adminauth (request, response, next) {
   var error = {}
   try {
-    var auth = await this.getAdminAuthToken(request.headers.token, process.env.JWT_SECRET)
+    var auth = await this.getAdminAuthToken(request.headers.token)
     if (auth.error) {
       error.error = true
       error.msg = 'Unauthorized'

@@ -163,7 +163,7 @@ module.exports = function (server, validator) {
     } else {
       var body = request.body
       body.auth = request.params.auth
-      this.providerOngoingBookingCtrl(body, (result) => {
+      bookingController.providerOngoingBookingCtrl(body, (result) => {
         this.ctrlHandler([result], result.error, lang, (message) => {
           return response.send(message)
         })

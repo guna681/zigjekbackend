@@ -22,7 +22,7 @@ module.exports = function () {
       } else {
         response.error = false
         response.msg = 'VALID'
-        response.data = providerInfo.result
+        response.data = providerInfo.result[0]
       }
       callback(response)
     } catch (err) {

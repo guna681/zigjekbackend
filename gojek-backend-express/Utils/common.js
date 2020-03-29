@@ -71,7 +71,7 @@ module.exports = function () {
     })
   }
 
-  this.getPayloadFromToken = function (token, secret) {
+  this.getPayloadFromToken = function (token) {
     var data = {}
     return new Promise(function (resolve) {
       token = token.replace('Bearer ', '')

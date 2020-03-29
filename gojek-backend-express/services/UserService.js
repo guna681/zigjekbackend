@@ -2,13 +2,10 @@ module.exports = function () {
   const UserRepository = require('../repository/UserRepository')
   const Common = require('../Utils/common')
   const Mailer = require('../Utils/mailer')
-  const AppConfigRepository = require('../repository/AppConfigRepository')
 
-  var common = new Common();
+  var common = new Common()
   var userRepository = new UserRepository()
-  var mailer = new Mailer();
-  var appConfigRepository = new AppConfigRepository();
-
+  var mailer = new Mailer()
 
   this.userAuthService = async (userId, callback) => {
     var response = {}
@@ -21,7 +18,7 @@ module.exports = function () {
       } else {
         response.error = false
         response.msg = 'VALID'
-        response.data = userInfo.result
+        response.data = userInfo.result[0]
       }
       callback(response)
     } catch (err) {
@@ -196,7 +193,7 @@ module.exports = function () {
             var UserId = userInfo.result[0].Id
             updateLangName.Language = data.languageName
             var updateDeviceList = await userRepository.updateUserDevice(deviceDetails)
-            var updateUserLanguage = await userRepository.updateUserProfileUsingId(updateLangName, UserId)
+            await userRepository.updateUserProfileUsingId(updateLangName, UserId)
 
             if (updateDeviceList.error) {
               await userRepository.addUserDevice(deviceDetails)
@@ -550,8 +547,10 @@ module.exports = function () {
       device.AppVersion = data.appVersion
 
       var userDeviceInfo = {}
-      userDeviceInfo.Id = data.auth.Device
+      userDeviceInfo.Id = 1
       userDeviceInfo.UserId = data.auth.Id
+
+      console.log(userDeviceInfo)
 
       var token = await userRepository.updateUserFCMToken(device, userDeviceInfo)
       if (token.error) {
