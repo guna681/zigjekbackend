@@ -47,3 +47,8 @@ uploads
 test.js
 #keyfile
 keyFile/*
+
+#uploads
+
+public/images/user/*
+public/images/provider/*

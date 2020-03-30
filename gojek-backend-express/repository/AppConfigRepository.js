@@ -79,7 +79,7 @@ module.exports = function () {
     var response = {}
     var knex = new Knex(config)
     knex(slider)
-      .select('Id as id', 'Title as title', 'Description as description', knex.raw('CONCAT(? , Image) as image', [process.env.BASE_URL + 'uploads/user/']))
+      .select('Id as id', 'Title as title', 'Description as description', knex.raw('CONCAT(? , Image) as image', [process.env.BASE_URL + 'slider/']))
       .where(data)
       .then((result) => {
         if (result.length > 0) {

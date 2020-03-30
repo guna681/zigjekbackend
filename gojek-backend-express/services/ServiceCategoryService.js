@@ -37,14 +37,16 @@ module.exports = function () {
           {
             image: 'http://134.209.147.250:3000/images/banner/banner1.png',
             type: 'CATEGORY',
-            categoryId: 1,
-            webUrl: null
+            categoryId: '1',
+            webUrl: null,
+            description: 'Zig Taxi'
           },
           {
             image: 'http://134.209.147.250:3000/images/banner/banner2.png',
             type: 'WEB',
             categoryId: null,
-            webUrl: 'https://www.google.com'
+            webUrl: 'https://www.google.com',
+            description: 'Eatoo'
           }
         ]
         data.serviceList = services
