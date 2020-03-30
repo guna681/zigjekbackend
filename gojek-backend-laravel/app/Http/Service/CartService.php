@@ -24,7 +24,7 @@ Class  CartService{
 
     public function addToCart($arg)
     {
-        $userId=Auth::guard('api')->user()->id;
+        $userId=Auth::guard('api')->user()->Id;
         $dishes= json_decode($arg->dishes);
         $cart           = new Cart();
         $cart->udId     =$arg->udId;
