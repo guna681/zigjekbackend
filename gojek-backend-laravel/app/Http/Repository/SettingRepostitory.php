@@ -16,8 +16,8 @@ class SettingRepostitory{
 	}
 
 
-    public  function  getValue($key){
-		$setting=Setting::select('Value as value')->where('FieldName',$key )->value('value');
+	public  function  getValue($key){
+		$setting=Setting::where('key',$key )->value('value');
 		return  $setting;
 		
 	}
