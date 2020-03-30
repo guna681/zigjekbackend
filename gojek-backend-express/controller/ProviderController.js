@@ -784,4 +784,19 @@ module.exports = function () {
       callback(response)
     })
   }
+
+  this.updateProviderAddressCtrl = async (req, callback) => {
+    var response = {}
+    var data = req
+    providerService.createProviderAddresservice(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+      }
+      callback(response)
+    })
+  }
 }

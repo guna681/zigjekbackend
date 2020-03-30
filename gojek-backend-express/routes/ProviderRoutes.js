@@ -120,6 +120,8 @@ module.exports = function (server, validator) {
     validator.check('isDeliveryOpt').optional()
       .isNumeric().withMessage('NUMERIC: $[1], Delivery Opted')
       .isLength({ min: 0, max: 1 }).withMessage('TEXT_LIMIT: $[1] $[2] $[3],languageName,0,10'),
+    validator.check('type').optional()
+      .isIn(['taxi', 'services']).withMessage('INVALID: $[1], Type'),
     validator.check('loginType').optional()
       .isIn(['manual', 'google', 'facebook']).withMessage('INVALID: $[1],loginType'),
     validator.check('socialToken').optional()
@@ -293,6 +295,7 @@ module.exports = function (server, validator) {
       })
     }
   })
+
   server.get(basePath + 'cancelPolicy', server.auth, (request, response) => {
     var body = request.body
     body.auth = request.params.auth
@@ -908,6 +911,42 @@ module.exports = function (server, validator) {
       var body = request.body
       body.auth = request.params.auth
       providerController.updateProviderFinancailInfoCtrl(body, (result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
+  })
+
+  server.post(basePath + 'updateAddressInfo', [
+    validator.check('address1')
+      .isLength({ min: 1, max: 255 }).withMessage('INVALID: $[1],Address 1'),
+    validator.check('address2')
+      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1],Address 2'),
+    validator.check('city')
+      .isLength({ min: 1, max: 50 }).withMessage('INVALID: $[1],City'),
+    validator.check('province')
+      .isLength({ min: 1, max: 255 }).withMessage('INVALID: $[1],Province'),
+    validator.check('landmark')
+      .isLength({ min: 1, max: 100 }).withMessage('INVALID: $[1],Landmark'),
+    validator.check('latitude')
+      .isNumeric().withMessage('INVALID: $[1], Latitude')
+      .isLength({ min: 1, max: 10 }).withMessage('INVALID: $[1],Latitude'),
+    validator.check('longitude')
+      .isNumeric().withMessage('INVALID: $[1], Longitude')
+      .isLength({ min: 1, max: 10 }).withMessage('INVALID: $[1],Longitude')
+  ], server.auth, (request, response) => {
+    const error = validator.validation(request)
+    const lang = request.headers.lang
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return response.send(message)
+      })
+    } else {
+      var body = request.body
+      body.auth = request.params.auth
+      const lang = request.headers.lang
+      providerController.updateProviderAddressCtrl(body, (result) => {
         errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return response.send(message)
         })

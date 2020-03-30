@@ -8,6 +8,7 @@ module.exports = function () {
   const providerDocuments = 'ProviderDocuments'
   const booking = 'Booking'
   const providerPayment = 'ProviderPayment'
+  const providerAddress = 'ProviderAddress'
 
   const config = {
     client: 'mysql2',
@@ -760,6 +761,27 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(providerPayment)
+        .insert(data)
+        .then((result) => {
+          if (result) {
+            output.error = false
+          } else {
+            output.error = true
+          }
+        }).catch((output) => {
+          output.error = true
+        }).finally(() => {
+          knex.destroy()
+          resolve(output)
+        })
+    })
+  }
+
+  this.insertAddressInfo = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerAddress)
         .insert(data)
         .then((result) => {
           if (result) {
