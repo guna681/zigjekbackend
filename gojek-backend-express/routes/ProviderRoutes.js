@@ -3,16 +3,14 @@ module.exports = function (server, validator) {
   const ProviderController = require('../controller/ProviderController')
   const ProviderVehicleController = require('../controller/ProviderVehicleController')
   const ErrorHandler = require('../Utils/error')
-  const PushNotification = require('../thirdParty/pushNotification')
 
   const date = new Date()
-  const year = date.getFullYear 
+  const year = date.getFullYear
   var providerController = new ProviderController()
   var errorHandler = new ErrorHandler()
   var providerVehicleController = new ProviderVehicleController()
-  var pushNotification = new PushNotification()
+
   server.get(basePath + 'config', (request, response) => {
-   
     providerController.providerAppSetting((result) => {
       const lang = request.headers.lang
       errorHandler.ctrlHandler([result], result.error, lang, (message) => {
@@ -20,6 +18,7 @@ module.exports = function (server, validator) {
       })
     })
   })
+
   server.post(basePath + 'check', [
     validator.check('mobile').isLength({ min: 6, max: 15 }).withMessage('NUMERIC_LIMIT: $[1] $[2] $[3],mobile,6,15')
       .isNumeric().withMessage('NUMERIC: $[1], mobile'),
@@ -118,6 +117,9 @@ module.exports = function (server, validator) {
       .isLength({ min: 1, max: 255 }).withMessage('TEXT_LIMIT: $[1] $[2] $[3],firstname,1,50'),
     validator.check('lastName')
       .isLength({ min: 1, max: 255 }).withMessage('TEXT_LIMIT: $[1] $[2] $[3],lastname,1,50'),
+    validator.check('isDeliveryOpt').optional()
+      .isNumeric().withMessage('NUMERIC: $[1], Delivery Opted')
+      .isLength({ min: 0, max: 1 }).withMessage('TEXT_LIMIT: $[1] $[2] $[3],languageName,0,10'),
     validator.check('loginType').optional()
       .isIn(['manual', 'google', 'facebook']).withMessage('INVALID: $[1],loginType'),
     validator.check('socialToken').optional()
@@ -885,6 +887,27 @@ module.exports = function (server, validator) {
       var body = request.body
       body.auth = request.params.auth
       providerController.getProviderBookingStacksCtrl(body, (result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
+  })
+
+  server.post(basePath + 'updateFinancialInfo', [
+    validator.check('data').isJSON().withMessage('MISSING: $[1], Datas')
+      .isLength({ min: 1, max: 255 }).withMessage('INVALID: $[1], Data')
+  ], server.auth, (request, response) => {
+    const error = validator.validation(request)
+    const lang = request.headers.lang
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return response.send(message)
+      })
+    } else {
+      var body = request.body
+      body.auth = request.params.auth
+      providerController.updateProviderFinancailInfoCtrl(body, (result) => {
         errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return response.send(message)
         })

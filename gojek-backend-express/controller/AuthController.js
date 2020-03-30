@@ -2,17 +2,17 @@ module.exports = function () {
   const UserService = require('../services/UserService')
   const ProviderService = require('../services/ProviderService')
 
-  var userService = new UserService();
-  var providerService = new ProviderService();
+  var userService = new UserService()
+  var providerService = new ProviderService()
 
-  
   this.apiServicesAuthCtrl = (request) => {
     return new Promise(function (resolve) {
       try {
         var headers = request.headers
         var role = headers.role
-        var Id = request.params.auth.Id
+        var Id
         if (role === 'user') {
+          Id = request.params.auth.sub
           userService.userAuthService(Id, (result) => {
             var response = {}
             if (result.error) {
@@ -26,6 +26,8 @@ module.exports = function () {
             resolve(response)
           })
         } else if (role === 'provider') {
+          Id = request.params.auth.Id
+          console.log(request.params.auth)
           providerService.providerAuthService(Id, (result) => {
             var response = {}
             if (result.error) {

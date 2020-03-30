@@ -12,19 +12,19 @@ module.exports = function () {
   const PushNotification = require('../thirdParty/pushNotification')
   const RatingService = require('../services/RatingServices')
   require('dotenv').config({ path: './../.env' })
+
   var ratingService = new RatingService()
   var pushNotification = new PushNotification()
   var trackingService = new TrackingService()
-  var appConfigService = new AppConfigService();
-  var userService = new UserService();
-  var providerService = new ProviderService();
-  var bookingService = new BookingService();
-  var common = new Common();
-  var mailer = new Mailer();
-  var paymentHelperService = new PaymentHelperService();
-  var walletService = new WalletService();
-  var transactionServices = new TransactionServices();
-
+  var appConfigService = new AppConfigService()
+  var userService = new UserService()
+  var providerService = new ProviderService()
+  var bookingService = new BookingService()
+  var common = new Common()
+  var mailer = new Mailer()
+  var paymentHelperService = new PaymentHelperService()
+  var walletService = new WalletService()
+  var transactionServices = new TransactionServices()
 
   this.appSetting = (callback) => {
     var response = {}
@@ -44,7 +44,6 @@ module.exports = function () {
 
   this.mobileValidation = (mobile, callback) => {
     var response = {}
-    var userService = new UserService();
     userService.checkUserExists(mobile, (result) => {
       if (result.error) {
         response.error = true
@@ -107,8 +106,8 @@ module.exports = function () {
         response.msg = result.msg
       } else {
         var userId = await common.getPayloadFromToken(result.data.token, process.env.JWT_SECRET)
-        var striperes = await paymentHelperService.createPaymentCustomerId(data.email)
-        //  var stripeCustomerId = striperes.data.id
+        // var striperes = await paymentHelperService.createPaymentCustomerId(data.email)
+        // var stripeCustomerId = striperes.data.id
         var stripeCustomerId = 1234
         stripeData.StripeCustomerID = stripeCustomerId
         await userService.updateUserStripeCustomerID(stripeData, userId.data.Id)
@@ -119,7 +118,7 @@ module.exports = function () {
         var year = new Date().getFullYear()
         var temp = await common.multipleStringReplace(template.data, [
           { substr: '*username*', to: FirstName + LastName }, { substr: '*year*', to: year }])
-          mailer.MailerNew(smtp.data, req.email, 'Welcome', temp)
+        mailer.MailerNew(smtp.data, req.email, 'Welcome', temp)
         if (!userId.error) {
           walletService.createWalletService(userId.data.Id, 'user', 0)
         }

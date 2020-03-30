@@ -7,10 +7,11 @@ module.exports = function () {
   const documentType = 'DocumentType'
   const providerDocuments = 'ProviderDocuments'
   const booking = 'Booking'
+  const providerPayment = 'ProviderPayment'
 
   const config = {
     client: 'mysql2',
-    connection: { 
+    connection: {
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASS,
@@ -750,6 +751,27 @@ module.exports = function () {
           resolve(err)
         }).finally(() => {
           knex.destroy()
+        })
+    })
+  }
+
+  this.insertFinancialInfo = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerPayment)
+        .insert(data)
+        .then((result) => {
+          if (result) {
+            output.error = false
+          } else {
+            output.error = true
+          }
+        }).catch((output) => {
+          output.error = true
+        }).finally(() => {
+          knex.destroy()
+          resolve(output)
         })
     })
   }

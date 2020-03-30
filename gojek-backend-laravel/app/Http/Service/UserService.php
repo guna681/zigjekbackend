@@ -730,12 +730,22 @@ Class UserService
             $data->errorMessage = __('validation.failure');
         }
         return $data;
-
-
     }
 
+    public function createTokenService($data) {
+        $userMobile  = new \stdClass();
+        $userMobile->mobileNumber = $data->mobile;
+        $userMobile->countryCode = $data->countryCode;
+        $userRepository = new UserRepository();
+        $userInfo = $userRepository->getMobileNumber($userMobile);
 
-
+        if($userInfo) {
+            $accessToken = $userInfo->createToken('User Access Token')->accessToken;
+        } else {
+            $accessToken = null;
+        }
+        return $accessToken;
+    }
 }
 
 

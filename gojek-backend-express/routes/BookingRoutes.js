@@ -1,12 +1,10 @@
 module.exports = function (server, validator) {
   const basePath = '/api/booking/'
   const ErrorController = require('../Utils/error')
-  const GeoHelper = require('../thirdParty/geoHelper')
   const BookingController = require('../controller/BookingController')
 
-  var errorController = new ErrorController();
-  var geoHelper = new GeoHelper();
-  var bookingController = new BookingController();
+  var errorController = new ErrorController()
+  var bookingController = new BookingController()
 
   setInterval(async () => {
     bookingController.bookingHandler((result) => {
@@ -165,7 +163,7 @@ module.exports = function (server, validator) {
     } else {
       var body = request.body
       body.auth = request.params.auth
-      this.providerOngoingBookingCtrl(body, (result) => {
+      bookingController.providerOngoingBookingCtrl(body, (result) => {
         this.ctrlHandler([result], result.error, lang, (message) => {
           return response.send(message)
         })

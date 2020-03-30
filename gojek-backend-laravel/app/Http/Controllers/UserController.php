@@ -606,20 +606,31 @@ Class  UserController extends Controller
 
     }
 
-        public function userLogout(request $request)
+    public function userLogout(request $request)
     {
-     
-           if (Auth::check()) {
+        if (Auth::check()) {
             $request->user()->token()->revoke();
         }
-            $userService = new UserService();
-            $response               = $userService->userLogout($request);
+        $userService = new UserService();
+        $response    = $userService->userLogout($request);
 
         $responsedata  = Defaults::encode($response);
         return $responsedata;
-
     }
 
+    public function createTokenCtrl(request $request) {
+        $userService = new UserService();
+        $response = new \stdClass();
+        $data = $userService->createTokenService($request);
+        if ($data) {
+            $response->error = Common::error_false;
+            $response->data = $data;
+        } else {
+            $response->error = Common::error_true;
+        }
+        $responsedata  = Defaults::encode($response);
+        return $responsedata;
+    }
 }
 
 

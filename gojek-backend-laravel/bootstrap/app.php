@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -16,7 +15,7 @@ $app = new Illuminate\Foundation\Application(
     
 );
 $app->useEnvironmentPath(
-    dirname('/var/www/html/zigjekbackend_krishna/.env')
+    dirname('./../.env')
   );
 /*
 |--------------------------------------------------------------------------

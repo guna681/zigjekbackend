@@ -61,6 +61,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       needle.post(process.env.PASSPORT_URL + 'oauth/token', data,
         function (error, response) {
+          console.log(error, response)
           if (error) {
             resolve(error)
           } else {
@@ -70,7 +71,7 @@ module.exports = function () {
     })
   }
 
-  this.getPayloadFromToken = function (token, secret) {
+  this.getPayloadFromToken = function (token) {
     var data = {}
     return new Promise(function (resolve) {
       token = token.replace('Bearer ', '')

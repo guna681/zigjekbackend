@@ -32,9 +32,26 @@ module.exports = function () {
           services.push(title)
         })
 
+        var data = {}
+        data.banner = [
+          {
+            image: 'http://134.209.147.250:3000/images/banner/banner1.png',
+            type: 'CATEGORY',
+            categoryId: 1,
+            webUrl: null
+          },
+          {
+            image: 'http://134.209.147.250:3000/images/banner/banner2.png',
+            type: 'WEB',
+            categoryId: null,
+            webUrl: 'https://www.google.com'
+          }
+        ]
+        data.serviceList = services
+
         response.error = false
         response.msg = 'VALID'
-        response.data = services
+        response.data = data
       }
       callback(response)
     } catch (err) {
