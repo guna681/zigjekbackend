@@ -3,8 +3,6 @@ node_modules
 /public/hot
 /public/storage
 /public/images
-/public/images/user/*
-/public/images/provider/*
 /storage/*.key
 /vendor
 /.idea
