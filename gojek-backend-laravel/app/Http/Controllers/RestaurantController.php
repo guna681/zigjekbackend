@@ -19,16 +19,23 @@ Class  RestaurantController extends Controller
 
 
     public function listRestaurants(request $request)
-    {
-        $userId     = Auth::guard('api')->user()->id;
+    { 
+        $request->userId     = Auth::guard('api')->user()->Id;
         $response   = new Response();
-        if ($userId) {
+        if ($request->pageNumber) {
+         $request->pageNumber = $request->pageNumber;
+         $request->page_offset= $request->pageNumber * 15;
+        } else {
+         $request->pageNumber = 0;
+         $request->page_offset= $request->pageNumber * 15;
+        }
+        if ($request->userId) {
             $restaurantService      = new RestaurantService();
-            $response               = $restaurantService->getRestaurant($userId);
+            $response               = $restaurantService->getRestaurant($request);
 
         } else {
             $response->error        = Common::error_true;
-            $response->errorMessage = trans('Validation.isDishes');
+            $response->errorMessage = trans('validation.noRestaurant');
 
         }
 
