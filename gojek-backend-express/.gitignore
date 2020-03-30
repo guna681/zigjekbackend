@@ -50,5 +50,5 @@ keyFile/*
 
 #uploads
 
-public/images/user/*
-public/images/provider/*
+!public/images/user/.gitkeep
+!public/images/provider/.gitkeep
