@@ -37,7 +37,7 @@ class RestaurantRepostitory
     {
 
 
-        $getUser = User::where('id', $request->userId)->first();
+        $getUser = User::where('Id', $request->userId)->first();
         if ($getUser->CurrentAddressId) {
             $latLong = Address::where('id', $getUser->CurrentAddressId)->first();
         } else if (!$getUser->latitude && !$getUser->longitude) {

@@ -33,7 +33,6 @@ Class RestaurantService
         $restaurantRepostitory  = new RestaurantRepostitory();
         $orderRepostitory  = new OrderRepostitory();
         $restaurantDetails      = $restaurantRepostitory->getNearOutletsRestaurants($request);
-        // $ratings                = $orderRepostitory->findRatingStatus($request->userId);
        
         $data                   = new DataService();
         $data->address          = array($restaurantRepostitory->getAddress($request->userId));
@@ -108,26 +107,6 @@ Class RestaurantService
                 }
             }
 
-            // if ($ratings) {
-            //     $deliveryTime = strtotime($ratings->deliveredTime);
-            //     $currentdate = date("Y-m-d h:i:sa");
-            //     $currentTime = strtotime($currentdate);
-            //     $checkTime = round(abs($deliveryTime - $currentTime) / 60,2);
-
-            //     $setting=new SettingRepostitory();
-            //     $ratingPopupTime=$setting->getValue(Constant::SHOW_RATING_POPUP_AFTER); 
-            //     if ($checkTime > $ratingPopupTime) {
-            // $data->ratings            =array($ratings);
-            // $data->ratingPending      =Common::error_true;
-            //     } else {
-            // $data->ratingPending      =Common::error_false;
-            // $data->ratings            =[];
-            //     }
-
-            // } else {
-            // $data->ratingPending      =Common::error_false;
-            // $data->ratings            =[];
-            // }
 
             $data->cartCount        = $restaurantRepostitory->getCartCount($request->userId);
             $data->restaurantCount  = count($listRestaurants);
