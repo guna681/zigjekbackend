@@ -621,7 +621,8 @@ Class UserService
 
         $settingService     = new SettingService();
         $address->getAddressDistance = $settingService->getValue(Constant::GET_ADDRESS_DISTANCE);
-
+// print_r($address);
+        // die;
         $userRepository     = new UserRepository();
         $getAddress = $userRepository->getCurrentAddress($address);
 
@@ -633,7 +634,7 @@ Class UserService
             $data->isCurrentAddress = Common::error_true;
         } else {
             $data->error            = Common::error_false;
-            $data->errorMessage     = trans('Validation.failure');
+            $data->errorMessage     = trans('validation.failure');
             $data->isCurrentAddress = Common::error_false;
 
         }
