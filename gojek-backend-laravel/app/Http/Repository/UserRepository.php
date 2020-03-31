@@ -266,7 +266,8 @@ class UserRepository
 
     public function getCurrentAddress($data){
            
-        $userAddress=User::where('id',$data->userId)->first();
+        $userAddress=User::where('Id',$data->userId)->first();
+        
         $address=Address::where(['userId'=>$data->userId,'currentAddress'=>1])->first();
         if($userAddress->CurrentAddressId && $address){
 
@@ -350,7 +351,7 @@ class UserRepository
   		}
         DB::commit();
           
-        $user =User::where('id',$data->userId)->update(['CurrentAddressId'=>$useraddress->id]);
+        $user =User::where('Id',$data->userId)->update(['CurrentAddressId'=>$useraddress->id]);
 
         return $useraddress->id;
 

@@ -459,6 +459,7 @@ Class  UserController extends Controller
     {
 
         $userId     = Auth::guard('api')->user()->Id;
+        
         $response   = new Response();
         $rules      = ['latitude'  => 'required|numeric',
                        'longitude' => 'required|numeric',

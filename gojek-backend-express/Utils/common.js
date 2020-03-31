@@ -189,6 +189,7 @@ module.exports = function () {
         })
         var upload = multer({ storage: storage }).single('file')
         upload(image, null, function (err) {
+          console.log(err)
           if (typeof image.file === 'undefined' || err) {
             data.error = true
             data.msg = err

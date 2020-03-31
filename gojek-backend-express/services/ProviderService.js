@@ -185,6 +185,8 @@ module.exports = function () {
       providerData.SocialToken = data.socialToken === undefined ? null : data.socialToken
       providerData.Language = data.languageName
       providerData.Password = data.password ? await common.hashPassword(data.password, 11) : null
+      providerData.IsDeliveryOpt = data.isDeliveryOpt
+      providerData.Type = data.type
 
       if (otpstatus.error) {
         response.error = true
@@ -1349,6 +1351,36 @@ module.exports = function () {
       err.error = true
       err.msg = 'OOPS'
       callback(err)
+    }
+  }
+
+  this.createProviderAddresservice = async (data, callback) => {
+    var response = {}
+    try {
+      var address = {}
+      address.ProviderId = data.auth.Id
+      address.Address1 = data.address1
+      address.Address2 = data.address2
+      address.City = data.city
+      address.Province = data.province
+      address.ZipCode = data.zipCode
+      address.Landmark = data.landmark
+      address.Latitude = data.latitude
+      address.Longitude = data.longitude
+
+      var providerAddress = await providerRespository.insertAddressInfo(address)
+      if (providerAddress.error) {
+        response.error = true
+        response.msg = 'OOPS'
+      } else {
+        response.error = false
+        response.msg = 'UPDATE'
+      }
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+    } finally {
+      callback(response)
     }
   }
 }

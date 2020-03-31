@@ -118,7 +118,7 @@ Class DishService
 
 
 
-   public function dishes($subCategory){
+public function dishes($subCategory){
 
 	$dishRepostitory=new DishRepostitory();
 	$category=$subCategory;
@@ -134,7 +134,13 @@ Class DishService
 			$dishes->dishName 		= $item->dishName;
             $dishes->price    		= (double) $item->price;
 			$price = number_format($dishes->price,2);
+			if ($item->slashedPrice != 0) {
+			$dishes->displayPrice	=$currency.$item->slashedPrice;
+			$dishes->slashedPrice           = $item->price;
+			} else {
+			$dishes->slashedPrice	=0;
 			$dishes->displayPrice	=$currency.$price;
+			}
 			$dishes->isVeg			=$item->isVeg;
 			$availableFrom          =strtotime($item->showFromTime);
 			$availableTo            =strtotime($item->showToTime);		
@@ -156,7 +162,7 @@ Class DishService
 
    }
 
-   public function getRecommended($outletId){
+ public function getRecommended($outletId){
 		$dishRepostitory=new DishRepostitory();
 		$dishes=$dishRepostitory->getRecommendedDihses($outletId);
 		$currencyRepostitory=new CurrencyRepostitory();
@@ -167,9 +173,17 @@ Class DishService
 			$dishes->categoryId     = $item->isRecommended;
 			$dishes->dishId			=$item->dishId;
 			$dishes->dishName 		=$item->dishName;
-			$dishes->price    		=(double)$item->price;
+			// $dishes->price    		=(double)$item->price;
             $price= number_format($item->price,2);
-            $dishes->displayPrice	=$currency.$price;
+			if ($item->slashedPrice != 0) {
+			$dishes->price    		=(double)$item->slashedPrice;	
+			$dishes->displayPrice	=$currency.$item->slashedPrice;
+			$dishes->slashedPrice           = $item->price;
+			} else {
+			$dishes->price    		=(double)$item->price;
+			$dishes->slashedPrice           = 0;
+			$dishes->displayPrice	=$currency.$price;
+			}
 			$dishes->dishImage		=url('/').'/images/'.$item->image;
 			$dishes->isVeg			=$item->isVeg;
 			$availableFrom          =strtotime($item->showFromTime);
@@ -197,6 +211,7 @@ Class DishService
 		return $outletMenuCategories;	   
  
    }
+
 
 
    public function getCustomisation($dishId){
