@@ -621,8 +621,7 @@ Class UserService
 
         $settingService     = new SettingService();
         $address->getAddressDistance = $settingService->getValue(Constant::GET_ADDRESS_DISTANCE);
-// print_r($address);
-        // die;
+
         $userRepository     = new UserRepository();
         $getAddress = $userRepository->getCurrentAddress($address);
 

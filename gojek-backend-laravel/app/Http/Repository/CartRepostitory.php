@@ -171,7 +171,7 @@ Class CartRepostitory extends Cart{
   {
       $currencyRepostitory    = new CurrencyRepostitory();
       $currency               = $currencyRepostitory->getCurrency();
-      $data=Taxes::select(DB::raw("id,name as displayKey,percentage,CONCAT('$currency',percentage)as displayValue,status"))
+      $data=Taxes::select(DB::raw("id,Name as displayKey,Percentage,CONCAT('$currency',Percentage)as displayValue,IsActive"))
                   ->get();
       return $data;
   }
