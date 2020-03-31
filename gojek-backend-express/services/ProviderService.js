@@ -1383,4 +1383,82 @@ module.exports = function () {
       callback(response)
     }
   }
+
+  this.getProviderTimeSlotService = async (providerId, callback) => {
+    var response = {}
+    try {
+      var timeSlot = await providerRespository.getTimeSlots()
+      var providerAvailability = await providerRespository.getProviderTimeSlots(providerId)
+      if (timeSlot.error) {
+        response.error = true
+        response.msg = 'OOPS'
+      } else {
+        var providerTimeslot = []
+        timeSlot.result.map(element => {
+          var slot = {}
+          slot.id = element.Id
+          slot.day = element.Day
+          slot.time = element.Time.map(element1 => {
+            var day = providerAvailability.result.filter(day => day.Day === element.Day)
+            if (day.length > 0 && day[0].Time.some(days => days.from === element1.from && days.to === element1.to && days.status === 1)) {
+              element1.isActive = 1
+            } else {
+              element1.isActive = 0
+            }
+            return element1
+          })
+          providerTimeslot.push(slot)
+        })
+
+        response.error = false
+        response.msg = 'VALID'
+        response.data = providerTimeslot
+      }
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+    } finally {
+      callback(response)
+    }
+  }
+
+  this.updateProviderTimeSlotService = async (data, callback) => {
+    var response = {}
+    try {
+      var providerId = data.auth.Id
+      var delTimeSlot = await providerRespository.deleteProviderTimeSlot(providerId)
+      if (delTimeSlot.error === false) {
+        var timeSlot = JSON.parse(data.data)
+        var slots = timeSlot.map(element => {
+          var slot = {}
+          slot.Day = element.day
+          slot.ProviderId = providerId
+          var time = element.time.map(time => {
+            var timing = {}
+            timing.from = time.from
+            timing.to = time.to
+            timing.status = time.isActive
+            return timing
+          })
+
+          slot.Time = JSON.stringify(time)
+          return slot
+        })
+
+        var updateTimeSlot = providerRespository.updateProviderTimeSlot(slots)
+        if (updateTimeSlot.error) {
+          response.error = false
+          response.msg = 'UPDATE'
+        } else {
+          response.error = false
+          response.msg = 'UPDATE'
+        }
+        callback(response)
+      }
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
 }

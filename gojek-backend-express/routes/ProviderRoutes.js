@@ -898,7 +898,7 @@ module.exports = function (server, validator) {
   })
 
   server.post(basePath + 'updateFinancialInfo', [
-    validator.check('data').isJSON().withMessage('MISSING: $[1], Datas')
+    validator.check('data').isJSON().withMessage('MISSING: $[1], Data')
       .isLength({ min: 1, max: 255 }).withMessage('INVALID: $[1], Data')
   ], server.auth, (request, response) => {
     const error = validator.validation(request)
@@ -947,6 +947,37 @@ module.exports = function (server, validator) {
       body.auth = request.params.auth
       const lang = request.headers.lang
       providerController.updateProviderAddressCtrl(body, (result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
+  })
+
+  server.get(basePath + 'getProviderTimeSlots', server.auth, (request, response) => {
+    var body = request.body
+    body.auth = request.params.auth
+    const lang = request.headers.lang
+    providerController.getProviderTimeSlotCtrl(body, (result) => {
+      errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+        return response.send(message)
+      })
+    })
+  })
+
+  server.post(basePath + 'updateProviderTimeSlots', [
+    validator.check('data').isJSON().withMessage('MISSING: $[1], Data')
+  ], server.auth, (request, response) => {
+    const error = validator.validation(request)
+    const lang = request.headers.lang
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return response.send(message)
+      })
+    } else {
+      var body = request.body
+      body.auth = request.params.auth
+      providerController.updateProviderTimeSlotCtrl(body, (result) => {
         errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return response.send(message)
         })
