@@ -458,7 +458,7 @@ Class  UserController extends Controller
     public function getCurrentAddress(request $request)
     {
 
-        $userId     = Auth::guard('api')->user()->id;
+        $userId     = Auth::guard('api')->user()->Id;
         $response   = new Response();
         $rules      = ['latitude'  => 'required|numeric',
                        'longitude' => 'required|numeric',

@@ -12,7 +12,7 @@ class Taxes extends Model
 {
 
 
-    protected $table='Taxes';
+    protected $table='Tax';
 
 
 }

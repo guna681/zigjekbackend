@@ -29,24 +29,26 @@ Class OrderRepostitory{
         DB::beginTransaction();
         try {
             $orders                      = new Orders();
-            $orders->userId              = $data->userId;
+            $orders->UserId              = $data->userId;
             $orders->outletId            = $data->outletId;
             $orders->deliveryAddressId   = $data->deliveryAddressId;
             $orders->netAmount           = $data->netAmount;
-            $orders->discount            = $data->discount;
-            $orders->couponName          = $data->couponName;
+            $orders->DiscountAmount      = $data->discount;
+            $orders->CouponCode          = $data->couponName;
             $orders->orderReferenceId    = $data->orderRefferenceId;
-            $orders->paymentTypeId       = $data->paymentType;
-            $orders->deliveryAddress     = $data->deliveryAddress;
-            $orders->deliveryAddressType = $data->addressType;
+            $orders->PaymentMode       = $data->paymentType;
+            $orders->ToLocation     = $data->deliveryAddress;
+            $orders->CreateAt       = now();
+            $orders->UpdateAt       = now();
+            // $orders->deliveryAddressType = $data->addressType;
             $orders->orderStatus         = $data->orderStatus;
-            $orders->orderPlaceTime      =  date('Y-m-d H:i:s');
-            $orders->deliverycharge      = $data->deliverycharge;
-            if ($data->orderSuggestions) {
-            $orders->orderSuggestions     = $data->orderSuggestions;
-            } else { 
-            $orders->orderSuggestions     = ' ';
-            }
+            // $orders->orderPlaceTime      =  date('Y-m-d H:i:s');
+            // $orders->deliverycharge      = $data->deliverycharge;
+            // if ($data->orderSuggestions) {
+            // $orders->orderSuggestions     = $data->orderSuggestions;
+            // } else { 
+            // $orders->orderSuggestions     = ' ';
+            // }
             $orders->save();
         } catch (\Illuminate\Database\QueryException $ex) {
             $jsonresponse = $ex->getMessage();

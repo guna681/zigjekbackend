@@ -56,7 +56,7 @@ Class  CartService{
 
     public function viewCart($arg)
     {
-        $userId          = Auth::guard('api')->user()->id;
+        $userId          = Auth::guard('api')->user()->Id;
         $cartRepostitory = new CartRepostitory();
         $cartRepostitory->updateDeliveryAddress($arg,$userId);
         $cart            = $cartRepostitory->getCart($arg->udId,$userId);

@@ -29,7 +29,6 @@ class OutletsRepostitory extends Outlets
         $outlets->outletName=$query->name;
         $outlets->isServicable=$query->status;        
         $outlets->offers=$query->outletOffers;
-        $outlets->averageReview=(string)number_format($query->outletReview(),1);       
         $outlets->time=(int)self::distanceTo($arg,$query);
         $outlets->displayTime=(int)self::distanceTo($arg,$query)." ".__('validation.mins');
         $cuisines=self::getCuisines($query->id);

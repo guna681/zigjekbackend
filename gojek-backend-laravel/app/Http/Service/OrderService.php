@@ -32,10 +32,10 @@ Class  OrderService
         $s2ServiceProvider = new S2ServiceProvider();
         $orderRepostitory     = new OrderRepostitory();
         $appConfigRepostitory = new AppConfigRepostitory();
-        $userId = Auth::guard('api')->user()->id;
+        $userId = Auth::guard('api')->user()->Id;
         // update rate status
         $updateData = 0;
-        $ratings                = $orderRepostitory->updateRatingStatus($updateData,$userId );
+        // $ratings                = $orderRepostitory->updateRatingStatus($updateData,$userId );
         $paymentAddress  = $userRepostitory->getPaymentAddress($arg->deliveryAddressId);
         $appconfigdata = $appConfigRepostitory->getAppConfig();
         $orders               = new Orders();
@@ -59,6 +59,7 @@ Class  OrderService
         $orders->deliverycharge    = $appconfigdata[0]->Value;
         
         $orderId                = $orderRepostitory->addOrder($orders);
+        
         $data    = new DataService();
         if ($orderId) {
             $data->error         = Common::error_false;
