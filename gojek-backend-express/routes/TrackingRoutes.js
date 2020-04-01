@@ -1,5 +1,6 @@
 module.exports = function (http) {
   const io = require('socket.io')(http)
+  require('../controller/UserController')()
   require('../controller/ProviderController')()
   require('../services/BookingService')()
   require('../Utils/error')()

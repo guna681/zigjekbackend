@@ -799,4 +799,36 @@ module.exports = function () {
       callback(response)
     })
   }
+
+  this.getProviderTimeSlotCtrl = async (data, callback) => {
+    var response = {}
+    var providerId = data.auth.Id
+    console.log(providerId)
+    providerService.getProviderTimeSlotService(providerId, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.updateProviderTimeSlotCtrl = async (data, callback) => {
+    var response = {}
+    providerService.updateProviderTimeSlotService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
 }
