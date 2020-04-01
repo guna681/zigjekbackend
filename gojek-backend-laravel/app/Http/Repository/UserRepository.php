@@ -494,7 +494,7 @@ class UserRepository
 
         DB::beginTransaction();
         try {
-            $update = User::where('id', $userId)
+            $update = User::where('Id', $userId)
                              ->update(['deviceToken' => $data->deviceToken,'os'=>$data->osType]);
         } catch (\Illuminate\Database\QueryException $ex) {
             $jsonresp = $ex->getMessage();
