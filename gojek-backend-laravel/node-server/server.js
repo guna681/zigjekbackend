@@ -1,7 +1,7 @@
 var app = require('express')()
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
-require('dotenv').config({ path: './../.env' })
+require('dotenv').config({ path: '../../.env' })
 require('./geoDataMatrix')()
 
 var bodyParser = require('body-parser')
@@ -344,5 +344,6 @@ app.post('/weightCalculation', function(req, res) {
 
 
 http.listen(process.env.PORT, function() {
+    console.log(process.env.PORT);
     console.log('listening on localhost:8002')
 })

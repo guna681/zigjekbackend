@@ -49,13 +49,14 @@ Class OrderRepostitory{
             // } else { 
             // $orders->orderSuggestions     = ' ';
             // }
+            
             $orders->save();
         } catch (\Illuminate\Database\QueryException $ex) {
             $jsonresponse = $ex->getMessage();
+            
             DB::rollBack();
             return false;
         }
-
         if ($orders->id) {
             try {
 //
@@ -215,7 +216,7 @@ Class OrderRepostitory{
 
     public function getOrderDetail($userId, $orderId)
     {
-        $order= Orders::where(['userId'=>$userId,'id'=>$orderId])->first();
+        $order= Orders::where(['userId'=>$userId,'Id'=>$orderId])->first();
 
         return $order;
     }
