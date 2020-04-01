@@ -74,7 +74,7 @@ Class OrderController extends Controller
          $page_offset= $pageNumber * 15;
         }
         $orderService   = new OrderService();
-        $response       = $orderService->listPastOrdersPage($pageNumber,$page_offset);
+        $response       = $orderService->listPastOrders($pageNumber,$page_offset);
         $responsedata   = Defaults::encode($response);
         return $responsedata;
     }

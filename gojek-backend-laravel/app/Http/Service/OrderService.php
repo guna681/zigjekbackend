@@ -259,7 +259,7 @@ Class  OrderService
     }
 
 
-    public function listPastOrdersPage($pageNumber,$page_offset)
+    public function listPastOrders($pageNumber,$page_offset)
     {
 
         $userId  = Auth::guard('api')->user()->Id;

@@ -344,6 +344,5 @@ app.post('/weightCalculation', function(req, res) {
 
 
 http.listen(process.env.PORT, function() {
-    console.log(process.env.PORT);
     console.log('listening on localhost:8002')
 })
