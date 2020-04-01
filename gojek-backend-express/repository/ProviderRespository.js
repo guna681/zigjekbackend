@@ -9,6 +9,8 @@ module.exports = function () {
   const booking = 'Booking'
   const providerPayment = 'ProviderPayment'
   const providerAddress = 'ProviderAddress'
+  const timeSlot = 'TimeSlot'
+  const providerAvailability = 'ProviderAvailability'
 
   const config = {
     client: 'mysql2',
@@ -794,6 +796,123 @@ module.exports = function () {
         }).finally(() => {
           knex.destroy()
           resolve(output)
+        })
+    })
+  }
+
+  this.getTimeSlots = () => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(timeSlot)
+        .select('Id', 'Day', 'Time')
+        .then((result) => {
+          if (result) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.getProviderTimeSlots = (providerId) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerAvailability)
+        .select('Id', 'Day', 'Time')
+        .where('ProviderId', providerId)
+        .then((result) => {
+          if (result) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+            output.result = []
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.getProviderTimeSlots = (providerId) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerAvailability)
+        .select('Id', 'Day', 'Time')
+        .where('ProviderId', providerId)
+        .then((result) => {
+          if (result) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+            output.result = []
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.updateProviderTimeSlot = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerAvailability)
+        .insert(data)
+        .then((result) => {
+          if (result) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+            output.result = []
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.deleteProviderTimeSlot = (providerId) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerAvailability)
+        .where('ProviderId', providerId)
+        .del()
+        .then(() => {
+          output.error = false
+          resolve(output)
+        }).catch((output) => {
+          console.log(output)
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
         })
     })
   }
