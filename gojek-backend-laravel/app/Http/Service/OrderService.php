@@ -32,10 +32,10 @@ Class  OrderService
         $s2ServiceProvider = new S2ServiceProvider();
         $orderRepostitory     = new OrderRepostitory();
         $appConfigRepostitory = new AppConfigRepostitory();
-        $userId = Auth::guard('api')->user()->id;
+        $userId = Auth::guard('api')->user()->Id;
         // update rate status
         $updateData = 0;
-        $ratings                = $orderRepostitory->updateRatingStatus($updateData,$userId );
+        // $ratings                = $orderRepostitory->updateRatingStatus($updateData,$userId );
         $paymentAddress  = $userRepostitory->getPaymentAddress($arg->deliveryAddressId);
         $appconfigdata = $appConfigRepostitory->getAppConfig();
         $orders               = new Orders();
@@ -59,6 +59,7 @@ Class  OrderService
         $orders->deliverycharge    = $appconfigdata[0]->Value;
         
         $orderId                = $orderRepostitory->addOrder($orders);
+        
         $data    = new DataService();
         if ($orderId) {
             $data->error         = Common::error_false;
@@ -69,7 +70,9 @@ Class  OrderService
             $outletsRepostitory     = new OutletsRepostitory();
 
             $orderDetails= $this->getOrderDetail($orderId, $arg->couponName);
+           
             $userDetails = $userRepostitory->getUser($userId);
+            
             $stripeCustomerId = $userDetails->stripeCustomerId;
             $orderdata = $orderDetails->orderDetails;
             array_push($origin, $orderdata->latitude, $orderdata->longitude);
@@ -91,54 +94,55 @@ Class  OrderService
 
 
             $updateLastMile                = $orderRepostitory->updateLastMile($orderId,$outletToRestaurantDistance,$etaInTimestamp);
+            
+            // if($distanceData->error === false) {     
+            //     $updateDate = (object) array();
+            //     $appConfigRepostitory = new AppConfigRepostitory();
+            //     $appconfigdata = $appConfigRepostitory->getAppConfig();
+            //     $distanceResult = $distanceData->result;
+            //     $updateDate->orderId = $orderId;
+            //     $updateDate->userId = $userId;
+            //     $distance = $distanceResult->distance;
+            //     $cartRepostitory        = new CartRepostitory();
+            //     $outlets                = $cartRepostitory->getOutlet($arg->outletId);
+            //     $serviceCommission = $outlets->serviceCommission;
 
-            if($distanceData->error === false) {     
-                $updateDate = (object) array();
-                $appConfigRepostitory = new AppConfigRepostitory();
-                $appconfigdata = $appConfigRepostitory->getAppConfig();
-                $distanceResult = $distanceData->result;
-                $updateDate->orderId = $orderId;
-                $updateDate->userId = $userId;
-                $distance = $distanceResult->distance;
-                $cartRepostitory        = new CartRepostitory();
-                $outlets                = $cartRepostitory->getOutlet($arg->outletId);
-                $serviceCommission = $outlets->serviceCommission;
+            //     $amount = floatval($orderdata->netAmount) - floatval($appconfigdata[0]->Value);
 
-                $amount = floatval($orderdata->netAmount) - floatval($appconfigdata[0]->Value);
-
-                if ($distance > intval($appconfigdata[3]->Value)) {
+            //     if ($distance > intval($appconfigdata[3]->Value)) {
 
 
-                    $distanceCharges = $distance * floatval($appconfigdata[2]->Value);
-                    $updateDate->distanceCharges = $distanceCharges;
+            //         $distanceCharges = $distance * floatval($appconfigdata[2]->Value);
+            //         $updateDate->distanceCharges = $distanceCharges;
 
-                    $updateDate->deliverycharge = floatval($appconfigdata[0]->Value) + $distanceCharges; 
-                    $remainingAmount = $amount - $distanceCharges;
-                    $adminCommission = (($remainingAmount * $serviceCommission)/100);
-                    $updateDate->distance = $distance;
+            //         $updateDate->deliverycharge = floatval($appconfigdata[0]->Value) + $distanceCharges; 
+            //         $remainingAmount = $amount - $distanceCharges;
+            //         $adminCommission = (($remainingAmount * $serviceCommission)/100);
+            //         $updateDate->distance = $distance;
 
-                    $finalOutletAmount = $remainingAmount - $adminCommission;
-                    $updateDate->adminServiceCharge = $adminCommission;
-                    $updateDate->outletEarnings = $finalOutletAmount;
-                    $updateOrder = $orderRepostitory->updateOrderDetail($updateDate);
-                    $outletsRepostitory->updateOutletsEarnings($finalOutletAmount, $arg->outletId);
+            //         $finalOutletAmount = $remainingAmount - $adminCommission;
+            //         $updateDate->adminServiceCharge = $adminCommission;
+            //         $updateDate->outletEarnings = $finalOutletAmount;
+            //         $updateOrder = $orderRepostitory->updateOrderDetail($updateDate);
+            //         $outletsRepostitory->updateOutletsEarnings($finalOutletAmount, $arg->outletId);
 
-                } else {
-                    $updateDate->distanceCharges = 0.00;
-                    $updateDate->deliverycharge = floatval($appconfigdata[0]->Value); 
-                    $updateDate->distance = $distance;
+            //     } else {
+            //         $updateDate->distanceCharges = 0.00;
+            //         $updateDate->deliverycharge = floatval($appconfigdata[0]->Value); 
+            //         $updateDate->distance = $distance;
                     
-                    $adminCommission = (($amount * $serviceCommission)/100);
-                    $finalOutletAmount = $amount - $adminCommission;
-                    $updateDate->adminServiceCharge = $adminCommission;
-                    $updateDate->outletEarnings = $finalOutletAmount;
+            //         $adminCommission = (($amount * $serviceCommission)/100);
+            //         $finalOutletAmount = $amount - $adminCommission;
+            //         $updateDate->adminServiceCharge = $adminCommission;
+            //         $updateDate->outletEarnings = $finalOutletAmount;
 
-                    $updateOrder = $orderRepostitory->updateOrderDetail($updateDate);      
-                    $outletsRepostitory->updateOutletsEarnings($finalOutletAmount, $arg->outletId);
-                }
+            //         $updateOrder = $orderRepostitory->updateOrderDetail($updateDate);      
+            //         $outletsRepostitory->updateOutletsEarnings($finalOutletAmount, $arg->outletId);
+            //     }
                                
-            }            
+            // }            
             $orderDish =$this->getOrderDishInvoice($orderdata->dishes,$orderdata->charges);
+            
             $order=array('orderRefferenceId'=>$orderdata->displayOrderId,
                          'netAmount'        =>$orderdata->displayNetAmount,
                          'totalItems'       =>$orderdata->displayTotalItems,
@@ -148,7 +152,7 @@ Class  OrderService
                          'userAddress'      =>$orderdata->userAddress,
                          'orderSummary'     =>$orderDish,
                       );
-
+           
             $mailService = new MailService();
             if($arg->paymentType == '11'){
             $paymentService = new PaymentService();
@@ -181,7 +185,7 @@ Class  OrderService
             $mailService->setReceiver($userDetails->email);
             $mailService->setTemplate(Constant::ORDERINVOICE);
             $mailService->sendMail($order);
-
+         
             // $orderDetails= $this->updateCustomisationItem($orders->cartId);
             
 
@@ -255,10 +259,10 @@ Class  OrderService
     }
 
 
-    public function listPastOrders()
+    public function listPastOrders($pageNumber,$page_offset)
     {
 
-        $userId  = Auth::guard('api')->user()->id;
+        $userId  = Auth::guard('api')->user()->Id;
         $orderRepostitory = new OrderRepostitory();
         $orders  = $orderRepostitory->listPastOrders($userId);
         $data    = new DataService();
@@ -274,7 +278,7 @@ Class  OrderService
 
             foreach ($orders as $order) {
 
-                $carts      = $orderRepostitory->orderDish($order->id);
+                $carts      = $orderRepostitory->orderDish($order->Id);
                 $orderDish  = array();
                 foreach ($carts as $cart) {
 
@@ -367,21 +371,24 @@ $orderCustomisationItems = $orderRepostitory->orderCustomisationItems($cart['id'
                 $orderData->paymentMethod = ($order->PaymentTypeId == '10') ? __('validation.payedCash')  : __('validation.payedCard');
 
                 $orderData->dishes      = $orderDish;
-                $orderData->charges     = $this->getCharges($outlet->id, array_flatten($orderDish), $order->couponName,$orderData->paymentMethod);
+                $orderData->charges     = $this->getCharges($outlet->id, array_flatten($orderDish), $order->couponName,$orderData->paymentMethod,$order->discount);
                 $orderDetails->orderDetails = $orderData;
                 array_push($data->pastOrders, $orderDetails);
+                
             }
+             $data->totalPage        = ceil(count($data->pastOrders)/15);
+            $data->pastOrders = array_slice( $data->pastOrders, $page_offset , 15 );
         } else {
 
             $data->error = Common::error_true;
             $data->errorMessage = __('validation.noOrders');
 
         }
+           
         return $data;
 
 
     }
-
 
     public function getOrderDish($carts)
     {
@@ -426,11 +433,12 @@ $orderCustomisationItems = $orderRepostitory->orderCustomisationItems($cart['id'
 
 
     /* total Calculation */
-    public function getCharges($outletId, $dishes, $couponName,$paymentMethod)
-    {
+    public function getCharges($outletId, $dishes, $couponName,$paymentMethod,$orderdiscount)
+    {  
         $cartService = new CartService();
         $totalcharges[] = $cartService->getItemTotal($dishes);
         $totalcharges[] = $cartService->getCharges($outletId, $dishes);
+        $totalcharges[] =  $this->slashedPriceDiscount($orderdiscount); 
         $totalcharges[] = $cartService->getTaxes();
         //$totalcharges[] = $cartService->getTotals($totalcharges);
         if ($couponName !== NULL) {
@@ -471,7 +479,24 @@ $orderCustomisationItems = $orderRepostitory->orderCustomisationItems($cart['id'
 
     }
 
-
+    public function slashedPriceDiscount($orderdiscount){	
+    	
+        $currencyRepostitory   = new CurrencyRepostitory();	
+        $currency              = $currencyRepostitory->getCurrency();	
+        $total = new \stdClass();	
+        if ($orderdiscount != 0) {	
+        $total->displayKey  =  'Total Discount';	
+        $total->displayValue= $currency .number_format($orderdiscount,2);	
+        $total->netAmount   = (string)floatval($orderdiscount);	
+        $total->percentage  = '-'. (string)floatval($orderdiscount);	
+        } else {	
+        $total->displayKey  =  'Total Discount';	
+        $total->displayValue= $currency .number_format($orderdiscount,2);	
+        $total->netAmount   = (string)floatval($orderdiscount);	
+        $total->percentage  = '-'. (string)floatval($orderdiscount); 	
+        }	
+        return array($total);	
+    }
 
  public function moveElement(&$totalcharges, $a, $b) {
             $out = array_splice($totalcharges, $a, 1);
@@ -617,7 +642,7 @@ $orderCustomisationItems = $orderRepostitory->orderCustomisationItems($cart['id'
 
     public function getOrderDetail($orderId)
     {
-        $userId           = Auth::guard('api')->user()->id;
+        $userId           = Auth::guard('api')->user()->Id;
         $orderRepostitory = new OrderRepostitory();
         $order            = $orderRepostitory->getOrderDetail($userId, $orderId);
 
@@ -628,10 +653,10 @@ $orderCustomisationItems = $orderRepostitory->orderCustomisationItems($cart['id'
             $currencyRepostitory    = new CurrencyRepostitory();
             $outletsRepostitory     = new OutletsRepostitory();
             $currency               = $currencyRepostitory->getCurrency();
-
+            
             $orderDish  = array();
-            $carts      = $orderRepostitory->orderDish($order->id);
-
+            $carts      = $orderRepostitory->orderDish($order->Id);
+        
 // order dish carts items list
             foreach ($carts as $cart) {
 
@@ -658,7 +683,7 @@ $orderCustomisationItems = $orderRepostitory->orderCustomisationItems($cart['id'
                     $dishes->dishTotal = $cart->price * $cart->quantity;
                 }
                 $dishes->displayPrice = $currency .$dishes->dishTotal;
-
+               
                 array_push($orderDish, $dishes);
 
             }
@@ -684,7 +709,7 @@ $orderCustomisationItems = $orderRepostitory->orderCustomisationItems($cart['id'
 
             /** charges calculation  for orders */
             $orderdata->dishes      = $orderDish;
-            $orderdata->charges     = $this->getCharges($outlet->id, array_flatten($orderDish), $order->couponName, $orderdata->paymentMethod);
+            $orderdata->charges     = $this->getCharges($outlet->id, array_flatten($orderDish), $order->couponName, $orderdata->paymentMethod,$order->discount);
 
             $data->error        = Common::error_false;
             $data->errorMessage = __('validation.sucess');

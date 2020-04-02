@@ -7,6 +7,6 @@ use DB;
 
 class Orders extends Model
 {
-    protected $table='Orders';
+    protected $table='Booking';
     
 }

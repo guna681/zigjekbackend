@@ -106,7 +106,7 @@ class UserRepository
     }
 
     public  function getUser($data){
-        $data=User::select('id','userName','email','mobileNumber','countryCode','status','deviceToken','os',
+        $data=User::select('id','FirstName as userName','email','Mobile as mobileNumber','ExtCode as countryCode','status','deviceToken','os',
             'stripeCustomerId', 'latitude', 'longitude')->where('id',$data)->first();
         return $data;
     }
@@ -306,6 +306,7 @@ class UserRepository
 
             }catch(\Illuminate\Database\QueryException $ex){
                 $jsonresp=$ex->getMessage();
+                print_r($jsonresp);
 
                 return false;
             }
