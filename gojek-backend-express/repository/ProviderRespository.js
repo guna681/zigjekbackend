@@ -11,6 +11,9 @@ module.exports = function () {
   const providerAddress = 'ProviderAddress'
   const timeSlot = 'TimeSlot'
   const providerAvailability = 'ProviderAvailability'
+  const category = 'Category'
+  const subCategory = 'SubCategory'
+  const providerService = 'ProviderService'
 
   const config = {
     client: 'mysql2',
@@ -906,6 +909,103 @@ module.exports = function () {
         .del()
         .then(() => {
           output.error = false
+          resolve(output)
+        }).catch((output) => {
+          console.log(output)
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchCategory = () => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(category)
+        .select('Id as id', 'Name as name', 'HasSubCategory as hasSubCategory', 'IsFixedPricing as isFixedPricing')
+        .where('Status', 1)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          console.log(output)
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchSubCategory = (categoryId) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(subCategory)
+        .select('Id as id', 'Name as name')
+        .where('CategoryId', categoryId)
+        .where('Status', 1)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          console.log(output)
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.createProviderServiceCategory = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerService)
+        .insert(data)
+        .then((result) => {
+          if (result[0] > 0) {
+            output.error = false
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          console.log(output)
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.getMyServiceList = (providerId) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerService)
+        .where('ProviderId', providerId)
+        .then((result) => {
+          if (result[0] > 0) {
+            output.error = false
+          } else {
+            output.error = true
+          }
           resolve(output)
         }).catch((output) => {
           console.log(output)

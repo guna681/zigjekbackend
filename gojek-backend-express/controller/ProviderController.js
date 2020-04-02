@@ -831,4 +831,62 @@ module.exports = function () {
       callback(response)
     })
   }
+
+  this.getCategoryListingCtrl = async (callback) => {
+    var response = {}
+    providerService.getCategoryListingService((result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.getSubCategoryListingCtrl = async (data, callback) => {
+    var response = {}
+    providerService.getSubCategoryListingService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.updateProviderServiceCategoryCtrl = async (data, callback) => {
+    var response = {}
+    providerService.updateProviderServiceCategoryService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+      }
+      callback(response)
+    })
+  }
+
+  this.myServiceListingCtrl = async (data, callback) => {
+    var response = {}
+    providerService.myServiceListingService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+      }
+      callback(response)
+    })
+  }
 }

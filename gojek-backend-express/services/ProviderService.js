@@ -1445,16 +1445,102 @@ module.exports = function () {
           return slot
         })
 
-        var updateTimeSlot = providerRespository.updateProviderTimeSlot(slots)
+        var updateTimeSlot = await providerRespository.updateProviderTimeSlot(slots)
         if (updateTimeSlot.error) {
-          response.error = false
-          response.msg = 'UPDATE'
+          response.error = true
+          response.msg = 'OOPS'
         } else {
           response.error = false
           response.msg = 'UPDATE'
         }
         callback(response)
       }
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.getCategoryListingService = async (callback) => {
+    var response = {}
+    try {
+      var categoryListing = await providerRespository.fetchCategory()
+      if (categoryListing.error) {
+        response.error = true
+        response.msg = 'OOPS'
+      } else {
+        response.error = false
+        response.msg = 'VALID'
+        response.data = categoryListing.result
+      }
+      callback(response)
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.getSubCategoryListingService = async (data, callback) => {
+    var response = {}
+    try {
+      var categoryId = data.categoryId
+      var subCategoryListing = await providerRespository.fetchSubCategory(categoryId)
+      if (subCategoryListing.error) {
+        response.error = true
+        response.msg = 'OOPS'
+      } else {
+        response.error = false
+        response.msg = 'VALID'
+        response.data = subCategoryListing.result
+      }
+      callback(response)
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.updateProviderServiceCategoryService = async (data, callback) => {
+    var response = {}
+    try {
+      var providerSerivce = {}
+      providerSerivce.CategoryId = data.categoryId
+      providerSerivce.SubCategoryId = data.subCategoryId
+      providerSerivce.Experience = data.experience
+      providerSerivce.PricePerHour = data.pricePerHour
+      providerSerivce.QuickPitch = data.quickPitch
+      var subCategoryListing = await providerRespository.createProviderServiceCategory(providerSerivce)
+      if (subCategoryListing.error) {
+        response.error = true
+        response.msg = 'OOPS'
+      } else {
+        response.error = false
+        response.msg = 'VALID'
+      }
+      callback(response)
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.myServiceListingService = async (data, callback) => {
+    var response = {}
+    try {
+      var providerId = data.auth.Id
+      var subCategoryListing = await providerRespository.getMyServiceList(providerId)
+      if (subCategoryListing.error) {
+        response.error = true
+        response.msg = 'OOPS'
+      } else {
+        response.error = false
+        response.msg = 'VALID'
+      }
+      callback(response)
     } catch (response) {
       response.error = true
       response.msg = 'OOPS'

@@ -984,4 +984,66 @@ module.exports = function (server, validator) {
       })
     }
   })
+
+  server.get(basePath + `categoryListing`, server.auth, (request, response) => {
+    const lang = request.headers.lang
+    providerController.getCategoryListingCtrl((result) => {
+      errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+        return response.send(message)
+      })
+    })
+  })
+
+  server.post(basePath + 'getSubCategory', [
+    validator.check('categoryId').isNumeric().withMessage('INVALID: $[1], Category Id')
+  ], server.auth, (request, response) => {
+    const error = validator.validation(request)
+    const lang = request.headers.lang
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return response.send(message)
+      })
+    } else {
+      var body = request.body
+      body.auth = request.params.auth
+      providerController.getSubCategoryListingCtrl(body, (result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
+  })
+
+  server.post(basePath + 'updateProviderServiceCategory', [
+    validator.check('categoryId').isNumeric().withMessage('NUMERIC: $[1], Category Id'),
+    validator.check('subCategoryId').isNumeric().withMessage('NUMERIC: $[1], Sub Category Id').optional(),
+    validator.check('pricePerHour').isNumeric().withMessage('NUMERIC: $[1], Price Per Hour').optional(),
+    validator.check('experience').isNumeric().withMessage('INUMERIC: $[1], Experience').optional(),
+    validator.check('quickPitch').isLength({ min: 1, max: 255 }).withMessage('INVALID: $[1], Quick Pitch').optional()
+  ], server.auth, (request, response) => {
+    const error = validator.validation(request)
+    const lang = request.headers.lang
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return response.send(message)
+      })
+    } else {
+      var body = request.body
+      body.auth = request.params.auth
+      providerController.updateProviderServiceCategoryCtrl(body, (result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
+  })
+
+  server.get(basePath + `myServiceListing`, server.auth, (request, response) => {
+    const lang = request.headers.lang
+    providerController.myServiceListingCtrl((result) => {
+      errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+        return response.send(message)
+      })
+    })
+  })
 }

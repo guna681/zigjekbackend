@@ -283,7 +283,7 @@ class UserRepository
 
            }else{             
                
-             $user =User::where('id',$data->userId)->update(['CurrentAddressId'=>$query[0]->id]);
+             $user =User::where('Id',$data->userId)->update(['CurrentAddressId'=>$query[0]->id]);
 
            }
 
@@ -301,7 +301,7 @@ class UserRepository
                 $userAddress->fullAddress	= $data->location;
                 $userAddress->currentAddress= 1;
                 $userAddress->save();
-                $user =User::where('id',$data->userId)->update(['CurrentAddressId'=>$userAddress->id]);
+                $user =User::where('Id',$data->userId)->update(['CurrentAddressId'=>$userAddress->id]);
 
 
             }catch(\Illuminate\Database\QueryException $ex){
