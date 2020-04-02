@@ -134,6 +134,7 @@ module.exports = function () {
           var result = waitingList.result.map((element) => {
             var data = {}
             data['id'] = element.Id
+            data['userId'] = element.UserId
             data['userDeviceId'] = element.UserDeviceId
             data['lat'] = element.SourceLat
             data['lng'] = element.SourceLong

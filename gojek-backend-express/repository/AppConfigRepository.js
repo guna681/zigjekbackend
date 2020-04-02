@@ -37,7 +37,6 @@ module.exports = function () {
         callback(response)
       })
       .catch((err) => {
-        console.log(err)
         err.error = true
         callback(err)
       })

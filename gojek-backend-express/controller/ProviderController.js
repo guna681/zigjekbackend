@@ -803,7 +803,6 @@ module.exports = function () {
   this.getProviderTimeSlotCtrl = async (data, callback) => {
     var response = {}
     var providerId = data.auth.Id
-    console.log(providerId)
     providerService.getProviderTimeSlotService(providerId, (result) => {
       if (result.error) {
         response.error = true
@@ -876,6 +875,20 @@ module.exports = function () {
     })
   }
 
+  this.updateServiceCategoryCtrl = async (data, callback) => {
+    var response = {}
+    providerService.updateServiceCategoryService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+      }
+      callback(response)
+    })
+  }
+
   this.myServiceListingCtrl = async (data, callback) => {
     var response = {}
     providerService.myServiceListingService(data, (result) => {
@@ -885,6 +898,22 @@ module.exports = function () {
       } else {
         response.error = false
         response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.deleteServiceCateogryCtrl = async (data, callback) => {
+    var response = {}
+    providerService.deleteServiceCateogryService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
       }
       callback(response)
     })

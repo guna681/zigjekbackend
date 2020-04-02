@@ -1075,7 +1075,6 @@ module.exports = function () {
     } catch (err) {
       err.error = true
       err.msg = 'OOPS'
-      console.log(err)
       callback(response)
     }
   }
@@ -1508,6 +1507,7 @@ module.exports = function () {
     try {
       var providerSerivce = {}
       providerSerivce.CategoryId = data.categoryId
+      providerSerivce.ProviderId = data.auth.Id
       providerSerivce.SubCategoryId = data.subCategoryId
       providerSerivce.Experience = data.experience
       providerSerivce.PricePerHour = data.pricePerHour
@@ -1535,10 +1535,60 @@ module.exports = function () {
       var subCategoryListing = await providerRespository.getMyServiceList(providerId)
       if (subCategoryListing.error) {
         response.error = true
-        response.msg = 'OOPS'
+        response.msg = 'NO_DATA'
       } else {
         response.error = false
         response.msg = 'VALID'
+        response.data = subCategoryListing.result
+      }
+      callback(response)
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.deleteServiceCateogryService = async (data, callback) => {
+    var response = {}
+    try {
+      var serviceInfo = {}
+      serviceInfo.Id = data.Id
+      serviceInfo.ProviderId = data.auth.Id
+      var subCategoryListing = await providerRespository.deleteServiceCategory(serviceInfo)
+      if (subCategoryListing.error) {
+        response.error = true
+        response.msg = 'NO_DATA'
+      } else {
+        response.error = false
+        response.msg = 'SERVICE_DELETED'
+      }
+      callback(response)
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.updateServiceCategoryService = async (data, callback) => {
+    var response = {}
+    try {
+      var providerSerivce = {}
+      providerSerivce.Id = data.serviceId
+      providerSerivce.CategoryId = data.categoryId
+      providerSerivce.ProviderId = data.auth.Id
+      providerSerivce.SubCategoryId = data.subCategoryId
+      providerSerivce.Experience = data.experience
+      providerSerivce.PricePerHour = data.pricePerHour
+      providerSerivce.QuickPitch = data.quickPitch
+      var subCategoryListing = await providerRespository.updateServiceCategory(providerSerivce)
+      if (subCategoryListing.error) {
+        response.error = true
+        response.msg = 'UPDATE_ERROR: $[1],Service'
+      } else {
+        response.error = false
+        response.msg = 'UPDATE'
       }
       callback(response)
     } catch (response) {

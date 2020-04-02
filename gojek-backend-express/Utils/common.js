@@ -61,7 +61,6 @@ module.exports = function () {
     return new Promise(function (resolve) {
       needle.post(process.env.PASSPORT_URL + 'oauth/token', data,
         function (error, response) {
-          console.log(error, response)
           if (error) {
             resolve(error)
           } else {
@@ -189,7 +188,6 @@ module.exports = function () {
         })
         var upload = multer({ storage: storage }).single('file')
         upload(image, null, function (err) {
-          console.log(err)
           if (typeof image.file === 'undefined' || err) {
             data.error = true
             data.msg = err
