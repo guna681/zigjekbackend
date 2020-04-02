@@ -103,11 +103,12 @@ Class  CartService{
             $dishesCustomisation=$dishRepostitory->getCustomisationItem($dish->dishId);
             $dishTransform      =$this->DishesTransForm($dishes,$dishesCustomisation,$dish);
             $dishTotal[]        =$dishTransform;
+            $dishesQuantity[]     =$dishes;
             $userId             =$dish->userId;
             $outletId           =$dish->outletId;
             $addressId          =$dish->deliveryaddressId;
         }
-        $toMany                     = $this->toMany($dishTotal,$cartDishes);
+        $toMany                     = $this->toMany($dishesQuantity,$cartDishes);
 
         if(!(array)$toMany){
             $isCartEligble=false;
@@ -123,12 +124,13 @@ Class  CartService{
         $totalcharges[]             = $this->getItemTotal($dishTotal);
         $totalcharges[]             = $this->getCharges($outletId, $cartDishes);
         $totalcharges[]             = $this->getTaxes();
-        // print_r($cartDishes[0]->couponName);
-        // die;
         if ($cartDishes[0]->couponName !== ' ' && $totalcharges[0][0]->itemTotal > 100) {
+        $slashedPrice               =  $this->slashedPriceDiscount($dishes,$dishTotal); 
         $couponDiscount             = $this->getcouponeDiscount($cartDishes[0]->couponName);
-        $totalcharges[]             = $this->getCouponeTotals($totalcharges,$couponDiscount);
-        $totalcharges[]             = $this->getDiscount($totalcharges);
+        // $totalcharges[]             = $this->getCouponeTotals($totalcharges,$couponDiscount,$dishes);
+        $totalcharges[]             = $this->getCouponeTotals1($totalcharges,$couponDiscount,$slashedPrice[0]->netAmount);
+        // $totalcharges[]             = $this->getDiscount($totalcharges,$dishes);
+        $totalcharges[]             = $this->getDiscount1($totalcharges,$slashedPrice[0]->netAmount);
 
         function moveElement(&$totalcharges, $a, $b) {
             $out = array_splice($totalcharges, $a, 1);
@@ -136,7 +138,9 @@ Class  CartService{
         }
         $totalcharges[] = moveElement($totalcharges, 4, 3);
         } else {
-        $totalcharges[]             = $this->getTotals($totalcharges);
+        $slashedPrice               =  $this->slashedPriceDiscount($dishes,$dishTotal); 
+        $totalcharges[]             = $slashedPrice; 
+        $totalcharges[]             = $this->getTotals($totalcharges,$slashedPrice);
         }
         // $totalcharges[]             = $this->getTotals($totalcharges);
 
@@ -144,6 +148,8 @@ Class  CartService{
 
         $cart->isTwoMany            = $isCartEligble;
         $cart->toMany               = $toMany;
+        // $cart->d = $dishTransform;
+        // $cart->h = $dishes;
         $address                    = $this->getDeliveryAddress($cart->outletDetails,$addressId);
         $cart->isAddress            = ($address->unsaved == 0)? true :  false;
         $cart->address              = ($address->unsaved == 0)? $address :(object)[];
@@ -197,12 +203,22 @@ Class  CartService{
         $obj->isVeg             =$dishes->isVeg;
         $obj->description       =$dishes->description;
         $obj->isAvailable       =true;
-        $obj->dishTotal         =($dishes->price+$customisationTotal)*$dish->quantity;
-        $obj->displayDishTotal  =$currency.($dishes->price+$customisationTotal)*$dish->quantity;
+        // $obj->dishTotal         =($dishes->price+$customisationTotal)*$dish->quantity;
+        // $obj->displayDishTotal  =$currency.($dishes->price+$customisationTotal)*$dish->quantity;
         $obj->dishCustomisation =$dishCustomisation;
         $obj->dishQuantity      =$dish->quantity;
         $obj->cartId            =$dish->id;
         $obj->uuId              =$dish->uuId;
+        if ($dishes->slashedPrice != 0) {
+        $obj->dishTotal         =($dishes->slashedPrice+$customisationTotal)*$dish->quantity;    
+        $obj->displayDishTotal   =$currency.($dishes->slashedPrice+$customisationTotal)*$dish->quantity;
+        $obj->slashedPrice           = $dishes->price;
+        } else {
+        $obj->slashedPrice           = 0;
+        $obj->displayDishTotal   =$currency.$dishes->price;
+        $obj->dishTotal         =($dishes->price+$customisationTotal)*$dish->quantity;
+        }
+        // $obj->slashedPrice      =$dishes->slashedPrice;
         if(!$customisationItem->isEmpty()){
             $obj->isCustomizable=Constant::IS_CUSTOMIZE;
         }else{
@@ -235,16 +251,19 @@ Class  CartService{
 
     public function getItemTotal($data)
     {
-
         $currencyRepostitory   = new CurrencyRepostitory();
         $currency              = $currencyRepostitory->getCurrency();
         $total                 = array_reduce($data, function ($carry, $item) {
                                                         $carry += $item->dishTotal;
                                                         return $carry;
                                                     });
+        $slashedPrice                 = array_reduce($data, function ($carry, $item) {
+                                                        $carry += $item->slashedPrice;
+                                                        return $carry;
+                                                    });
         $itemTotal                  = (object)array();
         $itemTotal->displayKey   = __('validation.itemTotalName');
-        $itemTotal->displayValue   = $currency .number_format($total,2);
+        $itemTotal->displayValue   = $currency .number_format($slashedPrice,2);
         $itemTotal->itemTotal       = $total;
         $itemTotal->percentage      = $total;
         $dishtotal[]                = $itemTotal;
@@ -266,7 +285,19 @@ Class  CartService{
         return $dishtotal;
     }
 
-  public function getDiscount($coupon)
+  public function getDiscount1($coupon,$slashedPrice)
+    {
+        $itemTotal                  = (object)array();
+        $itemTotal->displayKey   = 'Total Discount';
+        $itemTotal->displayValue   = '-₹'.(string)floatval($coupon[3][0]->couponSavingAmount + $slashedPrice);
+        $itemTotal->couponSavingAmount       = '-₹'.(string)floatval($coupon[3][0]->couponSavingAmount + $slashedPrice);
+        $itemTotal->couponStatus   = $coupon[3][0]->couponStatus;
+        $itemTotal->netAmount   = (string)floatval($coupon[3][0]->couponSavingAmount + $slashedPrice);
+        $dishtotal[]                = $itemTotal;
+        return $dishtotal;
+    }
+
+      public function getDiscount($coupon)
     {
         $itemTotal                  = (object)array();
         $itemTotal->displayKey   = 'Total Discount';
@@ -277,8 +308,7 @@ Class  CartService{
         return $dishtotal;
     }
 
-    public function getTotals($charges){
-
+    public function getTotals($charges,$slashedPrice){
 
         $charge = array_flatten($charges);
         $currencyRepostitory   = new CurrencyRepostitory();
@@ -294,6 +324,68 @@ Class  CartService{
         $total->displayValue= $currency .number_format($topay,2);
         $total->netAmount   = (string)floatval($topay);
 
+        return array($total);
+
+    }
+
+    public function slashedPriceDiscount($dishes,$dishTotal){
+        $totalDiscount = 0;
+        foreach($dishTotal as $dish){ 
+            if ($dish->slashedPrice != 0) {
+            $slashedPrice = $dish->slashedPrice * $dish->dishQuantity;
+            $totalDiscount += $dish->dishTotal - $slashedPrice;
+            }
+            
+         }
+        $currencyRepostitory   = new CurrencyRepostitory();
+        $currency              = $currencyRepostitory->getCurrency();
+        $total = new \stdClass();
+        if ($totalDiscount != 0) {
+        $total->displayKey  =  'Total Discount';
+        $total->displayValue= $currency .number_format(ltrim($totalDiscount, '-'),2);
+        $total->netAmount   = (string)floatval(ltrim($totalDiscount, '-'));
+        $total->percentage  = 0;
+        } else {
+        $total->displayKey  =  'Total Discount';
+        $total->displayValue= $currency .number_format(ltrim($totalDiscount, '-'),2);
+        $total->netAmount   = (string)floatval(ltrim($totalDiscount, '-'));
+        $total->percentage  = 0; 
+        }
+        return array($total);
+
+    }
+
+    public function getCouponeTotals1($charges,$discountData,$slashedPrice){
+
+        $charge = array_flatten($charges);
+        $currencyRepostitory   = new CurrencyRepostitory();
+        $currency              = $currencyRepostitory->getCurrency();
+
+        $topay=array_reduce($charge, function($carry, $item) {
+            $carry += $item->percentage;
+            return $carry;
+        });
+
+        $total = new \stdClass();
+        $total->displayKey  =  __('validation.topayName');
+        $total->totalNetAmount   = (string)floatval($topay);
+        $total->couponCode  = $discountData[0]->couponCode;
+        $total->couponStatus = 1;
+        $totalDiscountAmount = ($discountData[0]->discountType / 100) * $total->totalNetAmount;
+        if ($totalDiscountAmount > $discountData[0]->maxDiscount) {
+        $total->couponSavingAmount  = $discountData[0]->maxDiscount;
+        $total->netAmount   = number_format($topay,2) ;
+        // print_r(number_format($topay,2));
+        // print_r($currency .(string)floatval($topay - $discountData[0]->maxDiscount);
+        //     die;
+        $total->netAmount   = (string)floatval($topay - $discountData[0]->maxDiscount);
+        $total->displayValue= $currency .(string)floatval($topay - $discountData[0]->maxDiscount);
+        } else {
+        $total->couponSavingAmount  = $totalDiscountAmount + $slashedPrice;
+        // $total->netAmount   = number_format($topay,2);
+        $total->netAmount   = (string)floatval($topay - $totalDiscountAmount + $dishes->slashedPrice);
+        $total->displayValue= $currency .(string)floatval($topay - $totalDiscountAmount - $dishes->slashedPrice);
+        }
         return array($total);
 
     }
@@ -332,11 +424,10 @@ Class  CartService{
         return array($total);
 
     }
-
     public function toMany($dishes,$cartDishes){
     
         $dishQuantity=array_reduce($dishes, function($carry, $item) {
-                $carry += $item->dishQuantity;
+                $carry += $item->quantity;
                 return $carry;
         });
 
@@ -345,6 +436,7 @@ Class  CartService{
             return $carry;
         });
         $tomany=(object)array();
+        // echo $dishQuantity,$dishCartQuantity;
         if($dishCartQuantity>$dishQuantity){
             $tomany->shortDes=__('validation.shortDes');
             $tomany->longDesc=__('validation.longDesc');
@@ -418,7 +510,7 @@ Class  CartService{
     public function updateCart($arg)
     {
 
-        $userId             = Auth::guard('api')->user()->id;
+        $userId             = Auth::guard('api')->user()->Id;
         $cartRepostitory    = new CartRepostitory();
         $cart               = new Cart();
         $cart->userId       = $userId;
@@ -482,7 +574,7 @@ Class  CartService{
 
                 if ($coupon) {
                     $cartData           = $cartRepostitory->addCouponToCart($arg);
-                    $userId          = Auth::guard('api')->user()->id;
+                    $userId          = Auth::guard('api')->user()->Id;
                     $cartValue               = $cartRepostitory->getCartValue($arg);
                     $billsdata = $this->getDishes($cartValue);
     

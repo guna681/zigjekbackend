@@ -699,7 +699,7 @@ Class UserService
     public function updateDeviceToken($arg)
     {
 
-        $userId  = Auth::guard('api')->user()->id;
+        $userId  = Auth::guard('api')->user()->Id;
         $userRepository = new UserRepository();
         $update   = $userRepository->updateDeviceToken($arg, $userId);
         $data     = new DataService();

@@ -106,7 +106,7 @@ class UserRepository
     }
 
     public  function getUser($data){
-        $data=User::select('id','userName','email','mobileNumber','countryCode','status','deviceToken','os',
+        $data=User::select('id','FirstName as userName','email','Mobile as mobileNumber','ExtCode as countryCode','status','deviceToken','os',
             'stripeCustomerId', 'latitude', 'longitude')->where('id',$data)->first();
         return $data;
     }
@@ -283,7 +283,7 @@ class UserRepository
 
            }else{             
                
-             $user =User::where('id',$data->userId)->update(['CurrentAddressId'=>$query[0]->id]);
+             $user =User::where('Id',$data->userId)->update(['CurrentAddressId'=>$query[0]->id]);
 
            }
 
@@ -301,11 +301,12 @@ class UserRepository
                 $userAddress->fullAddress	= $data->location;
                 $userAddress->currentAddress= 1;
                 $userAddress->save();
-                $user =User::where('id',$data->userId)->update(['CurrentAddressId'=>$userAddress->id]);
+                $user =User::where('Id',$data->userId)->update(['CurrentAddressId'=>$userAddress->id]);
 
 
             }catch(\Illuminate\Database\QueryException $ex){
                 $jsonresp=$ex->getMessage();
+                print_r($jsonresp);
 
                 return false;
             }
@@ -494,7 +495,7 @@ class UserRepository
 
         DB::beginTransaction();
         try {
-            $update = User::where('id', $userId)
+            $update = User::where('Id', $userId)
                              ->update(['deviceToken' => $data->deviceToken,'os'=>$data->osType]);
         } catch (\Illuminate\Database\QueryException $ex) {
             $jsonresp = $ex->getMessage();

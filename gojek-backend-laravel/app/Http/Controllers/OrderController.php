@@ -61,8 +61,20 @@ Class OrderController extends Controller
 
     public function listPastOrders(request $request)
     {
+      if ($request->pageNumber) {
+        if ($request->pageNumber == 1) {
+         $pageNumber = 0;
+        } else {
+         $pageNumber = $request->pageNumber - 1;
+        }
+         // $pageNumber = $request->pageNumber;
+         $page_offset= $pageNumber * 15;
+        } else {
+         $pageNumber = 0;
+         $page_offset= $pageNumber * 15;
+        }
         $orderService   = new OrderService();
-        $response       = $orderService->listPastOrders();
+        $response       = $orderService->listPastOrders($pageNumber,$page_offset);
         $responsedata   = Defaults::encode($response);
         return $responsedata;
     }
