@@ -57,12 +57,12 @@ Class OrderRepostitory{
             DB::rollBack();
             return false;
         }
-        if ($orders->id) {
+        if ($orders->Id) {
             try {
 //
                     $c1 =array_values($data->cartId);
 
-                    $c2 = data_fill($c1,'*.orderId',$orders->id);
+                    $c2 = data_fill($c1,'*.orderId',$orders->Id);
                     $c3 = data_fill($c2,'*.userId', $data->userId);
                     $c4 = data_fill($c3,'*.outletId',$data->outletId);
                     $carts = $c4;
