@@ -116,14 +116,14 @@ module.exports = function (server, validator) {
     const error = validator.validation(request)
     const lang = request.headers.lang
     if (error.array().length) {
-      this.requestHandler(error.array(), true, lang, (message) => {
+      errorController.requestHandler(error.array(), true, lang, (message) => {
         return response.send(message)
       })
     } else {
       var body = request.body
       body.auth = request.params.auth
-      this.providerBookingStatusCtrl(body, (result) => {
-        this.ctrlHandler([result], result.error, lang, (message) => {
+      bookingController.providerBookingStatusCtrl(body, (result) => {
+        errorController.ctrlHandler([result], result.error, lang, (message) => {
           return response.send(message)
         })
       })
@@ -139,14 +139,14 @@ module.exports = function (server, validator) {
     const error = validator.validation(request)
     const lang = request.headers.lang
     if (error.array().length) {
-      this.requestHandler(error.array(), true, lang, (message) => {
+      errorController.requestHandler(error.array(), true, lang, (message) => {
         return response.send(message)
       })
     } else {
       var body = request.body
       body.auth = request.params.auth
-      this.providerBookingStatusCtrl(body, (result) => {
-        this.ctrlHandler([result], result.error, lang, (message) => {
+      bookingController.providerBookingStatusCtrl(body, (result) => {
+        errorController.ctrlHandler([result], result.error, lang, (message) => {
           return response.send(message)
         })
       })
@@ -157,14 +157,14 @@ module.exports = function (server, validator) {
     const error = validator.validation(request)
     const lang = request.headers.lang
     if (error.array().length) {
-      this.requestHandler(error.array(), true, lang, (message) => {
+      errorController.requestHandler(error.array(), true, lang, (message) => {
         return response.send(message)
       })
     } else {
       var body = request.body
       body.auth = request.params.auth
       bookingController.providerOngoingBookingCtrl(body, (result) => {
-        this.ctrlHandler([result], result.error, lang, (message) => {
+        errorController.ctrlHandler([result], result.error, lang, (message) => {
           return response.send(message)
         })
       })

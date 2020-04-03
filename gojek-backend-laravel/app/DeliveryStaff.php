@@ -12,7 +12,7 @@ use DB;
 class DeliveryStaff extends Authenticatable
 {
     use HasApiTokens, Notifiable;
-    protected $table='DeliveryStaff';
+    protected $table='Provider';
 
     /**
      * The attributes that are mass assignable.

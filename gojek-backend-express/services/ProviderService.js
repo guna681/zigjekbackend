@@ -131,6 +131,7 @@ module.exports = function () {
             auth.countryCode = providerDetails.ExtCode
             auth.image = providerDetails.Image
             auth.rating = providerDetails.Rating
+            auth.type = providerDetails.Type
             auth.token = await common.generateToken({ Id: providerDetails.Id }, process.env.JWT_SECRET)
             var updateLangName = {}
             var providerId = providerDetails.Id
@@ -205,6 +206,7 @@ module.exports = function () {
           auth.image = null
           auth.rating = providerData.Rating
           auth.token = await common.generateToken({ Id: provider.result }, process.env.JWT_SECRET)
+          auth.type = providerData.Type
           response.error = false
           response.data = auth
           response.msg = 'INSERTED'
@@ -239,6 +241,7 @@ module.exports = function () {
         providerData.image = provider.Image
         providerData.mobile = provider.Mobile
         providerData.rating = provider.Rating
+        providerData.type = provider.Type
         providerData.token = await common.generateToken(auth, process.env.JWT_SECRET)
 
         response.error = false
@@ -1590,6 +1593,40 @@ module.exports = function () {
         response.error = false
         response.msg = 'UPDATE'
       }
+      callback(response)
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.checkPendingInfoService = async (data, callback) => {
+    var response = {}
+    try {
+      var type = data.auth.Type
+      var provider = { ProviderId: data.auth.Id }
+      var info = []
+
+      var addressInfo = await providerRespository.fetchProviderAddressInfo(provider)
+      info.push({ info: 'Address', isPending: addressInfo.error })
+      var documentInfo = await providerRespository.fetchProviderDocumentInfo(provider)
+      info.push({ info: 'Document', isPending: documentInfo.error })
+      var bankInfo = await providerRespository.fetchProviderBankInfo(provider)
+      info.push({ info: 'Bank', isPending: bankInfo.error })
+      if (type === 'taxi') {
+        var vehicleInfo = await providerVehicleRepository.fetchProviderVehicle(data.auth.Id)
+        info.push({ info: 'Vehicle', isPending: vehicleInfo.error })
+      } else if (type === 'services') {
+        var availabilityInfo = await providerRespository.fetchProviderAvailability(provider)
+        info.push({ info: 'Vehicle', isPending: availabilityInfo.error })
+        var serviceInfo = await providerRespository.fetchProviderAddressInfo(provider)
+        info.push({ info: 'Service', isPending: serviceInfo.error })
+      }
+      response.error = false
+      response.msg = 'VALID'
+      response.data = info
+
       callback(response)
     } catch (response) {
       response.error = true

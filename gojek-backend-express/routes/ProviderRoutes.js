@@ -1094,4 +1094,15 @@ module.exports = function (server, validator) {
       })
     }
   })
+
+  server.get(basePath + `checkPendingInfo`, server.auth, (request, response) => {
+    const lang = request.headers.lang
+    var body = request.body
+    body.auth = request.params.auth
+    providerController.checkPendingInfoCtrl(body, (result) => {
+      errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+        return response.send(message)
+      })
+    })
+  })
 }
