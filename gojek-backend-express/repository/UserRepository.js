@@ -434,7 +434,7 @@ module.exports = function () {
         })
     })
   }
-  
+
   this.fetchUserCancelPolicyList = (type) => {
     var response = {}
     return new Promise(function (resolve) {

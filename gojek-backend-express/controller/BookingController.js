@@ -1,13 +1,11 @@
 module.exports = function () {
- const BookingService = require('../services/BookingService')
+  const BookingService = require('../services/BookingService')
   const ProviderService = require('../services/ProviderService')
   const UserService = require('../services/UserService')
   const AppConfigService = require('../services/AppConfigService')
-  const RatingService = require('../services/RatingServices')
   const WalletService = require('../services/WalletService')
   const TransactionService = require('../services/TransactionServices')
   const Common = require('../Utils/common')
-  const Mailer = require('../Utils/mailer')
   const PaymentHelper = require('../thirdParty/paymentHelper')
   const PushNotification = require('../thirdParty/pushNotification')
 
@@ -17,11 +15,9 @@ module.exports = function () {
   var providerService = new ProviderService()
   var userService = new UserService()
   var appConfigService = new AppConfigService()
-  var ratingService = new RatingService()
   var walletService = new WalletService()
   var transactionService = new TransactionService()
   var common = new Common()
-  var mailer  = new Mailer()
 
   this.getAvailabeRide = (req, callback) => {
     var data = req
@@ -67,7 +63,7 @@ module.exports = function () {
         var providerWalletInfo
         var providerTnxStatus
         var providerTnx
-        var deviceInfo = result.data[0].userDeviceId
+        var deviceInfo = result.data[0].userId
         var content = {}
         var providerId = data.auth.Id
         var bookingId = data.bookingNo
@@ -237,12 +233,12 @@ module.exports = function () {
         let providerBlockList = (List) => List.filter((key, value) => List.indexOf(key) === value)
         bookingService.changeBookingStatus(bookingId, bookingProcess)
 
-        var providerList = await this.getActiveProviderByCellId(source, neighbouringCellID, rideType, activeProviderStatus, weights, providerBlockList(mergeProviderBlockList))
+        var providerList = await providerService.getActiveProviderByCellId(source, neighbouringCellID, rideType, activeProviderStatus, weights, providerBlockList(mergeProviderBlockList))
         if (providerList.error) {
           content.data = 'booking_cancelled'
           content.title = 'Booking Cancelled'
           content.body = 'Sorry we dont have service at your location. Please try after some time'
-          var userDeviceInfo = await this.getUserDeviceToken(waitingList.data[0].userDeviceId)
+          var userDeviceInfo = await userService.getUserDeviceToken(waitingList.data[0].userId)
           pushNotification.sendPushNotificationByDeviceType(userDeviceInfo.data, content)
           bookingService.changeBookingStatus(bookingId, bookingCancel)
           providerService.releaseProviderService(assignedList)

@@ -506,7 +506,7 @@ $orderCustomisationItems = $orderRepostitory->orderCustomisationItems($cart['id'
     public function trackOrders($orderId)
     {
 
-        $userId = Auth::guard('api')->user()->id;
+        $userId = Auth::guard('api')->user()->Id;
         $orderRepostitory = new OrderRepostitory();
         $order = $orderRepostitory->trackOrders($userId, $orderId);
         $data = new DataService();

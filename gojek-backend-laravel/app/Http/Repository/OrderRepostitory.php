@@ -57,12 +57,12 @@ Class OrderRepostitory{
             DB::rollBack();
             return false;
         }
-        if ($orders->id) {
+        if ($orders->Id) {
             try {
 //
                     $c1 =array_values($data->cartId);
 
-                    $c2 = data_fill($c1,'*.orderId',$orders->id);
+                    $c2 = data_fill($c1,'*.orderId',$orders->Id);
                     $c3 = data_fill($c2,'*.userId', $data->userId);
                     $c4 = data_fill($c3,'*.outletId',$data->outletId);
                     $carts = $c4;
@@ -149,13 +149,13 @@ Class OrderRepostitory{
     public function trackOrders($userId,$orderId)
     {
 
-        $data = Orders::select('Orders.*','Address.latitude as userLatitude','Address.longitude as userLongitude','DeliveryStaff.latitude as deliveryStaffLatitude','DeliveryStaff.longitude as deliveryStaffLongitude','Outlets.latitude as outletlatitude','Outlets.longitude as outletLongitude',DB::raw("count(order_Items.orderId) as itemCount"))
-                      ->leftjoin('Outlets','Orders.outletId','=','Outlets.id')
-                      ->leftjoin('order_Items','Orders.id','=','order_Items.orderId')
-                      ->leftjoin('Address','Orders.deliveryAddressId','=','Address.id')
-                      ->leftjoin('DeliveryStaff','Orders.deliveryStaffId','=','DeliveryStaff.id')
-                      ->where(['Orders.userId'=>$userId,'Orders.id'=>$orderId])
-                      ->groupBy('Orders.id')
+        $data = Orders::select('Booking.*','Address.latitude as userLatitude','Address.longitude as userLongitude','Provider.latitude as deliveryStaffLatitude','Provider.longitude as deliveryStaffLongitude','Outlets.latitude as outletlatitude','Outlets.longitude as outletLongitude',DB::raw("count(order_Items.orderId) as itemCount"))
+                      ->leftjoin('Outlets','Booking.outletId','=','Outlets.id')
+                      ->leftjoin('order_Items','Booking.id','=','order_Items.orderId')
+                      ->leftjoin('Address','Booking.deliveryAddressId','=','Address.id')
+                      ->leftjoin('Provider','Booking.deliveryStaffId','=','Provider.id')
+                      ->where(['Booking.userId'=>$userId,'Booking.id'=>$orderId])
+                      ->groupBy('Booking.id')
                       ->first();
 
         return  $data;

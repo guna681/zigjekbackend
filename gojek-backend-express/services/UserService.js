@@ -547,10 +547,7 @@ module.exports = function () {
       device.AppVersion = data.appVersion
 
       var userDeviceInfo = {}
-      userDeviceInfo.Id = 1
       userDeviceInfo.UserId = data.auth.Id
-
-      console.log(userDeviceInfo)
 
       var token = await userRepository.updateUserFCMToken(device, userDeviceInfo)
       if (token.error) {
@@ -668,7 +665,7 @@ module.exports = function () {
     return new Promise(async function (resolve) {
       try {
         var device = {}
-        device.Id = deviceId
+        device.UserId = deviceId
         var deviceInfo = await userRepository.fetchUserDeviceInfoUsingId(device)
         if (deviceInfo.error) {
           response.error = true

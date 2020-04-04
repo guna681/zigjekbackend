@@ -374,7 +374,7 @@ Class  UserController extends Controller
 
 
 	public  function getAddress(request $request){
-		 $userId        =Auth::guard('api')->user()->id;
+		 $userId        =Auth::guard('api')->user()->Id;
 		 $userService   = new UserService();
 		 $response      =$userService->getAddress($userId);
 		 $responsedata  =Defaults::encode($response);
@@ -384,7 +384,7 @@ Class  UserController extends Controller
     public function addAddress(request $request)
     {
         $response   = new Response();
-        $userId     = Auth::guard('api')->user()->id;
+        $userId     = Auth::guard('api')->user()->Id;
         $typerules  =['Home','Work','other'];
         $rules      = array('location'     => 'required',
                              'houseFlatNo' => 'required',
@@ -416,7 +416,7 @@ Class  UserController extends Controller
     public function updateAddress(request $request)
     {
         $response   = new Response();
-        $userId     = Auth::guard('api')->user()->id;
+        $userId     = Auth::guard('api')->user()->Id;
         $typerules  = ['Home','Work','other'];
 
         $rules     = array('addressId'      => 'required|numeric',
@@ -480,7 +480,7 @@ Class  UserController extends Controller
 
     public function setCurrentAddress(request $request)
     {
-        $userId     = Auth::guard('api')->user()->id;
+        $userId     = Auth::guard('api')->user()->Id;
         $response   = new Response();
         $rules      = array('addressId' => 'required|numeric',);
         $validator  = Validator::make($request->all(), $rules);
@@ -498,7 +498,7 @@ Class  UserController extends Controller
 
     public function destroyAddress(request $request)
     {
-        $userId       = Auth::guard('api')->user()->id;
+        $userId       = Auth::guard('api')->user()->Id;
         $response     = new Response();
         $rules        = array('addressId' => 'required|numeric',);
         $validator    = Validator::make($request->all(), $rules);

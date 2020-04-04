@@ -586,6 +586,12 @@ module.exports = {
       'es': 'Su vehículo ha sido configurado para ser eliminado',
       'pt': 'Seu veículo foi definido como excluído'
     },
+    'SERVICE_DELETED': {
+      'default': 'Your service has been deleted',
+      'ar': 'تم ضبط سيارتك على حذفها',
+      'es': 'Su vehículo ha sido configurado para ser eliminado',
+      'pt': 'Seu veículo foi definido como excluído'
+    },
     'PROMOCODE_ACCEPT': {
       'default': 'This Promo codes is Applied',
       'ar': 'يتم تطبيق رموز الترويجي هذه',

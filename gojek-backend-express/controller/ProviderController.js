@@ -803,7 +803,6 @@ module.exports = function () {
   this.getProviderTimeSlotCtrl = async (data, callback) => {
     var response = {}
     var providerId = data.auth.Id
-    console.log(providerId)
     providerService.getProviderTimeSlotService(providerId, (result) => {
       if (result.error) {
         response.error = true
@@ -820,6 +819,109 @@ module.exports = function () {
   this.updateProviderTimeSlotCtrl = async (data, callback) => {
     var response = {}
     providerService.updateProviderTimeSlotService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.getCategoryListingCtrl = async (callback) => {
+    var response = {}
+    providerService.getCategoryListingService((result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.getSubCategoryListingCtrl = async (data, callback) => {
+    var response = {}
+    providerService.getSubCategoryListingService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.updateProviderServiceCategoryCtrl = async (data, callback) => {
+    var response = {}
+    providerService.updateProviderServiceCategoryService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+      }
+      callback(response)
+    })
+  }
+
+  this.updateServiceCategoryCtrl = async (data, callback) => {
+    var response = {}
+    providerService.updateServiceCategoryService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+      }
+      callback(response)
+    })
+  }
+
+  this.myServiceListingCtrl = async (data, callback) => {
+    var response = {}
+    providerService.myServiceListingService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.deleteServiceCateogryCtrl = async (data, callback) => {
+    var response = {}
+    providerService.deleteServiceCateogryService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.checkPendingInfoCtrl = async (data, callback) => {
+    var response = {}
+    providerService.checkPendingInfoService(data, (result) => {
       if (result.error) {
         response.error = true
         response.msg = result.msg

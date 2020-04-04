@@ -131,6 +131,7 @@ module.exports = function () {
             auth.countryCode = providerDetails.ExtCode
             auth.image = providerDetails.Image
             auth.rating = providerDetails.Rating
+            auth.type = providerDetails.Type
             auth.token = await common.generateToken({ Id: providerDetails.Id }, process.env.JWT_SECRET)
             var updateLangName = {}
             var providerId = providerDetails.Id
@@ -205,6 +206,7 @@ module.exports = function () {
           auth.image = null
           auth.rating = providerData.Rating
           auth.token = await common.generateToken({ Id: provider.result }, process.env.JWT_SECRET)
+          auth.type = providerData.Type
           response.error = false
           response.data = auth
           response.msg = 'INSERTED'
@@ -239,6 +241,7 @@ module.exports = function () {
         providerData.image = provider.Image
         providerData.mobile = provider.Mobile
         providerData.rating = provider.Rating
+        providerData.type = provider.Type
         providerData.token = await common.generateToken(auth, process.env.JWT_SECRET)
 
         response.error = false
@@ -1075,7 +1078,6 @@ module.exports = function () {
     } catch (err) {
       err.error = true
       err.msg = 'OOPS'
-      console.log(err)
       callback(response)
     }
   }
@@ -1445,16 +1447,187 @@ module.exports = function () {
           return slot
         })
 
-        var updateTimeSlot = providerRespository.updateProviderTimeSlot(slots)
+        var updateTimeSlot = await providerRespository.updateProviderTimeSlot(slots)
         if (updateTimeSlot.error) {
-          response.error = false
-          response.msg = 'UPDATE'
+          response.error = true
+          response.msg = 'OOPS'
         } else {
           response.error = false
           response.msg = 'UPDATE'
         }
         callback(response)
       }
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.getCategoryListingService = async (callback) => {
+    var response = {}
+    try {
+      var categoryListing = await providerRespository.fetchCategory()
+      if (categoryListing.error) {
+        response.error = true
+        response.msg = 'OOPS'
+      } else {
+        response.error = false
+        response.msg = 'VALID'
+        response.data = categoryListing.result
+      }
+      callback(response)
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.getSubCategoryListingService = async (data, callback) => {
+    var response = {}
+    try {
+      var categoryId = data.categoryId
+      var subCategoryListing = await providerRespository.fetchSubCategory(categoryId)
+      if (subCategoryListing.error) {
+        response.error = true
+        response.msg = 'OOPS'
+      } else {
+        response.error = false
+        response.msg = 'VALID'
+        response.data = subCategoryListing.result
+      }
+      callback(response)
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.updateProviderServiceCategoryService = async (data, callback) => {
+    var response = {}
+    try {
+      var providerSerivce = {}
+      providerSerivce.CategoryId = data.categoryId
+      providerSerivce.ProviderId = data.auth.Id
+      providerSerivce.SubCategoryId = data.subCategoryId
+      providerSerivce.Experience = data.experience
+      providerSerivce.PricePerHour = data.pricePerHour
+      providerSerivce.QuickPitch = data.quickPitch
+      var subCategoryListing = await providerRespository.createProviderServiceCategory(providerSerivce)
+      if (subCategoryListing.error) {
+        response.error = true
+        response.msg = 'OOPS'
+      } else {
+        response.error = false
+        response.msg = 'VALID'
+      }
+      callback(response)
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.myServiceListingService = async (data, callback) => {
+    var response = {}
+    try {
+      var providerId = data.auth.Id
+      var subCategoryListing = await providerRespository.getMyServiceList(providerId)
+      if (subCategoryListing.error) {
+        response.error = true
+        response.msg = 'NO_DATA'
+      } else {
+        response.error = false
+        response.msg = 'VALID'
+        response.data = subCategoryListing.result
+      }
+      callback(response)
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.deleteServiceCateogryService = async (data, callback) => {
+    var response = {}
+    try {
+      var serviceInfo = {}
+      serviceInfo.Id = data.Id
+      serviceInfo.ProviderId = data.auth.Id
+      var subCategoryListing = await providerRespository.deleteServiceCategory(serviceInfo)
+      if (subCategoryListing.error) {
+        response.error = true
+        response.msg = 'NO_DATA'
+      } else {
+        response.error = false
+        response.msg = 'SERVICE_DELETED'
+      }
+      callback(response)
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.updateServiceCategoryService = async (data, callback) => {
+    var response = {}
+    try {
+      var providerSerivce = {}
+      providerSerivce.Id = data.serviceId
+      providerSerivce.CategoryId = data.categoryId
+      providerSerivce.ProviderId = data.auth.Id
+      providerSerivce.SubCategoryId = data.subCategoryId
+      providerSerivce.Experience = data.experience
+      providerSerivce.PricePerHour = data.pricePerHour
+      providerSerivce.QuickPitch = data.quickPitch
+      var subCategoryListing = await providerRespository.updateServiceCategory(providerSerivce)
+      if (subCategoryListing.error) {
+        response.error = true
+        response.msg = 'UPDATE_ERROR: $[1],Service'
+      } else {
+        response.error = false
+        response.msg = 'UPDATE'
+      }
+      callback(response)
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.checkPendingInfoService = async (data, callback) => {
+    var response = {}
+    try {
+      var type = data.auth.Type
+      var provider = { ProviderId: data.auth.Id }
+      var info = []
+
+      var addressInfo = await providerRespository.fetchProviderAddressInfo(provider)
+      info.push({ info: 'Address', isPending: addressInfo.error })
+      var documentInfo = await providerRespository.fetchProviderDocumentInfo(provider)
+      info.push({ info: 'Document', isPending: documentInfo.error })
+      var bankInfo = await providerRespository.fetchProviderBankInfo(provider)
+      info.push({ info: 'Bank', isPending: bankInfo.error })
+      if (type === 'taxi') {
+        var vehicleInfo = await providerVehicleRepository.fetchProviderVehicle(data.auth.Id)
+        info.push({ info: 'Vehicle', isPending: vehicleInfo.error })
+      } else if (type === 'services') {
+        var availabilityInfo = await providerRespository.fetchProviderAvailability(provider)
+        info.push({ info: 'Vehicle', isPending: availabilityInfo.error })
+        var serviceInfo = await providerRespository.fetchProviderAddressInfo(provider)
+        info.push({ info: 'Service', isPending: serviceInfo.error })
+      }
+      response.error = false
+      response.msg = 'VALID'
+      response.data = info
+
+      callback(response)
     } catch (response) {
       response.error = true
       response.msg = 'OOPS'

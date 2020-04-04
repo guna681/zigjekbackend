@@ -62,7 +62,6 @@ module.exports = function () {
           admin.role = 'Provider'
           break
         default:
-          console.log('Error')
           break
       }
       var adminTokenData = await adminAuthRepository.adminVerifyJwtToken(admin)

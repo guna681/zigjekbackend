@@ -11,6 +11,9 @@ module.exports = function () {
   const providerAddress = 'ProviderAddress'
   const timeSlot = 'TimeSlot'
   const providerAvailability = 'ProviderAvailability'
+  const category = 'Category'
+  const subCategory = 'SubCategory'
+  const providerService = 'ProviderService'
 
   const config = {
     client: 'mysql2',
@@ -301,7 +304,6 @@ module.exports = function () {
           })
           .then(t.commit)
           .catch(function (e) {
-            console.log(e)
             t.rollback()
             throw e
           })
@@ -908,7 +910,261 @@ module.exports = function () {
           output.error = false
           resolve(output)
         }).catch((output) => {
-          console.log(output)
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchCategory = () => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(category)
+        .select('Id as id', 'Name as name', 'HasSubCategory as hasSubCategory', 'IsFixedPricing as isFixedPricing')
+        .where('Status', 1)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchSubCategory = (categoryId) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(subCategory)
+        .select('Id as id', 'Name as name')
+        .where('CategoryId', categoryId)
+        .where('Status', 1)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.createProviderServiceCategory = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerService)
+        .insert(data)
+        .then((result) => {
+          if (result[0] > 0) {
+            output.error = false
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.updateServiceCategory = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerService)
+        .where('Id', data.Id)
+        .where('ProviderId', data.ProviderId)
+        .update(data)
+        .then((result) => {
+          if (result > 0) {
+            output.error = false
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.getMyServiceList = (providerId) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerService)
+        .select('ProviderService.Id as id', 'ProviderService.CategoryId as categoryId', 'Category.Name as categoryName', 'ProviderService.SubCategoryId as subCategoryId', 'SubCategory.Name as subCategoryName', 'Experience as experience', 'QuickPitch as quickPitch', 'PricePerHour as pricePerHour')
+        .where('ProviderService.ProviderId', providerId)
+        .leftJoin(provider, 'ProviderService.ProviderId', 'Provider.Id')
+        .leftJoin(category, 'ProviderService.CategoryId', 'Category.Id')
+        .leftJoin(subCategory, 'ProviderService.SubCategoryId', 'SubCategory.Id')
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.deleteServiceCategory = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerService)
+        .where(data)
+        .del()
+        .then((result) => {
+          if (result > 0) {
+            output.error = false
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchProviderAddressInfo = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerAddress)
+        .where(data)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchProviderServiceInfo = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerService)
+        .where(data)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchProviderAvailability = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerAvailability)
+        .where(data)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchProviderDocumentInfo = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerDocuments)
+        .where(data)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchProviderBankInfo = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerPayment)
+        .where(data)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
           output.error = true
           resolve(output)
         }).finally(() => {

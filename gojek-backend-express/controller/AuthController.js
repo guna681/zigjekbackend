@@ -27,7 +27,6 @@ module.exports = function () {
           })
         } else if (role === 'provider') {
           Id = request.params.auth.Id
-          console.log(request.params.auth)
           providerService.providerAuthService(Id, (result) => {
             var response = {}
             if (result.error) {

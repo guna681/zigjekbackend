@@ -122,7 +122,7 @@ Route::get('couponRemove','CouponController@userCouponDelete')->middleware('auth
 /* Orders module */
 
 Route::post('orderConfirm','OrderController@OrderConfirm')->middleware('auth:api');
-Route::get('listPastOrders','OrderController@listPastOrders')->middleware('auth:api');
+Route::post('listPastOrders','OrderController@listPastOrders')->middleware('auth:api');
 Route::post('trackOrders','OrderController@trackOrders')->middleware('auth:api');
 Route::post('getOrderDetail','OrderController@getOrderDetail')->middleware('auth:api');
 
