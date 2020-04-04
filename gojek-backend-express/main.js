@@ -37,7 +37,7 @@ async function auth (request, response, next) {
       var authenticate = await this.apiServicesAuthCtrl(request)
       if (authenticate.error) {
         error.error = true
-        error.msg = 'Unauthorized accesx'
+        error.msg = 'Unauthorized access'
         return response.status(401).send(error)
       } else {
         request.params.auth = authenticate.data

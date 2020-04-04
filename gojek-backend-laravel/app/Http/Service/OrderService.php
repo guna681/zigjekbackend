@@ -42,6 +42,8 @@ Class  OrderService
         $origin = array();
         $destination = array();
         array_push($destination, $paymentAddress->latitude, $paymentAddress->longitude);
+        $orders->DestinyLat          = $paymentAddress->latitude;
+        $orders->DestinyLong          = $paymentAddress->longitude;
         $orders->userId            = $userId;
         $orders->deliveryAddressId = $arg->deliveryAddressId;
         $orders->outletId          = $arg->outletId;
@@ -90,10 +92,16 @@ Class  OrderService
              $addEtaMinutesToCurrentTime = 'now +'.$roundOfMinutes.' minutes';
              
              $etaInTimestamp = date('Y-m-d H:i:s', strtotime($addEtaMinutesToCurrentTime));
-
-
-
-            $updateLastMile                = $orderRepostitory->updateLastMile($orderId,$outletToRestaurantDistance,$etaInTimestamp);
+             // $lastMileData = array();
+              $lastMileData    = new DataService();
+              $lastMileData->orderId = $orderId;
+              $lastMileData->outletToRestaurantDistance = $outletToRestaurantDistance;
+              $lastMileData->etaInTimestamp = $etaInTimestamp;
+              $lastMileData->SourceLat = $orderdata->latitude;
+              $lastMileData->SourceLong = $orderdata->longitude;
+              $lastMileData->s2CellId   = $orderdata->s2CellId;
+              $lastMileData->outletAddress = $orderdata->outletAddress;
+            $updateLastMile                = $orderRepostitory->updateLastMile($lastMileData);
             
             // if($distanceData->error === false) {     
             //     $updateDate = (object) array();
@@ -344,7 +352,7 @@ $orderCustomisationItems = $orderRepostitory->orderCustomisationItems($cart['id'
                 $orderDetails->buttonName       = isset($order->deliveredTime)  ? __('validation.reorder'): __('validation.trackOrder');
                 $orderDetails->displaydate      = date('F j, g:i a', strtotime($order->created_at));
                 $orderDetails->displayDish      = implode(', ', array_column($orderDish, 'dishplayDish'));
-                $orderDetails->orderId          = $order->id;
+                $orderDetails->orderId          = $order->Id;
                 // $orderDetails->created_at       = $order->created_at;
                 /* orderData preview array */
                 $orderData = new \stdClass();
@@ -516,7 +524,7 @@ $orderCustomisationItems = $orderRepostitory->orderCustomisationItems($cart['id'
             $currencyRepostitory = new CurrencyRepostitory();
             $currency = $currencyRepostitory->getCurrency();
             $orders = new Orders();
-            $orders->orderId            = $order->id;
+            $orders->orderId            = $order->Id;
             $orders->displayOrderId     = $order->orderReferenceId;
             $orders->orderItems         = $order->itemCount;
             $orders->netAmount          = $currency.number_format($order->netAmount,2);
@@ -699,6 +707,7 @@ $orderCustomisationItems = $orderRepostitory->orderCustomisationItems($cart['id'
             $orderdata->outletName           = $outlet->name;
             $orderdata->latitude           = $outlet->latitude;
             $orderdata->longitude           = $outlet->longitude;
+            $orderdata->s2CellId           = $outlet->s2CellId;
             $orderdata->outletAddress        = $outlet->addressLineOne . ',' . $outlet->street . ',' . $outlet->area . ',' . $outlet->city;
             $orderdata->userAddressType      = $order->deliveryAddressType;
             $orderdata->userAddress          = $order->deliveryAddress;

@@ -38,8 +38,12 @@ Class OrderRepostitory{
             $orders->orderReferenceId    = $data->orderRefferenceId;
             $orders->PaymentMode       = $data->paymentType;
             $orders->ToLocation     = $data->deliveryAddress;
+            $orders->DestinyLat     = $data->DestinyLat;
+            $orders->DestinyLong    = $data->DestinyLong;
             $orders->CreateAt       = now();
             $orders->UpdateAt       = now();
+            $orders->Status         = 'waiting';
+            $orders->Type           = 'delivery';
             // $orders->deliveryAddressType = $data->addressType;
             $orders->orderStatus         = $data->orderStatus;
             // $orders->orderPlaceTime      =  date('Y-m-d H:i:s');
@@ -57,12 +61,12 @@ Class OrderRepostitory{
             DB::rollBack();
             return false;
         }
-        if ($orders->Id) {
+        if ($orders->id) {
             try {
 //
                     $c1 =array_values($data->cartId);
 
-                    $c2 = data_fill($c1,'*.orderId',$orders->Id);
+                    $c2 = data_fill($c1,'*.orderId',$orders->id);
                     $c3 = data_fill($c2,'*.userId', $data->userId);
                     $c4 = data_fill($c3,'*.outletId',$data->outletId);
                     $carts = $c4;
@@ -75,6 +79,7 @@ Class OrderRepostitory{
                                 ->where(['id' => $cart->cartId])
                                 // ->where(['userId' => $cart->userId])
                                 ->first();
+                                
                     $dishlist = $this->getDishesList($carts->dishId);
                    
 
@@ -153,7 +158,7 @@ Class OrderRepostitory{
                       ->leftjoin('Outlets','Booking.outletId','=','Outlets.id')
                       ->leftjoin('order_Items','Booking.id','=','order_Items.orderId')
                       ->leftjoin('Address','Booking.deliveryAddressId','=','Address.id')
-                      ->leftjoin('Provider','Booking.deliveryStaffId','=','Provider.id')
+                      ->leftjoin('Provider','Booking.ProviderId','=','Provider.id')
                       ->where(['Booking.userId'=>$userId,'Booking.id'=>$orderId])
                       ->groupBy('Booking.id')
                       ->first();
@@ -275,10 +280,10 @@ public function updateOrderDetail($data)
         return $orders;
     }
 
-public function updateLastMile($orderId,$distance,$eta)
+public function updateLastMile($lastMileData)
     {
-        $orders = Orders::where(['id'=>$orderId])
-                        ->update(['lastMile' =>$distance,'eta'=>$eta]);
+        $orders = Orders::where(['id'=>$lastMileData->orderId])
+                        ->update(['lastMile' =>$lastMileData->outletToRestaurantDistance,'eta'=>$lastMileData->etaInTimestamp,'SourceLat'=>$lastMileData->SourceLat,'SourceLong'=>$lastMileData->SourceLong,'s2CellId'=>$lastMileData->s2CellId,'FromLocation'=>$lastMileData->outletAddress,'Distance'=>$lastMileData->outletToRestaurantDistance]);
         return $orders;
     }
 

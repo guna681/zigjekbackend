@@ -910,7 +910,7 @@ module.exports = function (server, validator) {
     } else {
       var body = request.body
       body.auth = request.params.auth
-      providerController.updateProviderFinancailInfoCtrl(body, (result) => {
+      providerController.updateProviderFinancialInfoCtrl(body, (result) => {
         errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return response.send(message)
         })
@@ -922,11 +922,11 @@ module.exports = function (server, validator) {
     validator.check('address1')
       .isLength({ min: 1, max: 255 }).withMessage('INVALID: $[1],Address 1'),
     validator.check('address2')
-      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1],Address 2'),
+      .isLength({ min: 1, max: 255 }).withMessage('INVALID: $[1],Address 2'),
     validator.check('city')
       .isLength({ min: 1, max: 50 }).withMessage('INVALID: $[1],City'),
     validator.check('province')
-      .isLength({ min: 1, max: 255 }).withMessage('INVALID: $[1],Province'),
+      .isLength({ min: 1, max: 50 }).withMessage('INVALID: $[1],Province'),
     validator.check('landmark')
       .isLength({ min: 1, max: 100 }).withMessage('INVALID: $[1],Landmark'),
     validator.check('latitude')
@@ -952,6 +952,17 @@ module.exports = function (server, validator) {
         })
       })
     }
+  })
+
+  server.get(basePath + 'viewAddressInfo', server.auth, (request, response) => {
+    var body = request.body
+    body.auth = request.params.auth
+    const lang = request.headers.lang
+    providerController.viewAddressCtrl(body, (result) => {
+      errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+        return response.send(message)
+      })
+    })
   })
 
   server.get(basePath + 'getProviderTimeSlots', server.auth, (request, response) => {

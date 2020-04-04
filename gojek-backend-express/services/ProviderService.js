@@ -616,11 +616,13 @@ module.exports = function () {
       providerId.Id = data.auth.Id
       var provider = await providerRespository.fetchProvider(providerId)
       var status
+      var delivery
       if (provider.error) {
         response.error = true
         response.msg = 'NO_PROVIDER'
       } else {
         var state = provider.result[0].IsActive
+        delivery = provider.result[0].IsDeliveryOpt
         if (state === 'yes') {
           providerId.IsActive = 'no'
           status = await providerRespository.updateProviderDetailsUsingId(providerId)
@@ -636,7 +638,7 @@ module.exports = function () {
         } else if (state === 'no') {
           providerId.IsActive = 'yes'
           status = await providerRespository.updateProviderDetailsUsingId(providerId)
-          providerRespository.addProviderActiveLocation(data.auth.Id, rideSharing, rideTypeIds, 'active')
+          providerRespository.addProviderActiveLocation(data.auth.Id, rideSharing, rideTypeIds, 'active', delivery)
           if (status.error) {
             response.error = true
             response.msg = 'OOPS'
@@ -1037,17 +1039,20 @@ module.exports = function () {
     try {
       var docType = data.docType
       var providerId = data.auth.Id
+      var recentUploads
       switch (docType) {
         case 'provider':
+          recentUploads = await providerRespository.fetchProviderDocumentExist(providerId)
           docType = 'provider'
           break
         case 'vehicle':
+          recentUploads = await providerRespository.fetchProviderDocumentExist(providerId)
           docType = 'vehicle'
           break
         case 'bank':
+          recentUploads = await providerRespository.fetchProviderBankInfo({ 'ProviderId': providerId })
           docType = 'bank'
       }
-      var recentUploads = await providerRespository.fetchProviderDocumentExist(providerId)
       if (recentUploads.error) {
         recentUploads.result = []
       }
@@ -1066,6 +1071,8 @@ module.exports = function () {
           var compareDoc = recentUploads.result.find((doc) => {
             return doc.DocTypeId === element.Id
           })
+          var value = recentUploads.result.find((element1) => element.FieldName === element1.PaymentField)
+          doc['value'] = value ? value.Value : null
           doc['isApproved'] = compareDoc ? compareDoc.Status : 'new'
           doc['type'] = element.Type
           return doc
@@ -1138,6 +1145,7 @@ module.exports = function () {
       callback(response)
     }
   }
+
   this.getProivderPaymentCharge = (providerId) => {
     var response = {}
     return new Promise(async function (resolve) {
@@ -1159,6 +1167,7 @@ module.exports = function () {
       }
     })
   }
+
   this.updateProviderStripeAccountID = async (data, providerid) => {
     var response = {}
     return new Promise(async function (resolve) {
@@ -1334,19 +1343,25 @@ module.exports = function () {
   this.createProviderPaymentService = async (data, callback) => {
     var response = {}
     try {
-      var providerInfo = JSON.parse(data.data)
-      var value = Object.keys(providerInfo).map(element => {
-        return { PaymentField: element, Value: providerInfo[element], ProviderId: data.auth.Id }
-      })
+      var deletePaymentInfo = await providerRespository.deleteFinancialInfo({ ProviderId: data.auth.Id })
+      if (deletePaymentInfo.error === false) {
+        var providerInfo = JSON.parse(data.data)
+        var value = Object.keys(providerInfo).map(element => {
+          return { PaymentField: element, Value: providerInfo[element], ProviderId: data.auth.Id }
+        })
 
-      var updateInfo = await providerRespository.insertFinancialInfo(value)
+        var updateInfo = await providerRespository.insertFinancialInfo(value)
 
-      if (updateInfo.error) {
+        if (updateInfo.error) {
+          response.error = true
+          response.msg = 'OOPS'
+        } else {
+          response.error = false
+          response.msg = 'VALID'
+        }
+      } else {
         response.error = true
         response.msg = 'OOPS'
-      } else {
-        response.error = false
-        response.msg = 'VALID'
       }
       callback(response)
     } catch (err) {
@@ -1356,10 +1371,11 @@ module.exports = function () {
     }
   }
 
-  this.createProviderAddresservice = async (data, callback) => {
+  this.createProviderAddressService = async (data, callback) => {
     var response = {}
     try {
       var address = {}
+      var proivder = { ProviderId: data.auth.Id }
       address.ProviderId = data.auth.Id
       address.Address1 = data.address1
       address.Address2 = data.address2
@@ -1370,13 +1386,49 @@ module.exports = function () {
       address.Latitude = data.latitude
       address.Longitude = data.longitude
 
-      var providerAddress = await providerRespository.insertAddressInfo(address)
-      if (providerAddress.error) {
+      var deleteOldAddress = await providerRespository.deleteAddressInfo(proivder)
+      if (deleteOldAddress.error === false) {
+        var providerAddress = await providerRespository.insertAddressInfo(address)
+        if (providerAddress.error) {
+          response.error = true
+          response.msg = 'UPDATE_ERROR: $[1],Address'
+        } else {
+          response.error = false
+          response.msg = 'UPDATE'
+        }
+      } else {
         response.error = true
         response.msg = 'OOPS'
+      }
+      callback(response)
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.viewddresService = async (data, callback) => {
+    var response = {}
+    try {
+      let provider = { ProviderId: data.auth.Id }
+      var providerAddress = await providerRespository.fetchProviderAddressInfo(provider)
+      if (providerAddress.error) {
+        response.error = true
+        response.msg = 'NO_DATA'
       } else {
+        var address = {}
+        address.address1 = providerAddress.result.Address1
+        address.address2 = providerAddress.result.Address2
+        address.city = providerAddress.result.City
+        address.province = providerAddress.result.Province
+        address.zipCode = providerAddress.result.ZipCode
+        address.landmark = providerAddress.result.Landmark
+        address.latitude = providerAddress.result.Latitude
+        address.longitude = providerAddress.result.Longitude
         response.error = false
-        response.msg = 'UPDATE'
+        response.msg = 'VALID'
+        response.data = address
       }
     } catch (response) {
       response.error = true
@@ -1609,19 +1661,19 @@ module.exports = function () {
       var info = []
 
       var addressInfo = await providerRespository.fetchProviderAddressInfo(provider)
-      info.push({ info: 'Address', isPending: addressInfo.error })
+      info.push({ info: 'Address', key: 'ADDRESS', isPending: addressInfo.error })
       var documentInfo = await providerRespository.fetchProviderDocumentInfo(provider)
-      info.push({ info: 'Document', isPending: documentInfo.error })
+      info.push({ info: 'Document', key: 'DOCUMENT', isPending: documentInfo.error })
       var bankInfo = await providerRespository.fetchProviderBankInfo(provider)
-      info.push({ info: 'Bank', isPending: bankInfo.error })
+      info.push({ info: 'Bank', key: 'BANK', isPending: bankInfo.error })
       if (type === 'taxi') {
         var vehicleInfo = await providerVehicleRepository.fetchProviderVehicle(data.auth.Id)
-        info.push({ info: 'Vehicle', isPending: vehicleInfo.error })
+        info.push({ info: 'Vehicle', key: 'VEHICLE', isPending: vehicleInfo.error })
       } else if (type === 'services') {
         var availabilityInfo = await providerRespository.fetchProviderAvailability(provider)
-        info.push({ info: 'Vehicle', isPending: availabilityInfo.error })
+        info.push({ info: 'Availability', key: 'AVAILABILITY', isPending: availabilityInfo.error })
         var serviceInfo = await providerRespository.fetchProviderAddressInfo(provider)
-        info.push({ info: 'Service', isPending: serviceInfo.error })
+        info.push({ info: 'Service', key: 'SERVICE', isPending: serviceInfo.error })
       }
       response.error = false
       response.msg = 'VALID'

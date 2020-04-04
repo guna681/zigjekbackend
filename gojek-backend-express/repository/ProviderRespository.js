@@ -282,7 +282,7 @@ module.exports = function () {
     })
   }
 
-  this.addProviderActiveLocation = (providerId, rideSharing, rideTypeIds, status) => {
+  this.addProviderActiveLocation = (providerId, rideSharing, rideTypeIds, status, delivery) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
@@ -294,12 +294,12 @@ module.exports = function () {
             if (result.length === 0) {
               output.error = false
               return knex(provideLocationUpdate)
-                .insert({ ProviderId: providerId, IsPoolEnabled: rideSharing, RideTypeId: JSON.stringify(rideTypeIds), Status: status })
+                .insert({ ProviderId: providerId, IsPoolEnabled: rideSharing, RideTypeId: JSON.stringify(rideTypeIds), Status: status, IsDeliveryOpt: delivery })
             } else {
               output.error = false
               return knex(provideLocationUpdate)
                 .where({ ProviderId: providerId })
-                .update({ IsPoolEnabled: rideSharing, RideTypeId: JSON.stringify(rideTypeIds), Status: status })
+                .update({ IsPoolEnabled: rideSharing, RideTypeId: JSON.stringify(rideTypeIds), Status: status, IsDeliveryOpt: delivery })
             }
           })
           .then(t.commit)
@@ -781,6 +781,25 @@ module.exports = function () {
     })
   }
 
+  this.deleteFinancialInfo = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerPayment)
+        .where(data)
+        .del()
+        .then(() => {
+          output.error = false
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
   this.insertAddressInfo = (data) => {
     var output = {}
     return new Promise(function (resolve) {
@@ -788,16 +807,59 @@ module.exports = function () {
       knex(providerAddress)
         .insert(data)
         .then((result) => {
-          if (result) {
+          if (result[0] > 0) {
             output.error = false
           } else {
             output.error = true
           }
+          resolve(output)
         }).catch((output) => {
           output.error = true
+          resolve(output)
         }).finally(() => {
           knex.destroy()
+        })
+    })
+  }
+
+  this.fetchProviderAddressInfo = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerAddress)
+        .where(data)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result[0]
+          } else {
+            output.error = true
+          }
           resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.deleteAddressInfo = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerAddress)
+        .where(data)
+        .del()
+        .then(() => {
+          output.error = false
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
         })
     })
   }
@@ -1063,28 +1125,6 @@ module.exports = function () {
     })
   }
 
-  this.fetchProviderAddressInfo = (data) => {
-    var output = {}
-    return new Promise(function (resolve) {
-      var knex = new Knex(config)
-      knex(providerAddress)
-        .where(data)
-        .then((result) => {
-          if (result.length > 0) {
-            output.error = false
-          } else {
-            output.error = true
-          }
-          resolve(output)
-        }).catch((output) => {
-          output.error = true
-          resolve(output)
-        }).finally(() => {
-          knex.destroy()
-        })
-    })
-  }
-
   this.fetchProviderServiceInfo = (data) => {
     var output = {}
     return new Promise(function (resolve) {
@@ -1160,11 +1200,13 @@ module.exports = function () {
         .then((result) => {
           if (result.length > 0) {
             output.error = false
+            output.result = result
           } else {
             output.error = true
           }
           resolve(output)
         }).catch((output) => {
+          console.log(output)
           output.error = true
           resolve(output)
         }).finally(() => {
