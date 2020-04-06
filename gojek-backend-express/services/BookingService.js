@@ -142,6 +142,7 @@ module.exports = function () {
             data['rideId'] = element.RideTypeId
             data['blockList'] = element.ProviderRejectedIds
             data['assignedList'] = element.AssignedProviderIds
+            data['type'] = element.Type
             return data
           })
           response.error = false
@@ -332,6 +333,7 @@ module.exports = function () {
             data['sourceLong'] = element.SourceLong
             data['destinyLat'] = element.DestinyLat
             data['destinyLong'] = element.DestinyLong
+            data['type'] = element.Type
             data['status'] = element.Status
             data['startTime'] = common.timeStampFormatter(element.UpdateAt)
             data['currentTime'] = common.timeStampFormatter(new Date())
@@ -722,6 +724,47 @@ module.exports = function () {
         resolve(response)
       } catch (err) {
         err.response = true
+        resolve(err)
+      }
+    })
+  }
+
+  this.getProviderBookingHistory = (providerId) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      try {
+        var user = {}
+        user.ProviderId = providerId
+        var booking = await bookingRepository.fetchBookingInfo(user)
+        if (booking.error) {
+          response.error = true
+          response.msg = 'NO_BOOKING'
+        } else {
+          var bookingInfo = booking.result.map(element => {
+            var data = {}
+            data['bookingNo'] = element.Id
+            data['sourceLat'] = element.SourceLat
+            data['soruceLong'] = element.SourceLong
+            data['destinyLat'] = element.DestinyLat
+            data['destinyLong'] = element.DestinyLong
+            data['estimation'] = element.Estimation
+            data['total'] = element.CurrencyType + element.TotalAmount
+            data['isActive'] = element.IsActive
+            data['status'] = element.Status
+            data['vehicleName'] = element.VehicleName === null ? 'Test Vehicle' : element.VehicleName
+            data['paymentMode'] = element.PaymentMode
+            data['createdTime'] = element.CreateAt
+            return data
+          })
+
+          response.error = false
+          response.msg = 'VALID'
+          response.data = bookingInfo
+        }
+        resolve(response)
+      } catch (err) {
+        err.error = true
+        err.msg = 'OOPS'
         resolve(err)
       }
     })

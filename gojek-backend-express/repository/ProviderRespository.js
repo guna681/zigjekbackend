@@ -449,6 +449,32 @@ module.exports = function () {
     })
   }
 
+  this.fetchDeliveryProviderByCellId = (data, cellID, blockList) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(provideLocationUpdate)
+        .where(data)
+        .whereNotIn('ProviderId', blockList)
+        .whereIn('S2CellId', cellID)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
   this.updateProviderLocationStatus = (data) => {
     var output = {}
     return new Promise(function (resolve) {
@@ -1206,7 +1232,6 @@ module.exports = function () {
           }
           resolve(output)
         }).catch((output) => {
-          console.log(output)
           output.error = true
           resolve(output)
         }).finally(() => {
