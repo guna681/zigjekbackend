@@ -548,6 +548,7 @@ module.exports = function () {
 
       var userDeviceInfo = {}
       userDeviceInfo.UserId = data.auth.Id
+      userDeviceInfo.DeviceId = data.uuid
 
       var token = await userRepository.updateUserFCMToken(device, userDeviceInfo)
       if (token.error) {

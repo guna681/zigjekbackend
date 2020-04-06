@@ -210,13 +210,15 @@ Class  CartService{
         $obj->cartId            =$dish->id;
         $obj->uuId              =$dish->uuId;
         if ($dishes->slashedPrice != 0) {
-        $obj->dishTotal         =($dishes->slashedPrice+$customisationTotal)*$dish->quantity;    
+        $obj->dishTotal         =($dishes->slashedPrice+$customisationTotal)*$dish->quantity;
+        $obj->originalDishTotal         =($dishes->price+$customisationTotal)*$dish->quantity;    
         $obj->displayDishTotal   =$currency.($dishes->slashedPrice+$customisationTotal)*$dish->quantity;
         $obj->slashedPrice           = $dishes->price;
         } else {
         $obj->slashedPrice           = 0;
         $obj->displayDishTotal   =$currency.$dishes->price;
         $obj->dishTotal         =($dishes->price+$customisationTotal)*$dish->quantity;
+        $obj->originalDishTotal         =($dishes->price+$customisationTotal)*$dish->quantity;
         }
         // $obj->slashedPrice      =$dishes->slashedPrice;
         if(!$customisationItem->isEmpty()){
@@ -258,7 +260,7 @@ Class  CartService{
                                                         return $carry;
                                                     });
         $slashedPrice                 = array_reduce($data, function ($carry, $item) {
-                                                        $carry += $item->slashedPrice;
+                                                        $carry += $item->originalDishTotal;
                                                         return $carry;
                                                     });
         $itemTotal                  = (object)array();

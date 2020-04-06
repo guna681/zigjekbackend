@@ -355,7 +355,10 @@ module.exports = function (server, validator) {
     validator.check('osVersion')
       .isLength({ min: 1, max: 11 }).withMessage('INVALID: $[1],OS version'),
     validator.check('appVersion')
-      .isLength({ min: 1, max: 11 }).withMessage('INVALID: $[1],App Version')
+      .isLength({ min: 1, max: 11 }).withMessage('INVALID: $[1],App Version'),
+    validator.check('uuid')
+      .optional()
+      .isLength({ min: 10, max: 50 }).withMessage('TEXT_LIMIT: $[1] $[2] $[3],uuid,10,50')
   ], server.auth, (request, response) => {
     const error = validator.validation(request)
     const lang = request.headers.lang

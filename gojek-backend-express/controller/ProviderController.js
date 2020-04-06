@@ -769,7 +769,7 @@ module.exports = function () {
     })
   }
 
-  this.updateProviderFinancailInfoCtrl = async (req, callback) => {
+  this.updateProviderFinancialInfoCtrl = async (req, callback) => {
     var response = {}
     var data = req
     providerService.createProviderPaymentService(data, (result) => {
@@ -785,16 +785,48 @@ module.exports = function () {
     })
   }
 
-  this.updateProviderAddressCtrl = async (req, callback) => {
+  this.viewFinancialInfoCtrl = async (req, callback) => {
     var response = {}
     var data = req
-    providerService.createProviderAddresservice(data, (result) => {
+    providerService.viewFinancialInfoService(data, (result) => {
       if (result.error) {
         response.error = true
         response.msg = result.msg
       } else {
         response.error = false
         response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.updateProviderAddressCtrl = async (req, callback) => {
+    var response = {}
+    var data = req
+    providerService.createProviderAddressService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+      }
+      callback(response)
+    })
+  }
+
+  this.viewAddressCtrl = async (req, callback) => {
+    var response = {}
+    var data = req
+    providerService.viewddresService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
       }
       callback(response)
     })
