@@ -9,7 +9,7 @@ module.exports = function (server, validator) {
   setInterval(async () => {
     bookingController.bookingHandler((result) => {
       errorController.ctrlHandler([result], result.error, 'default', (message) => {
-        // console.log('Booking Service', message)
+        console.log('Booking Service', message)
       })
     })
     bookingController.reassignBookingCtrl(async (result) => {

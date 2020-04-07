@@ -965,4 +965,81 @@ module.exports = function () {
       callback(response)
     })
   }
+
+  this.getTripHistory = async (req, callback) => {
+    var response = {}
+    try {
+      var providerId = req.auth.Id
+      var booking = await bookingService.getProviderBookingHistory(providerId)
+      if (booking.error) {
+        response.error = true
+        response.msg = booking.msg
+      } else {
+        response.error = false
+        response.msg = booking.msg
+        response.data = booking.data
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
+
+  this.getTripDetails = async (req, callback) => {
+    var response = {}
+    try {
+      var condition = {}
+      condition.Id = req.bookingNo
+      condition.ProviderId = req.auth.Id
+      var booking = await bookingService.getBookingInfo(condition)
+      if (booking.error) {
+        response.error = true
+        response.msg = booking.msg
+      } else {
+        var bookingInfo = booking.data.map(element => {
+          var data = {}
+          var receipt = []
+          data['createdTime'] = element.CreateAt
+          data['fromLocation'] = element.FromLocation
+          data['toLocation'] = element.ToLocation
+          data['sourceLat'] = element.SourceLat
+          data['sourceLong'] = element.SourceLong
+          data['destinyLat'] = element.DestinyLat
+          data['destinyLong'] = element.DestinyLong
+          data['status'] = element.Status
+          data['totalAmt'] = element.CurrencyType + element.TotalAmount
+          data['paymentMode'] = element.PaymentMode
+          data['vehicleName'] = element.VehicleName === null ? 'Test Vehicle' : element.VehicleName
+          data['isActive'] = element.IsActive
+          receipt.push({ fieldName: 'Tax', value: element.Tax })
+          receipt.push({ fieldName: 'Fare', value: String(element.Estimation) })
+          receipt.push({ fieldName: 'Sub Total', value: String(Number(element.Estimation) + Number(element.Tax)) })
+          receipt.push({ fieldName: 'Total Amount', value: element.CurrencyType + ' ' + element.TotalAmount })
+          data['receipt'] = receipt
+          return data
+        })
+        var bookingDetails = bookingInfo[0]
+        var user = await userService.getUserBookingInfo(booking.data[0].UserId)
+        if (user.error) {
+          bookingDetails.providerInfo = null
+        } else {
+          var userInfo = {}
+          userInfo['name'] = user.data.firstName + ' ' + user.data.lastName
+          userInfo['image'] = user.data.image
+          userInfo['rating'] = user.data.rating
+          bookingDetails.userInfo = userInfo
+        }
+        response.error = false
+        response.msg = 'VALID'
+        response.data = bookingDetails
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
 }

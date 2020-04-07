@@ -701,6 +701,47 @@ module.exports = function () {
     })
   }
 
+  this.getActiveDeliveryProviderByCellId = (target, cellId, providerStatus, weights, blockList) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      try {
+        var condition = {}
+        condition.Status = providerStatus
+        condition.IsDeliveryOpt = 1
+        var provider = await providerRespository.fetchDeliveryProviderByCellId(condition, cellId, blockList)
+
+        if (provider.error) {
+          response.error = true
+          response.msg = 'NO_PROVIDER_AVAILABLE'
+        } else {
+          var origin = target
+          var destination = provider.result.map(element => {
+            return element.Latitude + ',' + element.Longitude
+          })
+
+          var matrix = await geoHelper.getProviderGeoMatrix(origin, destination)
+
+          var data = provider.result.map((elements, index) => {
+            elements['distance'] = matrix.result[index].distance
+            elements['duration'] = matrix.result[index].duration
+            return common.weightCalculator(elements, weights)
+          })
+
+          data.sort((a, b) => a.total - b.total)
+
+          response.error = false
+          response.data = data
+          response.msg = 'VALID'
+        }
+        resolve(response)
+      } catch (err) {
+        err.error = true
+        err.msg = 'OOPS'
+        resolve(err)
+      }
+    })
+  }
+
   this.providerLocationStatusUpdate = async (providerId, status) => {
     var response = {}
     try {

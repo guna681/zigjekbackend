@@ -237,16 +237,11 @@ module.exports = function () {
         device.UserId = userDetails.result[0].Id
         device.DeviceId = data.uuid
 
-        var auth = {}
-        auth.Id = userDetails.result[0].Id
         var userDevice = await userRepository.fetchUserDevice(data.uuid)
         if (userDevice.error) {
-          var newUserDevice = await userRepository.addUserDevice(device)
-          auth.Device = newUserDevice.result
+          await userRepository.addUserDevice(device)
         } else {
           await userRepository.updateUserDevice(device)
-          var newDevice = await userRepository.fetchUserDevice(data.uuid)
-          auth.Device = newDevice.result[0].Id
         }
         var user = {}
         user.firstName = userDetails.result[0].FirstName

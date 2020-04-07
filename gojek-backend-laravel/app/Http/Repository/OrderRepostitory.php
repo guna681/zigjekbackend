@@ -12,6 +12,7 @@ use App\Outlets;
 use App\Setting;
 use App\DishesCustomisation;
 use App\DishesCustomisationCategories;
+use App\Http\Repository\CurrencyRepostitory;
 use App\OrderItems;
 use App\OrderItemsCustomisations;
 use App\Orders;
@@ -28,6 +29,10 @@ Class OrderRepostitory{
 
         DB::beginTransaction();
         try {
+
+            $currencyRepostitory    = new CurrencyRepostitory();
+            $outletsRepostitory     = new OutletsRepostitory();
+            $currency               = $currencyRepostitory->getCurrency();
             $orders                      = new Orders();
             $orders->UserId              = $data->userId;
             $orders->outletId            = $data->outletId;
@@ -36,7 +41,11 @@ Class OrderRepostitory{
             $orders->DiscountAmount      = $data->discount;
             $orders->CouponCode          = $data->couponName;
             $orders->orderReferenceId    = $data->orderRefferenceId;
-            $orders->PaymentMode       = $data->paymentType;
+            if ($data->paymentType = 10) {
+            $orders->PaymentMode       = 'cash';
+            } else {
+            $orders->PaymentMode       = 'cash';
+            }
             $orders->ToLocation     = $data->deliveryAddress;
             $orders->DestinyLat     = $data->DestinyLat;
             $orders->DestinyLong    = $data->DestinyLong;
@@ -44,6 +53,10 @@ Class OrderRepostitory{
             $orders->UpdateAt       = now();
             $orders->Status         = 'waiting';
             $orders->Type           = 'delivery';
+            $orders->ProviderRejectedIds  = "[]";
+            $orders->AssignedProviderIds  = "[]";
+            $orders->Estimation  = $data->netAmount;
+            $orders->CurrencyType  = $currency;
             // $orders->deliveryAddressType = $data->addressType;
             $orders->orderStatus         = $data->orderStatus;
             // $orders->orderPlaceTime      =  date('Y-m-d H:i:s');
@@ -57,7 +70,7 @@ Class OrderRepostitory{
             $orders->save();
         } catch (\Illuminate\Database\QueryException $ex) {
             $jsonresponse = $ex->getMessage();
-            
+            // print_r($jsonresponse);
             DB::rollBack();
             return false;
         }

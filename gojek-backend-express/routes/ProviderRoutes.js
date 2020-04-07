@@ -1116,4 +1116,31 @@ module.exports = function (server, validator) {
       })
     })
   })
+
+  server.get(basePath + 'tripHistory', server.auth, (request, response) => {
+    var body = request.body
+    body.auth = request.params.auth
+    const lang = request.headers.lang || 'default'
+
+    providerController.getTripHistory(body, (result) => {
+      errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+        return response.send(message)
+      })
+    })
+  })
+
+  server.post(basePath + 'tripDetails', [
+    validator.check('bookingNo')
+      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1],Booking No')
+  ], server.auth, function (request, response) {
+    var body = request.body
+    body.auth = request.params.auth
+    const lang = request.headers.lang || 'default'
+
+    providerController.getTripDetails(body, (result) => {
+      errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+        return response.send(message)
+      })
+    })
+  })
 }
