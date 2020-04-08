@@ -38,6 +38,7 @@ Class OrderRepostitory{
             $orders->outletId            = $data->outletId;
             $orders->deliveryAddressId   = $data->deliveryAddressId;
             $orders->netAmount           = $data->netAmount;
+            $orders->TotalAmount         = $data->netAmount;
             $orders->DiscountAmount      = $data->discount;
             $orders->CouponCode          = $data->couponName;
             $orders->orderReferenceId    = $data->orderRefferenceId;
@@ -57,15 +58,16 @@ Class OrderRepostitory{
             $orders->AssignedProviderIds  = "[]";
             $orders->Estimation  = $data->netAmount;
             $orders->CurrencyType  = $currency;
+            $orders->RideName  = 'foodDelivery';
             // $orders->deliveryAddressType = $data->addressType;
             $orders->orderStatus         = $data->orderStatus;
             // $orders->orderPlaceTime      =  date('Y-m-d H:i:s');
             // $orders->deliverycharge      = $data->deliverycharge;
-            // if ($data->orderSuggestions) {
-            // $orders->orderSuggestions     = $data->orderSuggestions;
-            // } else { 
-            // $orders->orderSuggestions     = ' ';
-            // }
+            if ($data->orderSuggestions) {
+            $orders->Description     = $data->orderSuggestions;
+            } else { 
+            $orders->Description     = ' ';
+            }
             
             $orders->save();
         } catch (\Illuminate\Database\QueryException $ex) {
@@ -296,7 +298,7 @@ public function updateOrderDetail($data)
 public function updateLastMile($lastMileData)
     {
         $orders = Orders::where(['id'=>$lastMileData->orderId])
-                        ->update(['lastMile' =>$lastMileData->outletToRestaurantDistance,'eta'=>$lastMileData->etaInTimestamp,'SourceLat'=>$lastMileData->SourceLat,'SourceLong'=>$lastMileData->SourceLong,'s2CellId'=>$lastMileData->s2CellId,'FromLocation'=>$lastMileData->outletAddress,'Distance'=>$lastMileData->outletToRestaurantDistance]);
+                        ->update(['lastMile' =>$lastMileData->outletToRestaurantDistance,'eta'=>$lastMileData->etaInTimestamp,'SourceLat'=>$lastMileData->SourceLat,'SourceLong'=>$lastMileData->SourceLong,'s2CellId'=>$lastMileData->s2CellId,'FromLocation'=>$lastMileData->outletAddress,'Distance'=>$lastMileData->outletToRestaurantDistance,'OutletName'=>$lastMileData->outletName]);
         return $orders;
     }
 

@@ -267,7 +267,7 @@ module.exports = {
       'pt': 'Atualmente você não tem nenhuma reserva ativa'
     },
     'INVALID_BOOKING': {
-      'default': 'You dont have any completed trip. Please try after some time.',
+      'default': 'You dont have any booking. Please try after some time.',
       'ar': 'ليس لديك أي رحلة مكتملة. يرجى المحاولة بعد مرور بعض الوقت.',
       'es': 'No tienes ningún viaje completo. Por favor intente después de un tiempo.',
       'pt': 'Você não tem nenhuma viagem completa. Por favor, tente depois de algum tempo.'

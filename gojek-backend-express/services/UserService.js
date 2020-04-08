@@ -118,7 +118,7 @@ module.exports = function () {
           userDetails.mobile = data.mobile
           userDetails.image = null
           userDetails.rating = '0.0'
-          userDetails.token = await common.generateToken(auth, process.env.JWT_SECRET)
+          userDetails.token = await common.createAccessToken({ mobile: data.mobile, countryCode: data.countryCode })
           // this.Mailer(data.email, 'Welcome Mail', 'Its good to have you onboard')
 
           response.error = false
@@ -203,7 +203,7 @@ module.exports = function () {
 
             var device = await userRepository.fetchUserDevice(deviceId)
             auth.Device = device.error ? null : device.result[0].Id
-            rider.token = await common.generateToken(auth, process.env.JWT_SECRET)
+            rider.token = await common.createAccessToken({ mobile: rider.mobile, countryCode: mobile.ExtCode })
 
             response.error = false
             response.msg = 'OTP'
@@ -451,7 +451,6 @@ module.exports = function () {
           try {
             var oldpassword = await common.comparePassword(param[0], userDetails.result[0].Password)
             var newpassword = await common.comparePassword(param[1], userDetails.result[0].Password)
-
             if (oldpassword === false) {
               error = true
               errorMsg = 'PASSWORD'

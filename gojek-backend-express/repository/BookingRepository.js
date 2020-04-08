@@ -1,6 +1,7 @@
 module.exports = function () {
   const rideVehicleType = 'RideVehicleType'
   const booking = 'Booking'
+  const orderItems = 'order_Items'
 
   require('dotenv').config({ path: './../.env' })
   var config = {
@@ -398,6 +399,32 @@ module.exports = function () {
         })
         .catch((err) => {
           err.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.getDishesOrdered = (orderId) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(orderItems)
+        .select(knex.raw(`CONCAT(dishName,' X',quantity) as dishName, isVeg, quantity, price as dishTotal`))
+        .where('orderId', orderId)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          console.log(err)
           resolve(output)
         }).finally(() => {
           knex.destroy()

@@ -310,8 +310,8 @@ class UserRepository
 
                 return false;
             }
-             
-            $query=DB::select(DB::raw("select fullAddress,id,location,houseFlatNo,landMark,type,latitude,longitude ,(
+             if ($userAddress->id){
+                $query=DB::select(DB::raw("select fullAddress,id,location,houseFlatNo,landMark,type,latitude,longitude ,(
                 6371 * acos (
                 cos ( radians('$data->latitude') )
                 * cos( radians( Address.latitude ) )
@@ -320,7 +320,9 @@ class UserRepository
                 * sin( radians( Address.latitude ) )
               )
           ) AS distance from Address where Address.userId='$data->userId' and Address.id Having distance < '$data->getAddressDistance' ORDER by distance asc"));
-    
+             }
+            
+     
 
         }
        

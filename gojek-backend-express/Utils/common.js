@@ -70,6 +70,20 @@ module.exports = function () {
     })
   }
 
+  this.createAccessToken = function (data) {
+    return new Promise(function (resolve) {
+      needle.post(process.env.PASSPORT_URL + 'api/createUserToken', data,
+        function (error, response) {
+          if (error) {
+            resolve(error)
+          } else {
+            var result = JSON.parse(response.body)
+            resolve(result.data)
+          }
+        })
+    })
+  }
+
   this.getPayloadFromToken = function (token) {
     var data = {}
     return new Promise(function (resolve) {

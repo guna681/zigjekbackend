@@ -1143,4 +1143,19 @@ module.exports = function (server, validator) {
       })
     })
   })
+
+  server.post(basePath + 'bookingDetails', [
+    validator.check('bookingNo')
+      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1],Booking No')
+  ], server.auth, function (request, response) {
+    var body = request.body
+    body.auth = request.params.auth
+    const lang = request.headers.lang || 'default'
+
+    providerController.getTripDetails(body, (result) => {
+      errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+        return response.send(message)
+      })
+    })
+  })
 }
