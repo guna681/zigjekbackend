@@ -754,6 +754,7 @@ module.exports = function () {
             data['vehicleName'] = element.VehicleName === null ? 'Test Vehicle' : element.VehicleName
             data['paymentMode'] = element.PaymentMode
             data['createdTime'] = element.CreateAt
+            data['type'] = element.Type
             return data
           })
 
@@ -765,6 +766,25 @@ module.exports = function () {
       } catch (err) {
         err.error = true
         err.msg = 'OOPS'
+        resolve(err)
+      }
+    })
+  }
+
+  this.getBookingDishes = (orderId) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      try {
+        var dishes = await bookingRepository.getDishesOrdered(orderId)
+        if (dishes.error) {
+          response.error = true
+        } else {
+          response.error = false
+          response.data = dishes.result
+        }
+        resolve(response)
+      } catch (err) {
+        err.response = true
         resolve(err)
       }
     })

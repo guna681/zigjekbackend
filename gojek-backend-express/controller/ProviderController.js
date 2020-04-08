@@ -145,7 +145,7 @@ module.exports = function () {
         response.msg = result.msg
       } else {
         var providerId = await common.getPayloadFromToken(result.data.token, process.env.JWT_SECRET)
-        providerVehicleService.addProviderVehicleService(providerId, () => {})
+        // providerVehicleService.addProviderVehicleService(providerId, () => {})
         if (!providerId.error) {
           walletService.createWalletService(providerId.data.Id, 'provider', 0)
         }
@@ -998,29 +998,40 @@ module.exports = function () {
         response.error = true
         response.msg = booking.msg
       } else {
-        var bookingInfo = booking.data.map(element => {
-          var data = {}
-          var receipt = []
-          data['createdTime'] = element.CreateAt
-          data['fromLocation'] = element.FromLocation
-          data['toLocation'] = element.ToLocation
-          data['sourceLat'] = element.SourceLat
-          data['sourceLong'] = element.SourceLong
-          data['destinyLat'] = element.DestinyLat
-          data['destinyLong'] = element.DestinyLong
-          data['status'] = element.Status
-          data['totalAmt'] = element.CurrencyType + element.TotalAmount
-          data['paymentMode'] = element.PaymentMode
-          data['vehicleName'] = element.VehicleName === null ? 'Test Vehicle' : element.VehicleName
-          data['isActive'] = element.IsActive
-          receipt.push({ fieldName: 'Tax', value: element.Tax })
-          receipt.push({ fieldName: 'Fare', value: String(element.Estimation) })
-          receipt.push({ fieldName: 'Sub Total', value: String(Number(element.Estimation) + Number(element.Tax)) })
-          receipt.push({ fieldName: 'Total Amount', value: element.CurrencyType + ' ' + element.TotalAmount })
-          data['receipt'] = receipt
-          return data
-        })
-        var bookingDetails = bookingInfo[0]
+        var bookingInfo = booking.data[0]
+        var data = {}
+        var receipt = []
+        data['createdTime'] = bookingInfo.CreateAt
+        data['fromLocation'] = bookingInfo.FromLocation
+        data['toLocation'] = bookingInfo.ToLocation
+        data['sourceLat'] = bookingInfo.SourceLat
+        data['sourceLong'] = bookingInfo.SourceLong
+        data['destinyLat'] = bookingInfo.DestinyLat
+        data['destinyLong'] = bookingInfo.DestinyLong
+        data['status'] = bookingInfo.Status
+        data['totalAmt'] = bookingInfo.CurrencyType + bookingInfo.TotalAmount
+        data['paymentMode'] = bookingInfo.PaymentMode
+        data['type'] = bookingInfo.Type
+        data['vehicleName'] = bookingInfo.VehicleName === null ? 'Food Devliery' : bookingInfo.VehicleName
+        data['isActive'] = bookingInfo.IsActive
+        if (bookingInfo.Type === 'taxi') {
+          receipt.push({ fieldName: 'Tax', value: bookingInfo.Tax })
+          receipt.push({ fieldName: 'Fare', value: String(bookingInfo.Estimation) })
+          receipt.push({ fieldName: 'Sub Total', value: String(Number(bookingInfo.Estimation) + Number(bookingInfo.Tax)) })
+          receipt.push({ fieldName: 'Total Amount', value: bookingInfo.CurrencyType + ' ' + bookingInfo.TotalAmount })
+        } else {
+          data['description'] = bookingInfo.Description
+          data['orderId'] = bookingInfo.Id
+          data['outletName'] = bookingInfo.OutletName
+          var dishList = await bookingService.getBookingDishes(req.bookingNo)
+          data['dishes'] = dishList.error ? [] : dishList.data.map(element => { element.displayPrice = bookingInfo.CurrencyType + element.dishTotal; return element })
+          receipt.push({ fieldName: 'Tax', value: bookingInfo.Tax })
+          receipt.push({ fieldName: 'Fare', value: String(bookingInfo.Estimation) })
+          receipt.push({ fieldName: 'Sub Total', value: String(Number(bookingInfo.Estimation) + Number(bookingInfo.Tax)) })
+          receipt.push({ fieldName: 'Total Amount', value: bookingInfo.CurrencyType + ' ' + bookingInfo.TotalAmount })
+        }
+        data['receipt'] = receipt
+        var bookingDetails = data
         var user = await userService.getUserBookingInfo(booking.data[0].UserId)
         if (user.error) {
           bookingDetails.providerInfo = null
@@ -1029,6 +1040,7 @@ module.exports = function () {
           userInfo['name'] = user.data.firstName + ' ' + user.data.lastName
           userInfo['image'] = user.data.image
           userInfo['rating'] = user.data.rating
+          userInfo['mobile'] = user.data.countryCode + user.data.mobile
           bookingDetails.userInfo = userInfo
         }
         response.error = false

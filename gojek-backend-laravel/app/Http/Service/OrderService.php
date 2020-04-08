@@ -101,6 +101,7 @@ Class  OrderService
               $lastMileData->SourceLong = $orderdata->longitude;
               $lastMileData->s2CellId   = $orderdata->s2CellId;
               $lastMileData->outletAddress = $orderdata->outletAddress;
+              $lastMileData->outletName   = $orderdata->outletName;
             $updateLastMile                = $orderRepostitory->updateLastMile($lastMileData);
             
             // if($distanceData->error === false) {     
