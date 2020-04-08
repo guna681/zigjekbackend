@@ -337,12 +337,12 @@ module.exports = function () {
             data['status'] = element.Status
             data['startTime'] = common.timeStampFormatter(element.UpdateAt)
             data['currentTime'] = common.timeStampFormatter(new Date())
+            data['outletId'] = element.outletId
             if (status.indexOf(element.Status)) {
               data['paymentMode'] = element.PaymentMode
               data['estimation'] = element.CurrencyType + element.Estimation
               data['userId'] = element.UserId
             }
-            data['rideType'] = element.RideName
             return data
           })
           response.error = false
@@ -781,6 +781,25 @@ module.exports = function () {
         } else {
           response.error = false
           response.data = dishes.result
+        }
+        resolve(response)
+      } catch (err) {
+        err.response = true
+        resolve(err)
+      }
+    })
+  }
+
+  this.getOutletInfo = (outletId) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      try {
+        var outlet = await bookingRepository.getOutletDetails(outletId)
+        if (outlet.error) {
+          response.error = true
+        } else {
+          response.error = false
+          response.data = outlet.result
         }
         resolve(response)
       } catch (err) {

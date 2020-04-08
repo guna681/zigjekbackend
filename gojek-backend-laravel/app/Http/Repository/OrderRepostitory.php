@@ -58,7 +58,7 @@ Class OrderRepostitory{
             $orders->AssignedProviderIds  = "[]";
             $orders->Estimation  = $data->netAmount;
             $orders->CurrencyType  = $currency;
-            $orders->RideName  = 'foodDelivery';
+            $orders->RideName  = 'Food Delivery';
             // $orders->deliveryAddressType = $data->addressType;
             $orders->orderStatus         = $data->orderStatus;
             // $orders->orderPlaceTime      =  date('Y-m-d H:i:s');
@@ -298,7 +298,7 @@ public function updateOrderDetail($data)
 public function updateLastMile($lastMileData)
     {
         $orders = Orders::where(['id'=>$lastMileData->orderId])
-                        ->update(['lastMile' =>$lastMileData->outletToRestaurantDistance,'eta'=>$lastMileData->etaInTimestamp,'SourceLat'=>$lastMileData->SourceLat,'SourceLong'=>$lastMileData->SourceLong,'s2CellId'=>$lastMileData->s2CellId,'FromLocation'=>$lastMileData->outletAddress,'Distance'=>$lastMileData->outletToRestaurantDistance,'OutletName'=>$lastMileData->outletName]);
+                        ->update(['lastMile' =>$lastMileData->outletToRestaurantDistance,'eta'=>$lastMileData->etaInTimestamp,'SourceLat'=>$lastMileData->SourceLat,'SourceLong'=>$lastMileData->SourceLong,'s2CellId'=>$lastMileData->s2CellId,'FromLocation'=>$lastMileData->outletAddress,'Distance'=>$lastMileData->outletToRestaurantDistance,'OutletName'=>$lastMileData->outletName,'serviceCommission'=>$lastMileData->serviceCommission]);
         return $orders;
     }
 

@@ -2,6 +2,7 @@ module.exports = function () {
   const rideVehicleType = 'RideVehicleType'
   const booking = 'Booking'
   const orderItems = 'order_Items'
+  const outlet = 'Outlets'
 
   require('dotenv').config({ path: './../.env' })
   var config = {
@@ -425,6 +426,30 @@ module.exports = function () {
         .catch((err) => {
           err.error = true
           console.log(err)
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.getOutletDetails = (orderId) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(outlet)
+        .where('id', orderId)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result[0]
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
           resolve(output)
         }).finally(() => {
           knex.destroy()
