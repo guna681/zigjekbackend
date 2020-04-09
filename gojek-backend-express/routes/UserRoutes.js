@@ -733,4 +733,39 @@ module.exports = function (server, validator) {
       })
     })
   })
+
+  server.get(basePath + 'getOrderTabs', server.auth, function (request, response) {
+    var body = request.body
+    body.auth = request.params.auth
+    const lang = request.headers.lang || 'default'
+
+    userController.getOrderTabCtrl((result) => {
+      errorController.ctrlHandler([result], result.error, lang, (message) => {
+        return response.send(message)
+      })
+    })
+  })
+
+  server.get(basePath + 'getOrderList/:type/:page', [
+    validator.check('type')
+      .isIn(['taxi', 'services', 'delivery']).withMessage('INVALID: $[1],Order Type'),
+    validator.check('page')
+      .isNumeric().withMessage('INVALID: $[1],Page no')
+  ], server.auth, (request, response) => {
+    const error = validator.validation(request)
+    const lang = request.headers.lang
+    if (error.array().length) {
+      errorController.requestHandler(error.array(), true, lang, (message) => {
+        return response.send(message)
+      })
+    } else {
+      var body = request.params
+      body.auth = request.params.auth
+      userController.getOrderListingCtrl(body, (result) => {
+        errorController.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
+  })
 }

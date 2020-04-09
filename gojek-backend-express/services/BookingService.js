@@ -808,4 +808,75 @@ module.exports = function () {
       }
     })
   }
+
+  this.getOrderTabService = (type) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      try {
+        var orderList = await bookingRepository.fetchTabList(type)
+        if (orderList.error) {
+          response.error = true
+          response.msg = 'NO_DATA'
+        } else {
+          response.error = false
+          response.data = orderList.result
+          response.msg = 'VALID'
+        }
+        resolve(response)
+      } catch (err) {
+        err.response = true
+        err.msg = 'OOPS'
+        resolve(err)
+      }
+    })
+  }
+
+  this.getOrderListingService = (data) => {
+    var response = {}
+    var page = 1
+    return new Promise(async function (resolve) {
+      try {
+        var condition = {}
+        if (data.userType === 'user') {
+          condition.UserId = data.auth.Id
+        } else if (data.userType === 'provider') {
+          condition.ProviderId = data.auth.Id
+        }
+        condition.Type = data.type
+        page = data.page
+        var orderList = await bookingRepository.fetchOrderList(condition, page)
+        if (orderList.error) {
+          response.error = true
+          response.msg = 'NO_DATA'
+        } else {
+          var bookingInfo = orderList.result.map(element => {
+            var data = {}
+            data['bookingNo'] = element.Id
+            data['sourceLat'] = element.SourceLat
+            data['soruceLong'] = element.SourceLong
+            data['destinyLat'] = element.DestinyLat
+            data['destinyLong'] = element.DestinyLong
+            data['estimation'] = element.Estimation
+            data['total'] = element.CurrencyType + element.TotalAmount
+            data['isActive'] = element.IsActive
+            data['status'] = element.Status
+            data['vehicleName'] = element.VehicleName === null ? 'Test Vehicle' : element.VehicleName
+            data['paymentMode'] = element.PaymentMode
+            data['createdTime'] = element.CreateAt
+            data['type'] = element.Type
+            return data
+          })
+
+          response.error = false
+          response.data = bookingInfo
+          response.msg = 'VALID'
+        }
+        resolve(response)
+      } catch (err) {
+        err.response = true
+        err.msg = 'OOPS'
+        resolve(err)
+      }
+    })
+  }
 }

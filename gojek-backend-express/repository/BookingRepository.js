@@ -3,6 +3,7 @@ module.exports = function () {
   const booking = 'Booking'
   const orderItems = 'order_Items'
   const outlet = 'Outlets'
+  const orderTab = 'OrderTab'
 
   require('dotenv').config({ path: './../.env' })
   var config = {
@@ -449,6 +450,61 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
+          err.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchTabList = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(orderTab)
+        .select('Name as displayName', 'Path as path')
+        .where(data)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchOrderList = (data, page) => {
+    var output = {}
+    var limit = 10
+    var offset = page > 1 ? (page - 1) * 10 : 0
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(booking)
+        .where(data)
+        .limit(limit)
+        .offset(offset)
+        .then((result) => {
+          console.log(result)
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          console.log(err)
           err.error = true
           resolve(output)
         }).finally(() => {

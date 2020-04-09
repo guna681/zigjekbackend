@@ -1054,4 +1054,47 @@ module.exports = function () {
       callback(err)
     }
   }
+
+  this.getOrderTabCtrl = async (req, callback) => {
+    var response = {}
+    try {
+      var data = { UserType: 'provider', Key: req.auth.Type }
+      var tabList = await bookingService.getOrderTabService(data)
+      if (tabList.error) {
+        response.error = true
+        response.msg = tabList.msg
+      } else {
+        response.error = false
+        response.msg = tabList.msg
+        response.data = tabList.data
+      }
+      callback(response)
+    } catch (err) {
+      console.log(err)
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
+
+  this.getOrderListingCtrl = async (req, callback) => {
+    var response = {}
+    try {
+      req.userType = 'provider'
+      var tabList = await bookingService.getOrderListingService(req)
+      if (tabList.error) {
+        response.error = true
+        response.msg = tabList.msg
+      } else {
+        response.error = false
+        response.msg = tabList.msg
+        response.data = tabList.data
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
 }
