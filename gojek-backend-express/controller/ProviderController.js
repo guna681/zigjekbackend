@@ -1001,6 +1001,8 @@ module.exports = function () {
         var bookingInfo = booking.data[0]
         var data = {}
         var receipt = []
+        data['id'] = bookingInfo.Id
+        data['orderRefferenceID'] = 'ORDER No. #' + bookingInfo.Id
         data['createdTime'] = bookingInfo.CreateAt
         data['fromLocation'] = bookingInfo.FromLocation
         data['toLocation'] = bookingInfo.ToLocation
@@ -1070,7 +1072,6 @@ module.exports = function () {
       }
       callback(response)
     } catch (err) {
-      console.log(err)
       err.error = true
       err.msg = 'OOPS'
       callback(err)

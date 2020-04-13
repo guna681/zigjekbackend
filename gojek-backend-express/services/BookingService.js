@@ -837,14 +837,19 @@ module.exports = function () {
     return new Promise(async function (resolve) {
       try {
         var condition = {}
+        condition.Type = data.type
+        page = data.page
+        var orderList
         if (data.userType === 'user') {
           condition.UserId = data.auth.Id
         } else if (data.userType === 'provider') {
           condition.ProviderId = data.auth.Id
         }
-        condition.Type = data.type
-        page = data.page
-        var orderList = await bookingRepository.fetchOrderList(condition, page)
+        if (data.type === 'taxi') {
+          orderList = await bookingRepository.fetchOrderList(condition, page)
+        } else if (data.type === 'delivery') {
+          orderList = await bookingRepository.fetchDeliveryOrders(condition, page)
+        }
         if (orderList.error) {
           response.error = true
           response.msg = 'NO_DATA'
@@ -852,15 +857,20 @@ module.exports = function () {
           var bookingInfo = orderList.result.map(element => {
             var data = {}
             data['bookingNo'] = element.Id
+            data['orderRefferenceID'] = 'ORDER No. #' + element.Id
+            data['outletName'] = element.OutletName
+            data['sourceLocation'] = element.FromLocation
             data['sourceLat'] = element.SourceLat
             data['soruceLong'] = element.SourceLong
+            data['userName'] = element.UserName
+            data['destinyLocation'] = element.ToLocation
             data['destinyLat'] = element.DestinyLat
             data['destinyLong'] = element.DestinyLong
             data['estimation'] = element.Estimation
             data['total'] = element.CurrencyType + element.TotalAmount
             data['isActive'] = element.IsActive
             data['status'] = element.Status
-            data['vehicleName'] = element.VehicleName === null ? 'Test Vehicle' : element.VehicleName
+            data['vehicleName'] = element.VehicleName
             data['paymentMode'] = element.PaymentMode
             data['createdTime'] = element.CreateAt
             data['type'] = element.Type
