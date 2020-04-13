@@ -494,17 +494,16 @@ module.exports = function () {
         .limit(limit)
         .offset(offset)
         .then((result) => {
-          console.log(result)
           if (result.length > 0) {
             output.error = false
             output.result = result
           } else {
-            output.error = true
+            output.error = false
+            output.result = result
           }
           resolve(output)
         })
         .catch((err) => {
-          console.log(err)
           err.error = true
           resolve(output)
         }).finally(() => {
