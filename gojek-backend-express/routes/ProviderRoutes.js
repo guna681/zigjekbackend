@@ -1186,6 +1186,7 @@ module.exports = function (server, validator) {
     } else {
       var body = request.params
       body.auth = request.params.auth
+      console.table(body.auth)
       providerController.getOrderListingCtrl(body, (result) => {
         errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return response.send(message)

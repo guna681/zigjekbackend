@@ -534,6 +534,8 @@ module.exports = function () {
         var bookingInfo = booking.data.map(element => {
           var data = {}
           var receipt = []
+          data['id'] = element.Id
+          data['orderRefferenceID'] = 'ORDER No. #' + element.Id
           data['createdTime'] = element.CreateAt
           data['fromLocation'] = element.FromLocation
           data['toLocation'] = element.ToLocation

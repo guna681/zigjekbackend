@@ -1232,7 +1232,6 @@ module.exports = function () {
           }
           resolve(output)
         }).catch((output) => {
-          console.log(output)
           output.error = true
           resolve(output)
         }).finally(() => {

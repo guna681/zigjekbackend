@@ -4,6 +4,7 @@ module.exports = function () {
   const orderItems = 'order_Items'
   const outlet = 'Outlets'
   const orderTab = 'OrderTab'
+  const users = 'Users'
 
   require('dotenv').config({ path: './../.env' })
   var config = {
@@ -426,7 +427,6 @@ module.exports = function () {
         })
         .catch((err) => {
           err.error = true
-          console.log(err)
           resolve(output)
         }).finally(() => {
           knex.destroy()
@@ -463,7 +463,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(orderTab)
-        .select('Name as displayName', 'Path as path')
+        .select('Name as displayName', 'Path as path', 'Type as type')
         .where(data)
         .then((result) => {
           if (result.length > 0) {
@@ -494,17 +494,49 @@ module.exports = function () {
         .limit(limit)
         .offset(offset)
         .then((result) => {
-          console.log(result)
           if (result.length > 0) {
             output.error = false
             output.result = result
           } else {
-            output.error = true
+            output.error = false
+            output.result = result
           }
           resolve(output)
         })
         .catch((err) => {
-          console.log(err)
+          err.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchDeliveryOrders = (data, page) => {
+    var output = {}
+    var limit = 10
+    var offset = page > 1 ? (page - 1) * 10 : 0
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(booking)
+        .select(knex.raw(`Booking.Id, CONCAT(Users.FirstName, Users.LastName) as UserName, 
+        Booking.OutletName, Booking.FromLocation, Booking.ToLocation, 
+        Booking.TotalAmount, Booking.CurrencyType, Booking.CreateAt, Booking.PaymentMode`))
+        .join(users, 'Booking.UserId', 'Users.Id')
+        .where(data)
+        .limit(limit)
+        .offset(offset)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = false
+            output.result = result
+          }
+          resolve(output)
+        })
+        .catch((err) => {
           err.error = true
           resolve(output)
         }).finally(() => {
