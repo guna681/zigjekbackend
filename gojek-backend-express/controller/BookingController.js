@@ -337,6 +337,13 @@ module.exports = function () {
             if (bookingInfo.paymentMode === 'wallet' || booking.data.paymentMode === 'card') {
               bookingInfo.estimation = '0.00'
             }
+            if (bookingInfo.type === 'delivery' && ['assigned', 'accepted', 'pickedup'].includes(bookingInfo.status)) {
+              var outletInfo = await bookingService.getOutletInfo(bookingInfo.outletId)
+              bookingInfo.displayName = outletInfo.error ? userInfo.data.firstName + ' ' + userInfo.data.lastName : outletInfo.data.name
+              userInfo.data.mobile = outletInfo.error ? userInfo.data.mobile : outletInfo.data.contactNumber
+            } else {
+              bookingInfo.displayName = userInfo.data.firstName + ' ' + userInfo.data.lastName
+            }
             bookingInfo.userInfo = userInfo.data
           }
         } else {

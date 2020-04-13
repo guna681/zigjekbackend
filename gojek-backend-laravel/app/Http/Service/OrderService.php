@@ -102,6 +102,7 @@ Class  OrderService
               $lastMileData->s2CellId   = $orderdata->s2CellId;
               $lastMileData->outletAddress = $orderdata->outletAddress;
               $lastMileData->outletName   = $orderdata->outletName;
+              $lastMileData->serviceCommission   = $orderdata->serviceCommission;
             $updateLastMile                = $orderRepostitory->updateLastMile($lastMileData);
             
             // if($distanceData->error === false) {     
@@ -709,6 +710,7 @@ $orderCustomisationItems = $orderRepostitory->orderCustomisationItems($cart['id'
             $orderdata->latitude           = $outlet->latitude;
             $orderdata->longitude           = $outlet->longitude;
             $orderdata->s2CellId           = $outlet->s2CellId;
+            $orderdata->serviceCommission           = $outlet->serviceCommission;
             $orderdata->outletAddress        = $outlet->addressLineOne . ',' . $outlet->street . ',' . $outlet->area . ',' . $outlet->city;
             $orderdata->userAddressType      = $order->deliveryAddressType;
             $orderdata->userAddress          = $order->deliveryAddress;
