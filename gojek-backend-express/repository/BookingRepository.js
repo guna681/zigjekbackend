@@ -5,6 +5,8 @@ module.exports = function () {
   const outlet = 'Outlets'
   const orderTab = 'OrderTab'
   const users = 'Users'
+  const serviceCategory = 'ServiceCategory'
+  const serviceSubCategory = 'ServiceSubCategory'
 
   require('dotenv').config({ path: './../.env' })
   var config = {
@@ -138,7 +140,8 @@ module.exports = function () {
           .transacting(trx)
           .where(data)
           .whereIn('Status', status)
-          .having('CreateAT', '<', knex.fn.now())
+          .whereIn('Type', ['taxi', 'delivery', 'services'])
+          .having('CreateAt', '<', knex.fn.now())
           .limit(limit)
           .then(trx.commit)
           .catch((err) => {
@@ -519,9 +522,9 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(booking)
-        .select(knex.raw(`Booking.Id, CONCAT(Users.FirstName, Users.LastName) as UserName, 
+        .select(knex.raw(`Booking.Id, CONCAT(Users.FirstName,' ',Users.LastName) as UserName, 
         Booking.OutletName, Booking.FromLocation, Booking.ToLocation, 
-        Booking.TotalAmount, Booking.CurrencyType, Booking.CreateAt, Booking.PaymentMode`))
+        Booking.TotalAmount, Booking.CurrencyType, Booking.CreateAt, Booking.PaymentMode, Booking.Type`))
         .join(users, 'Booking.UserId', 'Users.Id')
         .where(data)
         .limit(limit)
@@ -533,6 +536,117 @@ module.exports = function () {
           } else {
             output.error = false
             output.result = result
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.addServiceRequest = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(booking)
+        .insert(data)
+        .then((result) => {
+          if (result[0] > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchServiceList = (data, page) => {
+    var output = {}
+    var limit = 10
+    var offset = page > 1 ? (page - 1) * 10 : 0
+    console.log(data, page)
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(booking)
+        .select(knex.raw(`Booking.Id, CONCAT(Users.FirstName,' ',Users.LastName) as UserName, Booking.ToLocation, 
+        Booking.TotalAmount, Booking.CurrencyType, Booking.CreateAt, Booking.PaymentMode, ServiceCategory.Name as CategoryName, Booking.TotalAmount, Booking.Status, Booking.DestinyLat, Booking.DestinyLong, Booking.ServiceTimeSlot, Booking.BookingTimestamp, Booking.Type`))
+        .leftJoin(users, 'Booking.UserId', 'Users.Id')
+        .leftJoin(serviceCategory, 'Booking.ServiceCategoryId', 'ServiceCategory.Id')
+        .where(data)
+        .limit(limit)
+        .offset(offset)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = false
+            output.result = result
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.updateServiceImage = (conditon, data) => {
+    var output = {}
+    console.log(conditon, data)
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(booking)
+        .where(conditon)
+        .update(data)
+        .then((result) => {
+          if (result > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          console.log(err)
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchBookingCategory = (categoryId, subCategoryId, groupId) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceSubCategory)
+        .select('')
+        .leftJoin('')
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
           }
           resolve(output)
         })

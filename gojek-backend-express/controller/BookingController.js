@@ -320,10 +320,11 @@ module.exports = function () {
     var bookingStatus = ['assigned', 'accepted', 'pickedup', 'arrived', 'dropped']
     try {
       var booking = await bookingService.getProviderBooking(data.auth.Id, bookingStatus)
-      if (booking.error) {
+      if (booking.error || (booking.data.type === 'services' && booking.data.status === 'accepted')) {
         response.error = true
-        response.msg = booking.msg
+        response.msg = 'NO_BOOKING'
       } else {
+        this.formdatedata = typeof this.formdatedata === 'undefined' ? null : this.formdatedata
         var bookingInfo = booking.data
         var status = bookingInfo.status
         if (bookingStatus.indexOf(status) >= 0) {

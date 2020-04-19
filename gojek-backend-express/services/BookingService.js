@@ -1,5 +1,5 @@
 module.exports = function () {
- const BookingRepository = require('../repository/BookingRepository')
+  const BookingRepository = require('../repository/BookingRepository')
   const GeoHelper = require('../thirdParty/geoHelper')
   const Common = require('../Utils/common')
 
@@ -340,7 +340,7 @@ module.exports = function () {
             data['outletId'] = element.outletId
             if (status.indexOf(element.Status)) {
               data['paymentMode'] = element.PaymentMode
-              data['estimation'] = element.CurrencyType + element.Estimation
+              data['estimation'] = (element.CurrencyType + element.Estimation).toString()
               data['userId'] = element.UserId
             }
             return data
@@ -849,6 +849,9 @@ module.exports = function () {
           orderList = await bookingRepository.fetchOrderList(condition, page)
         } else if (data.type === 'delivery') {
           orderList = await bookingRepository.fetchDeliveryOrders(condition, page)
+        } else if (data.type === 'services') {
+          delete condition.Type
+          orderList = await bookingRepository.fetchServiceList(condition, page)
         }
         if (orderList.error) {
           response.error = true
@@ -867,18 +870,108 @@ module.exports = function () {
             data['destinyLat'] = element.DestinyLat
             data['destinyLong'] = element.DestinyLong
             data['estimation'] = element.Estimation
-            data['total'] = element.CurrencyType + element.TotalAmount
+            data['total'] = (element.CurrencyType + element.TotalAmount).toString()
             data['isActive'] = element.IsActive
             data['status'] = element.Status
             data['vehicleName'] = element.VehicleName
             data['paymentMode'] = element.PaymentMode
             data['createdTime'] = element.CreateAt
             data['type'] = element.Type
+            data['categoryName'] = element.CategoryName
+            data['bookingDate'] = element.BookingTimestamp
+            data['timeSlot'] = element.ServiceTimeSlot
             return data
           })
 
           response.error = false
           response.data = bookingInfo
+          response.msg = 'VALID'
+        }
+        resolve(response)
+      } catch (err) {
+        err.response = true
+        err.msg = 'OOPS'
+        resolve(err)
+      }
+    })
+  }
+
+  this.createSerivceRequestService = (data) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      try {
+        var service = {}
+        service.UserId = data.auth.Id
+        service.ProviderId = data.providerId
+        service.ServiceCategoryId = data.categoryId
+        service.ServiceSubCategoryId = data.subCategoryId
+        service.ServiceGroupId = data.groupId
+        service.BookingTimestamp = data.bookingDate
+        service.ServiceTimeSlot = data.timeSlot
+        service.ToLocation = data.address
+        service.DestinyLat = data.latitude
+        service.DestinyLong = data.longitude
+        service.PaymentMode = data.paymentMode
+        service.Status = 'assigned'
+        service.Type = 'services'
+
+        var createService = await bookingRepository.addServiceRequest(service)
+        if (createService.error) {
+          response.error = true
+          response.msg = 'BOOKING_UNAVAILABLE'
+        } else {
+          response.error = false
+          response.msg = 'BOOKING_ADDED'
+        }
+        resolve(response)
+      } catch (err) {
+        err.response = true
+        resolve(err)
+      }
+    })
+  }
+
+  this.serviceImageUpdateService = (data) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      try {
+        var service = {}
+        var condition = {}
+        condition.Id = data.bookingNo
+        condition.ProviderId = data.auth.Id
+        if (data.type === 'start') {
+          service.ServiceStartImage = data.imageURL
+        } else if (data.type === 'end') {
+          service.ServiceEndImage = data.imageURL
+        }
+        var createService = await bookingRepository.updateServiceImage(condition, service)
+        if (createService.error) {
+          response.error = true
+          response.msg = 'OOPS'
+        } else {
+          response.error = false
+          response.msg = 'VALID'
+        }
+        resolve(response)
+      } catch (err) {
+        err.error = true
+        err.msg = 'OOPS'
+        resolve(err)
+      }
+    })
+  }
+
+  this.getBookingCategoryInfoService = (type) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      try {
+        var orderList = await bookingRepository.fetchTabList(type)
+        if (orderList.error) {
+          response.error = true
+          response.msg = 'NO_DATA'
+        } else {
+          response.error = false
+          response.data = orderList.result
           response.msg = 'VALID'
         }
         resolve(response)
