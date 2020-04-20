@@ -1,6 +1,6 @@
 module.exports = function () {
   const UserService = require('../services/UserService.js')
-  const AppConfigService = require('../services/AppConfigService.js')
+  const AppConfigService = require('../services/AppConfigService')
   const ProviderService = require('../services/ProviderService')
   const BookingService = require('../services/BookingService')
   const Common = require('../Utils/common.js')
@@ -885,6 +885,31 @@ module.exports = function () {
         response.error = false
         response.msg = tabList.msg
         response.data = tabList.data
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
+
+  this.createSerivceRequestCtrl = async (req, callback) => {
+    var response = {}
+    try {
+      var createBooking = await bookingService.createSerivceRequestService(req)
+      if (createBooking.error) {
+        response.error = true
+        response.msg = createBooking.msg
+      } else {
+        var content = {}
+        content.data = 'incoming_booking'
+        content.title = 'Booking Alert'
+        content.body = 'You have new booking request'
+        var providerInfo = await providerService.getProivderMessageToken(req.providerId)
+        pushNotification.sendPushNotificationByDeviceType(providerInfo.data, content)
+        response.error = false
+        response.msg = createBooking.msg
       }
       callback(response)
     } catch (err) {

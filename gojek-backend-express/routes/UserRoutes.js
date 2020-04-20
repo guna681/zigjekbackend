@@ -776,11 +776,66 @@ module.exports = function (server, validator) {
     var body = request.body
     body.auth = request.params.auth
     const lang = request.headers.lang || 'default'
-
-    userController.getTripDetails(body, (result) => {
-      errorController.ctrlHandler([result], result.error, lang, (message) => {
+    const error = validator.validation(request)
+    if (error.array().length) {
+      errorController.requestHandler(error.array(), true, lang, (message) => {
         return response.send(message)
       })
-    })
+    } else {
+      userController.getTripDetails(body, (result) => {
+        errorController.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
+  })
+
+  server.post(basePath + 'serviceRequest', [
+    validator.check('providerId')
+      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1],Provider Id')
+      .isNumeric().withMessage('INVALID: $[1],Provider Id'),
+    validator.check('categoryId')
+      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1],Category Id')
+      .isNumeric().withMessage('INVALID: $[1],Category Id'),
+    validator.check('subCategoryId')
+      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1],Sub Category Id')
+      .isNumeric().withMessage('INVALID: $[1],Sub Category Id')
+      .optional(),
+    validator.check('groupId')
+      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1],Group Id')
+      .isNumeric().withMessage('INVALID: $[1],Group Id')
+      .optional(),
+    validator.check('bookingDate')
+      .isISO8601().toDate().withMessage('INVALID: $[1],Booking date')
+      .optional(),
+    validator.check('timeSlot')
+      .isJSON().withMessage('INVALID: $[1],Time Slot'),
+    validator.check('description')
+      .isLength({ min: 1, max: 100 }).withMessage('INVALID: $[1],Description')
+      .optional(),
+    validator.check('address')
+      .isLength({ min: 1, max: 255 }).withMessage('INVALID: $[1],Address'),
+    validator.check('latitude')
+      .isNumeric().withMessage('INVALID: $[1],Latidue'),
+    validator.check('longitude')
+      .isNumeric().withMessage('INVALID: $[1],Longitude'),
+    validator.check('paymentMode')
+      .isIn(['wallet', 'cash', 'card']).withMessage('INVALID_PAYMENT_MODE')
+  ], server.auth, function (request, response) {
+    var body = request.body
+    body.auth = request.params.auth
+    const lang = request.headers.lang || 'default'
+    const error = validator.validation(request)
+    if (error.array().length) {
+      errorController.requestHandler(error.array(), true, lang, (message) => {
+        return response.send(message)
+      })
+    } else {
+      userController.createSerivceRequestCtrl(body, (result) => {
+        errorController.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
   })
 }

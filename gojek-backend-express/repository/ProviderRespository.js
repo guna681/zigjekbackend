@@ -11,8 +11,8 @@ module.exports = function () {
   const providerAddress = 'ProviderAddress'
   const timeSlot = 'TimeSlot'
   const providerAvailability = 'ProviderAvailability'
-  const category = 'Category'
-  const subCategory = 'SubCategory'
+  const serviceCategory = 'ServiceCategory'
+  const serviceSubCategory = 'ServiceSubCategory'
   const providerService = 'ProviderService'
 
   const config = {
@@ -1010,8 +1010,9 @@ module.exports = function () {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(category)
-        .select('Id as id', 'Name as name', 'HasSubCategory as hasSubCategory', 'IsFixedPricing as isFixedPricing')
+      knex(serviceCategory)
+        .select('Id as id', 'Name as name', 'HasSubCategory as hasSubCategory', 'IsFixedPricing as isFixedPricing', 'PricePerHour as pricePerHour')
+        .where('Type', 'SERVICE')
         .where('Status', 1)
         .then((result) => {
           if (result.length > 0) {
@@ -1034,7 +1035,7 @@ module.exports = function () {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(subCategory)
+      knex(serviceSubCategory)
         .select('Id as id', 'Name as name')
         .where('CategoryId', categoryId)
         .where('Status', 1)
@@ -1106,11 +1107,11 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(providerService)
-        .select('ProviderService.Id as id', 'ProviderService.CategoryId as categoryId', 'Category.Name as categoryName', 'ProviderService.SubCategoryId as subCategoryId', 'SubCategory.Name as subCategoryName', 'Experience as experience', 'QuickPitch as quickPitch', 'PricePerHour as pricePerHour')
+        .select('ProviderService.Id as id', 'ProviderService.CategoryId as categoryId', 'ServiceCategory.Name as categoryName', 'ProviderService.SubCategoryId as subCategoryId', 'ServiceSubCategory.Name as subCategoryName', 'Experience as experience', 'QuickPitch as quickPitch', 'ServiceCategory.PricePerHour as pricePerHour')
         .where('ProviderService.ProviderId', providerId)
         .leftJoin(provider, 'ProviderService.ProviderId', 'Provider.Id')
-        .leftJoin(category, 'ProviderService.CategoryId', 'Category.Id')
-        .leftJoin(subCategory, 'ProviderService.SubCategoryId', 'SubCategory.Id')
+        .leftJoin(serviceCategory, 'ProviderService.CategoryId', 'ServiceCategory.Id')
+        .leftJoin(serviceSubCategory, 'ProviderService.SubCategoryId', 'ServiceSubCategory.Id')
         .then((result) => {
           if (result.length > 0) {
             output.error = false
@@ -1120,6 +1121,7 @@ module.exports = function () {
           }
           resolve(output)
         }).catch((output) => {
+          console.log(output)
           output.error = true
           resolve(output)
         }).finally(() => {

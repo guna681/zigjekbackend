@@ -1021,12 +1021,22 @@ module.exports = function () {
           receipt.push({ fieldName: 'Fare', value: String(bookingInfo.Estimation) })
           receipt.push({ fieldName: 'Sub Total', value: String(Number(bookingInfo.Estimation) + Number(bookingInfo.Tax)) })
           receipt.push({ fieldName: 'Total Amount', value: bookingInfo.CurrencyType + ' ' + bookingInfo.TotalAmount })
-        } else {
+        } else if (bookingInfo.Type === 'delivery') {
           data['description'] = bookingInfo.Description
           data['orderId'] = bookingInfo.Id
           data['outletName'] = bookingInfo.OutletName
           var dishList = await bookingService.getBookingDishes(req.bookingNo)
           data['dishes'] = dishList.error ? [] : dishList.data.map(element => { element.displayPrice = bookingInfo.CurrencyType + element.dishTotal; return element })
+          receipt.push({ fieldName: 'Tax', value: bookingInfo.Tax })
+          receipt.push({ fieldName: 'Fare', value: String(bookingInfo.Estimation) })
+          receipt.push({ fieldName: 'Sub Total', value: String(Number(bookingInfo.Estimation) + Number(bookingInfo.Tax)) })
+          receipt.push({ fieldName: 'Total Amount', value: bookingInfo.CurrencyType + ' ' + bookingInfo.TotalAmount })
+        } else if (bookingInfo.Type === 'services') {
+          data['categoryName'] = 'Test'
+          data['timeSlot'] = bookingInfo.ServiceTimeSlot
+          data['bookingDate'] = bookingInfo.BookingTimestamp
+          data['serviceStartImage'] = bookingInfo.ServiceStartImage
+          data['serviceEndImage'] = bookingInfo.ServiceEndImage
           receipt.push({ fieldName: 'Tax', value: bookingInfo.Tax })
           receipt.push({ fieldName: 'Fare', value: String(bookingInfo.Estimation) })
           receipt.push({ fieldName: 'Sub Total', value: String(Number(bookingInfo.Estimation) + Number(bookingInfo.Tax)) })
@@ -1082,14 +1092,34 @@ module.exports = function () {
     var response = {}
     try {
       req.userType = 'provider'
-      var tabList = await bookingService.getOrderListingService(req)
-      if (tabList.error) {
+      var orderList = await bookingService.getOrderListingService(req)
+      if (orderList.error) {
         response.error = true
-        response.msg = tabList.msg
+        response.msg = orderList.msg
       } else {
         response.error = false
-        response.msg = tabList.msg
-        response.data = tabList.data
+        response.msg = orderList.msg
+        response.data = orderList.data
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
+
+  this.serviceImageUpdateCtrl = async (req, callback) => {
+    var response = {}
+    try {
+      var orderList = await bookingService.serviceImageUpdateService(req)
+      if (orderList.error) {
+        response.error = true
+        response.msg = orderList.msg
+      } else {
+        response.error = false
+        response.msg = orderList.msg
+        response.data = orderList.data
       }
       callback(response)
     } catch (err) {
