@@ -1,3 +1,4 @@
 *.swi
 *.swp
 .env
+gojek-admin
