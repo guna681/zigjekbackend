@@ -1011,7 +1011,7 @@ module.exports = function () {
         data['destinyLat'] = bookingInfo.DestinyLat
         data['destinyLong'] = bookingInfo.DestinyLong
         data['status'] = bookingInfo.Status
-        data['totalAmt'] = bookingInfo.CurrencyType + bookingInfo.TotalAmount
+        data['totalAmt'] = (bookingInfo.CurrencyType + bookingInfo.TotalAmount).toString()
         data['paymentMode'] = bookingInfo.PaymentMode
         data['type'] = bookingInfo.Type
         data['vehicleName'] = bookingInfo.VehicleName === null ? 'Food Devliery' : bookingInfo.VehicleName

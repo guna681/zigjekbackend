@@ -73,8 +73,8 @@ module.exports = function () {
     })
   }
 
-  //Provider List View
-  this.providersListView = (data) => {
+  // Provider List View
+  this.providersListView = () => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)

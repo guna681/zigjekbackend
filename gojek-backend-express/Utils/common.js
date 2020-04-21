@@ -101,10 +101,10 @@ module.exports = function () {
     })
   }
 
-  this.getAdminAuthToken = function (token, secret) {
+  this.getAdminAuthToken = function (token) {
     var data = {}
     return new Promise(function (resolve) {
-      jwt.verify(token, secret, (err, payload) => {
+      jwt.verify(token, publicKey, { algorithms: ['RS256'] }, (err, payload) => {
         if (err) {
           data.error = true
           data.data = null

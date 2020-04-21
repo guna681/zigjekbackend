@@ -1,0 +1,540 @@
+/* spinner css */
+body, html {
+    height: 100%;
+  }
+.justify-content-center {
+    display: flex !important;
+    justify-content: center !important;
+    margin-left: 00px!important;
+}
+  .app-loading .logo {   
+    width: 100px;
+    height: 100px;
+    background: url("../img/Group756.png") center center no-repeat; 
+}
+  .app-loading {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  .app-loading .spinner {
+    height: 200px;
+    width: 200px;
+    animation: rotate 2s linear infinite;
+    transform-origin: center center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+  .app-loading .spinner .path {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    animation: dash 1.5s ease-in-out infinite;
+    stroke-linecap: round;
+    stroke: #ddd;
+  }
+  @keyframes rotate {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes dash {
+    0% {
+      stroke-dasharray: 1, 200;
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: 89, 200;
+      stroke-dashoffset: -35px;
+    }
+    100% {
+      stroke-dasharray: 89, 200;
+      stroke-dashoffset: -124px;
+    }
+  }
+/* end spinner css */
+/*common css classes*/
+.switch input { 
+    display:none;
+}
+.switch {
+    display:inline-block;
+    width:60px;
+    height:30px;
+    margin:8px;
+    transform:translateY(50%);
+    position:relative;
+}
+label {
+    color: black;
+}
+::placeholder {
+    color : grey;
+}
+.slider {
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    border-radius:30px;
+    box-shadow:0 0 0 2px #777, 0 0 4px #777;
+    cursor:pointer;
+    border:4px solid transparent;
+    overflow:hidden;
+     transition:.4s;
+}
+.slider:before {
+    position:absolute;
+    content:"";
+    width:100%;
+    height:100%;
+    background:#777;
+    border-radius:30px;
+    transform:translateX(-30px);
+    transition:.4s;
+}
+
+input:checked + .slider:before {
+    transform:translateX(30px);
+    background:limeGreen;
+}
+input:checked + .slider {
+    box-shadow:0 0 0 2px limeGreen,0 0 2px limeGreen;
+}
+.btn,.primary {
+    border-color: #3472F7;
+    color: white;
+    background-color: #3472F7;
+}
+select {
+    color: black;
+}
+@font-face {
+    font-family: 'Avenir Book';
+    src: url('../fonts/avenir_book.ttf');
+}
+@font-face {
+    font-family: 'Avenir Medium';
+    src: url('../fonts/avenir_medium.ttf');
+}
+@font-face {
+    font-family: 'Avenir Heavy';
+    src: url('../fonts/avenir_heavy.ttf');
+}
+.card .content .text-first{
+	margin-top: 10px;
+    font-size: 22px;
+    font-weight: bold;	
+}
+.card .content .text-second{
+	margin-top: 0px;
+    font-size: 15px;
+    /*font-weight: bold;	*/
+}
+.span {
+	color: #525174;
+	font-weight: bold!important;
+}
+@media (max-width: 3600px) {
+	.logout-img {
+	color:#fff!important;
+	border-radius: 30px!important;
+    background: #FF4E00;
+}
+	.navbar-default .navbar-nav > li > a:not(.btn):hover {
+	color:#fff!important;
+	border-radius: 30px!important;
+    background-color: #FF4E00!important;
+}
+
+}
+
+
+
+/*laptop*/
+@media (min-width: 992px) and (max-width: 1024px) {
+	.col-rider {
+		/*width: 44.333333%!important;*/
+		margin: 0px 0px 0px 80px;
+	}
+	.col-driver {
+		/*width: 44.333333%!important;*/
+		margin: 0px 0px 0px 20px;
+	}
+	.col-company {
+		
+		margin: 0px 0px 0px 80px;
+	}
+	.col-total {
+		
+		margin: 0px 0px 0px 20px;
+	}
+		.card-riders {
+    background: #77b0f2;
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+        /*margin-left: 80px;*/
+    /* background-color: white; */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-drivers {
+    background: #7793f2;
+    width: 120px;
+    height: 120px;
+        /*margin-left: 80px;*/
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-companies {
+    background: #8a77f2;
+    width: 120px;
+    height: 120px;
+        /*margin-left: 80px;*/
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-total-earnings {
+    background: #93f276;
+    width: 120px;
+    height: 120px;
+        /*margin-left: 80px;*/
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+/*ride statics*/
+
+.card-total-rides {
+    background: #77D1F2;
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+        /*margin-left: 80px;*/
+    /* background-color: white; */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-ongoing {
+    background: #F2DA77;
+    width: 120px;
+    height: 120px;
+        /*margin-left: 80px;*/
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-cancel-rides {
+    background: #F27777;
+    width: 120px;
+    height: 120px;
+        /*margin-left: 80px;*/
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-completed-rides {
+    background: #93F277;
+    width: 120px;
+    height: 120px;
+        /*margin-left: 80px;*/
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}	
+}
+/*pc or computer screens*/
+@media (min-width: 1025px){
+	.col-rider {
+		/*width: 44.333333%!important;*/
+		margin: 0px 5px 0px 80px;
+	}
+	.col-driver {
+		/*width: 44.333333%!important;*/
+		margin: 0px 5px 0px -40px;
+	}
+	.col-company {
+		/*width: 44.333333%!important;*/
+		margin: 0px 5px 0px 80px;
+	}
+	.col-total {
+		/*width: 44.333333%!important;*/
+		margin: 0px 5px 0px -40px;
+	}
+	/*site statics*/
+		.card-riders {
+    background: #77b0f2;
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+        /*margin-left: 80px;*/
+    /* background-color: white; */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-drivers {
+    background: #7793f2;
+    width: 120px;
+    height: 120px;
+        /*margin-left: 80px;*/
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-companies {
+    background: #8a77f2;
+    width: 120px;
+    height: 120px;
+        /*margin-left: 80px;*/
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-total-earnings {
+    background: #93f276;
+    width: 120px;
+    height: 120px;
+        /*margin-left: 80px;*/
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}	
+/*ride statics*/
+
+.card-total-rides {
+    background: #77D1F2;
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+        /*margin-left: 80px;*/
+    /* background-color: white; */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-ongoing {
+    background: #F2DA77;
+    width: 120px;
+    height: 120px;
+        /*margin-left: 80px;*/
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-cancel-rides {
+    background: #F27777;
+    width: 120px;
+    height: 120px;
+        /*margin-left: 80px;*/
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-completed-rides {
+    background: #93F277;
+    width: 120px;
+    height: 120px;
+        /*margin-left: 80px;*/
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}	
+}
+/*tablets*/
+@media (min-width: 768px) and (max-width: 993px) {
+	.col-site {
+		width: 44.333333%!important;
+		margin: 0px 5px 0px 10px;
+	}
+	.card-riders {
+    background: #77b0f2;
+    width: 360px;
+    height: 120px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+        margin-left: 80px;
+    /* background-color: white; */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-drivers {
+    background: #7793f2;
+    width: 360px;
+    height: 120px;
+        margin-left: 80px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-companies {
+    background: #8a77f2;
+    width: 360px;
+    height: 120px;
+    margin-left: 80px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-total-earnings {
+    background: #93f276;
+    width: 360px;
+    height: 120px;
+    margin-left: 80px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+/*ride statics*/
+
+.card-total-rides {
+    background: #77D1F2;
+    width: 360px;
+    height: 120px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+        margin-left: 80px;
+    /* background-color: white; */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-ongoing {
+    background: #F2DA77;
+    width: 360px;
+    height: 120px;
+        margin-left: 80px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-cancel-rides {
+    background: #F27777;
+    width: 360px;
+    height: 120px;
+        margin-left: 80px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-completed-rides {
+    background: #93F277;
+    width: 360px;
+    height: 120px;
+        margin-left: 80px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}	
+}
+/*small devices*/
+@media (max-width: 427px) {
+	/*.col-site {
+		width: 44.333333%!important;
+		margin: 0px 5px 0px 10px;
+	}
+	*/
+.card-riders {
+    background: #77b0f2;
+    width: 150px;
+    height: 120px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+        margin-left: 60px;
+    /* background-color: white; */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-drivers {
+    background: #7793f2;
+    width: 150px;
+    height: 120px;
+        margin-left: 60px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-companies {
+    background: #8a77f2;
+    width: 150px;
+    height: 120px;
+        margin-left: 60px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-total-earnings {
+    background: #93f276;
+    width: 150px;
+    height: 120px;
+        margin-left: 60px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+/*ride statics*/
+
+.card-total-rides {
+    background: #77D1F2;
+    width: 150px;
+    height: 120px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+        margin-left: 60px;
+    /* background-color: white; */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-ongoing {
+    background: #F2DA77;
+    width: 150px;
+    height: 120px;
+        margin-left: 60px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-cancel-rides {
+    background: #F27777;
+    width: 150px;
+    height: 120px;
+        margin-left: 60px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}
+.card-completed-rides {
+    background: #93F277;
+    width: 150px;
+    height: 120px;
+        margin-left: 60px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+ 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(63, 63, 68, 0);
+}	
+}
