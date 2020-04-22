@@ -4,9 +4,9 @@ module.exports = function () {
   const PushNotification = require('../../thirdParty/pushNotification')
   require('dotenv').config({ path: './../.env' })
 
-  var providersRepository = new ProvidersRepository();
+  var providersRepository = new ProvidersRepository()
   var common = new Common();
-  var pushNotification = new PushNotification();
+  var pushNotification = new PushNotification()
 
   this.providersListPageViewService = async (data, callback) => {
     var response = {}
@@ -36,7 +36,7 @@ module.exports = function () {
     }
   }
 
-  this.providersListViewService = async (callback) => {
+  this.providersListViewService = async (data, callback) => {
     var response = {}
     try {
       var providersListSData = await providersRepository.providersListView()

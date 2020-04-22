@@ -1,10 +1,9 @@
 module.exports = function () {
   const ProviderSerice = require('../../services/Admin/ProvidersService')
-  const Common = require('../../Utils/common')
   require('dotenv').config({ path: './../.env' })
 
-  var providerService = new ProviderSerice();
-  
+  var providerService = new ProviderSerice()
+
   this.providerListPageViewCtrl = (req, callback) => {
     var response = {}
     providerService.providersListPageViewService(req, (result) => {
@@ -19,9 +18,9 @@ module.exports = function () {
       callback(response)
     })
   }
-  this.providerListViewCtrl = (callback) => {
+  this.providerListViewCtrl = (data, callback) => {
     var response = {}
-    providerService.providersListViewService((result) => {
+    providerService.providersListViewService(data, (result) => {
       if (result.error) {
         response.error = true
         response.msg = result.msg

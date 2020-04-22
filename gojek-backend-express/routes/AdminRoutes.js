@@ -1347,15 +1347,17 @@ module.exports = function (app, validator) {
     }
   })
   // Admin Providers View
-  app.get(`${basePath}/providerListView`, app.adminauth, (req, res) => {
+  app.get(`${basePath}/providerListView/:page`, app.adminauth, (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
+    var limit = 10
+    var page = { page: req.params.page, limit: limit }
     if (error.array().length) {
       errorHandler.requestHandler(error.array(), true, lang, (message) => {
         return res.send(message)
       })
     } else {
-      providersController.providerListViewCtrl((result) => {
+      providersController.providerListViewCtrl(page, (result) => {
         errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })
@@ -2236,7 +2238,7 @@ module.exports = function (app, validator) {
         return res.send(message)
       })
     } else {
-      this.bannerAdsPageViewCtrl((result) => {
+      bannerAdsCtrl.bannerAdsPageViewCtrl((result) => {
         this.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })
