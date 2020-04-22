@@ -25,6 +25,8 @@ module.exports = function () {
               list.name = categories.Name
               list.icon = categories.Icon
               list.type = categories.Type
+              list.hasSubCategory = categories.HasSubCategory
+              list.isFixedPricing = categories.IsFixedPricing
               category.push(list)
             }
           })
@@ -55,6 +57,53 @@ module.exports = function () {
         response.msg = 'VALID'
         response.data = data
       }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.getServiceSubCategoryListing = async (req, callback) => {
+    var response = {}
+    try {
+      var data = { CategoryId: req.categoryId }
+      var service = {}
+      var subCategoryList = await serviceRepository.fetchServiceSubCategory(data)
+      var categoryBanner = await serviceRepository.fetchServiceCategoryBanner(data)
+      var categoryExtras = await serviceRepository.fetchServiceCategoryExtras(data)
+      var categorySlide = await serviceRepository.fetchServiceCategorySlide(data)
+      service.subCategoryList = subCategoryList.error ? [] : subCategoryList.result
+      service.categoryBanner = categoryBanner.error ? [] : categoryBanner.result
+      service.categoryExtras = categoryExtras.error ? [] : categoryExtras.result
+      service.categorySlide = categorySlide.error ? [] : categorySlide.result
+      response.error = false
+      response.msg = 'VALID'
+      response.data = service
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(response)
+    }
+  }
+  this.getServiceGroupListing = async (req, callback) => {
+    var response = {}
+    try {
+      var data = { CategoryId: req.categoryId }
+      var service = {}
+      var groupList = await serviceRepository.fetchServiceGroup(data)
+      var categoryBanner = await serviceRepository.fetchServiceCategoryBanner(data)
+      var categoryExtras = await serviceRepository.fetchServiceCategoryExtras(data)
+      var categorySlide = await serviceRepository.fetchServiceCategorySlide(data)
+      service.groupList = groupList.error ? [] : groupList.result
+      service.categoryBanner = categoryBanner.error ? [] : categoryBanner.result
+      service.categoryExtras = categoryExtras.error ? [] : categoryExtras.result
+      service.categorySlide = categorySlide.error ? [] : categorySlide.result
+      response.error = false
+      response.msg = 'VALID'
+      response.data = service
       callback(response)
     } catch (err) {
       err.error = true
