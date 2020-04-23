@@ -70,14 +70,12 @@ module.exports = function () {
     try {
       var data = { CategoryId: req.categoryId }
       var service = {}
+      service.viewType = 'list'
       var subCategoryList = await serviceRepository.fetchServiceSubCategory(data)
-      var categoryBanner = await serviceRepository.fetchServiceCategoryBanner(data)
-      var categoryExtras = await serviceRepository.fetchServiceCategoryExtras(data)
-      var categorySlide = await serviceRepository.fetchServiceCategorySlide(data)
       service.subCategoryList = subCategoryList.error ? [] : subCategoryList.result
-      service.categoryBanner = categoryBanner.error ? [] : categoryBanner.result
-      service.categoryExtras = categoryExtras.error ? [] : categoryExtras.result
-      service.categorySlide = categorySlide.error ? [] : categorySlide.result
+      subCategoryList.result.map(element => {
+        element.description = [{ text: 'Expert Cleaning Service' }]
+      })
       response.error = false
       response.msg = 'VALID'
       response.data = service
@@ -93,14 +91,48 @@ module.exports = function () {
     try {
       var data = { CategoryId: req.categoryId }
       var service = {}
+      service.viewType = 'list'
       var groupList = await serviceRepository.fetchServiceGroup(data)
       var categoryBanner = await serviceRepository.fetchServiceCategoryBanner(data)
       var categoryExtras = await serviceRepository.fetchServiceCategoryExtras(data)
       var categorySlide = await serviceRepository.fetchServiceCategorySlide(data)
       service.groupList = groupList.error ? [] : groupList.result
+      service.groupTitle = 'What do you want help with ?'
       service.categoryBanner = categoryBanner.error ? [] : categoryBanner.result
       service.categoryExtras = categoryExtras.error ? [] : categoryExtras.result
       service.categorySlide = categorySlide.error ? [] : categorySlide.result
+      service.categorySlideTitle = 'See how its get done'
+      service.rating = [{ rating: '4.0', totalReview: '100' }]
+      service.ratingTitle = 'What user are saying about us'
+      response.error = false
+      response.msg = 'VALID'
+      response.data = service
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.getServiceSubCategoryLandingService = async (req, callback) => {
+    var response = {}
+    try {
+      var data = { SubCategoryId: req.subCategoryId }
+      var service = {}
+      service.viewType = 'list'
+      var serviceList = await serviceRepository.fetchServiceListing(data)
+      var categoryBanner = await serviceRepository.fetchServiceCategoryBanner(data)
+      var categoryExtras = await serviceRepository.fetchServiceCategoryExtras(data)
+      var categorySlide = await serviceRepository.fetchServiceCategorySlide(data)
+      service.serviceList = serviceList.error ? [] : serviceList.result
+      service.groupTitle = 'What do you want help with ?'
+      service.categoryBanner = categoryBanner.error ? [] : categoryBanner.result
+      service.categoryExtras = categoryExtras.error ? [] : categoryExtras.result
+      service.categorySlide = categorySlide.error ? [] : categorySlide.result
+      service.categorySlideTitle = 'See how its get done'
+      service.rating = [{ rating: '4.0', totalReview: '100' }]
+      service.ratingTitle = 'What user are saying about us'
       response.error = false
       response.msg = 'VALID'
       response.data = service

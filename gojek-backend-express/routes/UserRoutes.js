@@ -755,6 +755,27 @@ module.exports = function (server, validator) {
     }
   })
 
+  server.post(basePath + `serviceSubCategoryLanding`, [
+    validator.check('subCategoryId').trim().isNumeric()
+      .withMessage('INVALID: $[1], Category Id')
+  ], server.auth, (request, response) => {
+    const lang = request.headers.lang
+    const error = validator.validation(request)
+    var body = request.body
+    body.auth = request.params.auth
+    if (error.array().length) {
+      errorController.requestHandler(error.array(), true, lang, (message) => {
+        return response.send(message)
+      })
+    } else {
+      serviceCtrl.getServiceSubCategoryLandingCtrl(body, (result) => {
+        errorController.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
+  })
+
   server.post(basePath + `serviceGroupListing`, [
     validator.check('categoryId').trim().isNumeric()
       .withMessage('INVALID: $[1], Category Id')

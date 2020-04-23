@@ -145,11 +145,11 @@ public function updateOrderViewStatus($arg)
     {
 
         $perPage = Constant::PERPAGE;
-        $data    = Orders::select('Orders.id as orderId','Orders.orderReferenceId','Orders.netAmount','Orders.orderStatus','Orders.orderPlaceTime','Orders.confirmedTime','Users.mobileNumber','Users.email','Orders.updated_at')
-                          ->leftjoin('Users','Orders.userId','=','Users.id')
+        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.orderStatus','Users.Mobile','Users.Email','Booking.updated_at')
+                          ->leftjoin('Users','Booking.UserId','=','Users.id')
                         //   ->where('Orders.orderStatus','<>','DELIVERED')
                         //   ->whereDate('Orders.created_at', DB::raw('CURDATE()'))
-                          ->orderby('Orders.id', 'DESC')
+                          ->orderby('Booking.id', 'DESC')
                           ->paginate($perPage, ['*'], 'page', $pageNumber);
         return $data;
     }
@@ -159,13 +159,13 @@ public function updateOrderViewStatus($arg)
 
     public function getAdminOrders($orderId)
     {
-        $orders =Orders::select(DB::raw("Orders.*,Users.userName,Users.mobileNumber,Users.email,Users.countryCode,DeliveryStaff.name as staffName,DeliveryStaff.mobileNumber as staffMobileNumber,DeliveryStaff.email as staffeEmail,DeliveryStaff.tripStatus,Outlets.email as outletEmail,Outlets.name as OutletName,Outlets.addressLineOne,Outlets.addressLineTwo,Outlets.street,Outlets.area,Outlets.city,Outlets.state,Outlets.contactNumber"))
-                 ->leftjoin('Users','Orders.userId','=','Users.id')
-                 ->leftjoin('Outlets','Orders.OutletId', '=', 'Outlets.id')
-                 ->leftjoin('DeliveryStaff', function ($join) {
-                $join->on('Orders.deliveryStaffId', '=', 'DeliveryStaff.id');
+        $orders =Orders::select(DB::raw("Booking.*,Users.FirstName,Users.Mobile,Users.Email,Users.ExtCode,Provider.FirstName as staffName,Provider.Mobile as staffMobileNumber,Provider.Email as staffeEmail,Outlets.email as outletEmail,Outlets.name as OutletName,Outlets.addressLineOne,Outlets.addressLineTwo,Outlets.street,Outlets.area,Outlets.city,Outlets.state,Outlets.contactNumber"))
+                 ->leftjoin('Users','Booking.userId','=','Users.id')
+                 ->leftjoin('Outlets','Booking.OutletId', '=', 'Outlets.id')
+                 ->leftjoin('Provider', function ($join) {
+                $join->on('Booking.ProviderId', '=', 'Provider.id');
                      })
-                 ->where(['Orders.id'=>$orderId ])
+                 ->where(['Booking.id'=>$orderId ])
                  ->first();
 
         return $orders;

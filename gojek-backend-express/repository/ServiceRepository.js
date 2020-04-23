@@ -6,6 +6,7 @@ module.exports = function () {
   const serviceCategoryExtras = 'ServiceCategoryExtras'
   const serviceCategorySlide = 'ServiceCategorySlide'
   const serviceGroup = 'ServiceGroup'
+  const service = 'Service'
 
   require('dotenv').config({ path: './../.env' })
   var config = {
@@ -148,7 +149,6 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
-          console.log(err)
           err.error = true
           resolve(err)
         })
@@ -191,6 +191,34 @@ module.exports = function () {
       var knex = new Knex(config)
       knex(serviceGroup)
         .select('Id as id', 'Name as name', knex.raw('CONCAT(?, Image) as image', [process.env.BASE_URL + process.env.GROUP_PATH]))
+        .where(data)
+        .where('Status', 1)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          console.log(err)
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchServiceListing = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(service)
+        .select('Id as id', 'Name as name', knex.raw('CONCAT(?, Image) as image', [process.env.BASE_URL + process.env.SERVICE_PATH]))
         .where(data)
         .where('Status', 1)
         .then((result) => {
