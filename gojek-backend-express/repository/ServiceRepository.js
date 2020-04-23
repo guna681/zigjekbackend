@@ -1,6 +1,11 @@
 module.exports = function () {
   const serviceTitle = 'ServiceTitle'
   const serviceCategory = 'ServiceCategory'
+  const serviceSubCategory = 'ServiceSubCategory'
+  const serviceCategoryBanner = 'ServiceCategoryBanner'
+  const serviceCategoryExtras = 'ServiceCategoryExtras'
+  const serviceCategorySlide = 'ServiceCategorySlide'
+  const serviceGroup = 'ServiceGroup'
 
   require('dotenv').config({ path: './../.env' })
   var config = {
@@ -49,7 +54,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(serviceCategory)
-        .select('Id', 'TitleId', 'Name', 'Type',knex.raw('CONCAT(?, Icon) as Icon', [process.env.BASE_URL + process.env.SERVICE_PATH]))
+        .select('Id', 'TitleId', 'Name', 'Type', 'HasSubCategory', 'IsFixedPricing', knex.raw('CONCAT(?, Icon) as Icon', [process.env.BASE_URL + process.env.SERVICE_PATH]))
         .where('Status', 1)
         .then((result) => {
           if (result.length > 0) {
@@ -61,6 +66,144 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchServiceSubCategory = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceSubCategory)
+        .select('Id as id', 'Name as subCategoryName', knex.raw('CONCAT(?, Image) as image', [process.env.BASE_URL + process.env.SERVICE_PATH]))
+        .where(data)
+        .where('Status', 1)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchServiceCategoryBanner = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceCategoryBanner)
+        .select('Id as id', 'Text as text', knex.raw('CONCAT(?, Path) as filePath', [process.env.BASE_URL + process.env.BANNER_PATH]))
+        .where(data)
+        .where('Status', 1)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          console.log(err)
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchServiceCategoryExtras = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceCategoryExtras)
+        .select('Id as id', 'Text as text', knex.raw('CONCAT(?, Icon) as icon', [process.env.BASE_URL + process.env.ICON_PATH]))
+        .where(data)
+        .where('Status', 1)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          console.log(err)
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+  this.fetchServiceCategorySlide = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceCategorySlide)
+        .select('Id as id', 'Text as text', knex.raw('CONCAT(?, Image) as image', [process.env.BASE_URL + process.env.SERVICE_SLIDE]))
+        .where(data)
+        .where('Status', 1)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          console.log(err)
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchServiceGroup = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceGroup)
+        .select('Id as id', 'Name as name', knex.raw('CONCAT(?, Image) as image', [process.env.BASE_URL + process.env.GROUP_PATH]))
+        .where(data)
+        .where('Status', 1)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          console.log(err)
           err.error = true
           resolve(err)
         })
