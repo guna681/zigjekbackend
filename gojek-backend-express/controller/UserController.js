@@ -939,4 +939,48 @@ module.exports = function () {
       callback(err)
     }
   }
+
+  this.getProviderListByServiceCtrl = async (req, callback) => {
+    var response = {}
+    try {
+      var data = { SubCategoryId: req.subCategoryId }
+      var page = req.page
+      providerService.getProviderListByService(data, page, (result) => {
+        if (result.error) {
+          response.error = true
+          response.msg = result.msg
+        } else {
+          response.error = false
+          response.msg = result.msg
+          response.data = result.data
+        }
+        callback(response)
+      })
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
+
+  this.getBookingTimeSlots = async (callback) => {
+    var response = {}
+    try {
+      providerService.getProviderTimeSlotService(null, (result) => {
+        if (result.error) {
+          response.error = true
+          response.msg = result.msg
+        } else {
+          response.error = false
+          response.msg = result.msg
+          response.data = result.data
+        }
+        callback(response)
+      })
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
 }
