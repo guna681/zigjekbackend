@@ -576,7 +576,6 @@ module.exports = function () {
     var output = {}
     var limit = 10
     var offset = page > 1 ? (page - 1) * 10 : 0
-    console.log(data, page)
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(booking)
@@ -608,7 +607,6 @@ module.exports = function () {
 
   this.updateServiceImage = (conditon, data) => {
     var output = {}
-    console.log(conditon, data)
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(booking)
@@ -624,7 +622,6 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
-          console.log(err)
           err.error = true
           resolve(err)
         })

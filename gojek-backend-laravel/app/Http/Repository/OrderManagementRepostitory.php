@@ -145,10 +145,11 @@ public function updateOrderViewStatus($arg)
     {
 
         $perPage = Constant::PERPAGE;
-        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.orderStatus','Users.Mobile','Users.Email','Booking.updated_at')
+        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.orderStatus','Users.Mobile','Users.Email','Booking.created_at','Booking.updated_at')
                           ->leftjoin('Users','Booking.UserId','=','Users.id')
                         //   ->where('Orders.orderStatus','<>','DELIVERED')
                         //   ->whereDate('Orders.created_at', DB::raw('CURDATE()'))
+                          ->where('Booking.RideName','=','foodDelivery')
                           ->orderby('Booking.id', 'DESC')
                           ->paginate($perPage, ['*'], 'page', $pageNumber);
         return $data;
@@ -163,9 +164,9 @@ public function updateOrderViewStatus($arg)
                  ->leftjoin('Users','Booking.userId','=','Users.id')
                  ->leftjoin('Outlets','Booking.OutletId', '=', 'Outlets.id')
                  ->leftjoin('Provider', function ($join) {
-                $join->on('Booking.ProviderId', '=', 'Provider.id');
+                $join->on('Booking.ProviderId', '=', 'Provider.Id');
                      })
-                 ->where(['Booking.id'=>$orderId ])
+                 ->where(['Booking.id'=>$orderId,'Booking.RideName'=>'foodDelivery'])
                  ->first();
 
         return $orders;

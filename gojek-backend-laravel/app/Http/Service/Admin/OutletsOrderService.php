@@ -48,12 +48,14 @@ Class OutletsOrderService
 
         $orderManagementRepostitory = new OrderManagementRepostitory();
         $orders     = $orderManagementRepostitory->getAdminOrders($arg->orderId);
+        print_r($orders);
+        die;
         $data       = new DataService();
         if ($orders) {
 
 
             $ordersData             = new Orders();
-            $ordersData->orderId          = $orders->id;
+            $ordersData->orderId          = $orders->Id;
             $ordersData->orderReferenceId = $orders->orderReferenceId;
             $ordersData->netAmount        = $orders->netAmount;
             $ordersData->orderStatus      = $orders->orderStatus;
@@ -62,11 +64,11 @@ Class OutletsOrderService
             $ordersData->pickedupTime     = $orders->pickedupTime;
             $ordersData->confirmedTime    = $orders->confirmedTime;
             $ordersData->deliveredTime    = $orders->deliveredTime;
-            $ordersData->userId           = $orders->userId;
-            $ordersData->userName         = $orders->userName;
-            $ordersData->userMobileNumber = $orders->mobileNumber;
-            $ordersData->userEmail        = $orders->email;
-            $ordersData->deliveryAddress  = $orders->deliveryAddress;
+            $ordersData->userId           = $orders->UserId;
+            $ordersData->userName         = $orders->FirstName;
+            $ordersData->userMobileNumber = $orders->Mobile;
+            $ordersData->userEmail        = $orders->Email;
+            $ordersData->deliveryAddress  = $orders->ToLocation;
             $ordersData->deliveryAddressType = $orders->deliveryAddressType;
 
             $ordersData->staffName          = $orders->staffName;

@@ -13,7 +13,7 @@ module.exports = function () {
         origins: origin,
         destinations: [destination]
       }).asPromise()
-        .then((distance) => { 
+        .then((distance) => {
           var result = distance.json
           var matrix = {}
           matrix.distance = result.rows[0].elements[0].distance.value

@@ -1121,7 +1121,6 @@ module.exports = function () {
           }
           resolve(output)
         }).catch((output) => {
-          console.log(output)
           output.error = true
           resolve(output)
         }).finally(() => {
@@ -1225,6 +1224,56 @@ module.exports = function () {
       var knex = new Knex(config)
       knex(providerPayment)
         .where(data)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.getServiceProviderIds = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerService)
+        .where(data)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.getProviderListByIds = (data, page) => {
+    var output = {}
+    var limit = 10
+    var offset = page > 1 ? (page - 1) * 10 : 0
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(provider)
+        // .whereIn('Id', data)
+        .limit(limit)
+        .offset(offset)
         .then((result) => {
           if (result.length > 0) {
             output.error = false

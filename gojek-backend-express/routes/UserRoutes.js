@@ -797,6 +797,31 @@ module.exports = function (server, validator) {
     }
   })
 
+  server.post(basePath + `serviceListingInGroup`, [
+    validator.check('groupId').trim().isNumeric()
+      .withMessage('INVALID: $[1], Group Id')
+      .optional(),
+    validator.check('subCategoryId').trim().isNumeric()
+      .withMessage('INVALID: $[1], Sub-Category Id')
+      .optional()
+  ], server.auth, (request, response) => {
+    const lang = request.headers.lang
+    const error = validator.validation(request)
+    var body = request.body
+    body.auth = request.params.auth
+    if (error.array().length) {
+      errorController.requestHandler(error.array(), true, lang, (message) => {
+        return response.send(message)
+      })
+    } else {
+      serviceCtrl.getServiceInGroupCtrl(body, (result) => {
+        errorController.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
+  })
+
   server.get(basePath + 'getOrderTabs', server.auth, function (request, response) {
     var body = request.body
     body.auth = request.params.auth
@@ -900,5 +925,40 @@ module.exports = function (server, validator) {
         })
       })
     }
+  })
+  server.post(basePath + 'providerList/:page', [
+    validator.check('subCategoryId')
+      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1], SubCategory Id'),
+    validator.check('page')
+      .isNumeric().withMessage('INVALID: $[1],Page No.')
+  ], server.auth, function (request, response) {
+    var body = request.body
+    body.auth = request.params.auth
+    body.page = request.params.page
+    const lang = request.headers.lang || 'default'
+    const error = validator.validation(request)
+    if (error.array().length) {
+      errorController.requestHandler(error.array(), true, lang, (message) => {
+        return response.send(message)
+      })
+    } else {
+      userController.getProviderListByServiceCtrl(body, (result) => {
+        errorController.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
+  })
+
+  server.get(basePath + 'bookingTimeSlots', server.auth, function (request, response) {
+    var body = request.body
+    body.auth = request.params.auth
+    const lang = request.headers.lang || 'default'
+
+    userController.getBookingTimeSlots((result) => {
+      errorController.ctrlHandler([result], result.error, lang, (message) => {
+        return response.send(message)
+      })
+    })
   })
 }

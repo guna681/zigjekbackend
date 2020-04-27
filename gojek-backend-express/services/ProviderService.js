@@ -1509,10 +1509,11 @@ module.exports = function () {
         response.msg = 'VALID'
         response.data = providerTimeslot
       }
-    } catch (response) {
-      response.error = true
-      response.msg = 'OOPS'
-    } finally {
+      callback(response)
+    } catch (err) {
+      console.log(err)
+      err.error = true
+      err.msg = 'OOPS'
       callback(response)
     }
   }
@@ -1720,6 +1721,40 @@ module.exports = function () {
       response.msg = 'VALID'
       response.data = info
 
+      callback(response)
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
+  this.getProviderListByService = async (data, page, callback) => {
+    var response = {}
+    try {
+      var providerId = await providerRespository.getServiceProviderIds(data)
+      var providerIds = providerId.error ? [] : providerId.result.map((element) => { return element.Id })
+
+      var providerList = await providerRespository.getProviderListByIds(providerIds, page)
+
+      if (providerList.error) {
+        response.error = true
+        response.msg = 'NO_DATA'
+      } else {
+        var provider = providerList.result.map((element) => {
+          var details = {}
+          details.id = element.Id
+          details.firstName = element.FirstName
+          details.lastName = element.LastName
+          details.rating = element.Rating
+          details.latitude = element.Latitude === null ? '0' : element.Latitude
+          details.longitude = element.Longitude === null ? '0' : element.Longitude
+          return details
+        })
+        response.error = false
+        response.msg = 'VALID'
+        response.data = provider
+      }
       callback(response)
     } catch (response) {
       response.error = true

@@ -115,17 +115,52 @@ module.exports = function () {
     }
   }
 
+  this.getServiceListingInGroup = async (req, callback) => {
+    var response = {}
+    try {
+      var data
+      var serviceId
+      var serviceIds
+      if (req.groupId) {
+        data = { GroupId: req.groupId }
+        serviceId = await serviceRepository.fetchGroupService(data)
+        serviceIds = serviceId.error ? [] : serviceId.result
+        var serviceList = await serviceRepository.fetchServiceListingUsingIds(serviceIds)
+      } else if (req.subCategoryId) {
+        data = { SubCategoryId: req.subCategoryId }
+        serviceList = await serviceRepository.fetchServiceListing(data)
+        serviceIds = serviceList.error ? [] : serviceList.result.map((element) => { return element.id })
+      }
+      var serviceImage = await serviceRepository.fetchServiceImages(serviceIds)
+      if (serviceList.error) {
+        response.error = true
+        response.msg = 'NO_DATA'
+      } else {
+        var service = serviceList.result.map((element) => { element.serviceImage = serviceImage.result.filter((element1) => element.id === element1.serviceId); return element })
+        response.error = false
+        response.msg = 'VALID'
+        response.data = service
+      }
+      callback(response)
+    } catch (err) {
+      console.log(err)
+      err.error = true
+      err.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
   this.getServiceSubCategoryLandingService = async (req, callback) => {
     var response = {}
     try {
       var data = { SubCategoryId: req.subCategoryId }
       var service = {}
       service.viewType = 'list'
-      var serviceList = await serviceRepository.fetchServiceListing(data)
+      // var serviceList = await serviceRepository.fetchServiceListing(data)
       var categoryBanner = await serviceRepository.fetchServiceCategoryBanner(data)
       var categoryExtras = await serviceRepository.fetchServiceCategoryExtras(data)
       var categorySlide = await serviceRepository.fetchServiceCategorySlide(data)
-      service.serviceList = serviceList.error ? [] : serviceList.result
+      service.serviceList = []
       service.groupTitle = 'What do you want help with ?'
       service.categoryBanner = categoryBanner.error ? [] : categoryBanner.result
       service.categoryExtras = categoryExtras.error ? [] : categoryExtras.result
