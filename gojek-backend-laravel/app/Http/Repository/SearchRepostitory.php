@@ -142,10 +142,11 @@ class SearchRepostitory{
     {
 
         $perPage = Constant::PERPAGE;
-        $data    = Orders::select('Orders.id as orderId','Orders.orderReferenceId','Orders.netAmount','Orders.orderStatus','Orders.orderPlaceTime','Orders.confirmedTime','Users.mobileNumber','Users.email','Orders.updated_at')
-                          ->leftjoin('Users','Orders.userId','=','Users.id')
-                          ->where('Orders.orderReferenceId','LIKE','%'.$request->key.'%')
-                          ->orwhere('Users.mobileNumber','LIKE','%'.$request->key.'%')
+        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.orderStatus','Booking.created_At','Users.Mobile','Users.Email','Booking.updated_at')
+                          ->leftjoin('Users','Booking.userId','=','Users.id')
+                          ->where('Booking.orderReferenceId','LIKE','%'.$request->key.'%')
+                          ->orwhere('Users.Mobile','LIKE','%'.$request->key.'%')
+                          ->where('Booking.RideName','foodDelivery')           
                           ->paginate($perPage, ['*'], 'page', $request->pageNumber);
         return $data;
     }

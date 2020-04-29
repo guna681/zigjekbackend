@@ -98,7 +98,7 @@ Class OrderManagementService
 
 
             $ordersData         = new Orders();
-            $ordersData->orderId          = $orders->id;
+            $ordersData->orderId          = $orders->Id;
             $ordersData->orderReferenceId = $orders->orderReferenceId;
             $ordersData->netAmount        = $orders->netAmount;
             $ordersData->orderStatus      = $orders->orderStatus;
@@ -107,19 +107,19 @@ Class OrderManagementService
             $ordersData->pickedupTime     = $orders->pickedupTime;
             $ordersData->confirmedTime    = $orders->confirmedTime;
             $ordersData->deliveredTime    = $orders->deliveredTime;
-            $ordersData->userId           = $orders->userId;
-            $ordersData->userName         = $orders->userName;
-            $ordersData->userMobileNumber = $orders->mobileNumber;
-            $ordersData->userEmail        = $orders->email;
-            $ordersData->deliveryAddress  = $orders->deliveryAddress;
-            $ordersData->deliveryAddressType = $orders->deliveryAddressType;
+            $ordersData->userId           = $orders->UserId;
+            $ordersData->userName         = $orders->FirstName;
+            $ordersData->userMobileNumber = $orders->Mobile;
+            $ordersData->userEmail        = $orders->Email;
+            $ordersData->deliveryAddress  = $orders->ToLocation;
+            $ordersData->deliveryAddressType = 'Default';
 
             $ordersData->staffName         = $orders->staffName;
             $ordersData->staffMobileNumber = $orders->staffMobileNumber;
             $ordersData->staffeEmail       = $orders->staffeEmail;
             $ordersData->tripStatus        = $orders->tripStatus;
             $ordersData->orderSuggestions  = $orders->orderSuggestions;
-            $ordersData->dishes            = $this->getOrderDishes($orders->id);
+            $ordersData->dishes            = $this->getOrderDishes($orders->Id);
 
             $cartService    = new CartService();
             $totalcharges[] = $cartService->getItemTotal($ordersData['dishes']);
@@ -130,7 +130,7 @@ Class OrderManagementService
             $ordersData->billTotals = array_collapse($totalcharges);
 
             $paymentGateway             = new IntegrationSettingRepository();
-            $ordersData->paymentDetails = $paymentGateway->getPaymentGatewayDetails($orders->PaymentTypeId);
+            $ordersData->paymentDetails = $orders->PaymentMode;
 
             $data->error        = Common::error_false;
             $data->errorMessage = __('validation.sucess');

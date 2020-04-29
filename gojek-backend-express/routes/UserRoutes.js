@@ -881,7 +881,8 @@ module.exports = function (server, validator) {
   server.post(basePath + 'serviceRequest', [
     validator.check('providerId')
       .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1],Provider Id')
-      .isNumeric().withMessage('INVALID: $[1],Provider Id'),
+      .isNumeric().withMessage('INVALID: $[1],Provider Id')
+      .optional(),
     validator.check('categoryId')
       .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1],Category Id')
       .isNumeric().withMessage('INVALID: $[1],Category Id'),
@@ -893,6 +894,8 @@ module.exports = function (server, validator) {
       .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1],Group Id')
       .isNumeric().withMessage('INVALID: $[1],Group Id')
       .optional(),
+    validator.check('serviceData')
+      .isJSON().withMessage('INVALID: $[1], Service Data'),
     validator.check('bookingDate')
       .isISO8601().toDate().withMessage('INVALID: $[1],Booking date')
       .optional(),
@@ -960,5 +963,30 @@ module.exports = function (server, validator) {
         return response.send(message)
       })
     })
+  })
+  server.post(basePath + 'serviceAddons', [
+    validator.check('categoryId')
+      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1], Category Id')
+      .optional(),
+    validator.check('subCategoryId')
+      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1], SubCategory Id')
+      .optional()
+  ], server.auth, function (request, response) {
+    var body = request.body
+    body.auth = request.params.auth
+    body.page = request.params.page
+    const lang = request.headers.lang || 'default'
+    const error = validator.validation(request)
+    if (error.array().length) {
+      errorController.requestHandler(error.array(), true, lang, (message) => {
+        return response.send(message)
+      })
+    } else {
+      userController.getServiceAddonsCtrl(body, (result) => {
+        errorController.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
   })
 }

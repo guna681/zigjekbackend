@@ -62,7 +62,7 @@ Class SearchService
             $data->error         = Common::error_false;
             $data->errorMessage  = __('validation.sucess');
             $data->totalPage    = $searchRestaurantsData->lastPage();
-            $data->listStaff         = $searchRestaurantsData->flatten();
+            $data->restaurantList         = $searchRestaurantsData->flatten();
         } else {
             $data->error         = Common::error_true;
             $data->errorMessage  = __('validation.failure');
@@ -82,7 +82,7 @@ Class SearchService
             $data->error         = Common::error_false;
             $data->errorMessage  = __('validation.sucess');
             $data->totalPage    = $searchOrderData->lastPage();
-            $data->listStaff         = $searchOrderData->flatten();
+            $data->listOrders         = $searchOrderData->flatten();
         } else {
             $data->error         = Common::error_true;
             $data->errorMessage  = __('validation.failure');

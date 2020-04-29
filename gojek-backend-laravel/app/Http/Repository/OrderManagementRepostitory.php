@@ -42,11 +42,12 @@ Class OrderManagementRepostitory
     {
 
         $perPage = Constant::PERPAGE;
-        $data    = Orders::select('Orders.id as orderId','Orders.orderReferenceId','Orders.netAmount','Orders.orderStatus','Orders.orderPlaceTime','Orders.confirmedTime','Users.mobileNumber','Users.email','Orders.updated_at')
-                          ->leftjoin('Users','Orders.userId','=','Users.id')
+        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.orderStatus','Booking.created_at','Users.Mobile','Users.Email','Booking.updated_at')
+                          ->leftjoin('Users','Booking.userId','=','Users.id')
                           // ->where('Orders.orderStatus','<>','DELIVERED')
                           ->where('outletId',$outletId)
-                          ->orderby('Orders.id', 'DESC')
+                          ->where('Booking.RideName','foodDelivery')
+                          ->orderby('Booking.id', 'DESC')
                           ->paginate($perPage, ['*'], 'page', $pageNumber);
 
         return $data;
@@ -55,12 +56,12 @@ Class OrderManagementRepostitory
 
     public function getOrder($orderId, $outletId)
     {
-        $orders =Orders::select(DB::raw("Orders.*,Users.userName,Users.mobileNumber,Users.email,Users.countryCode,DeliveryStaff.name as staffName,DeliveryStaff.mobileNumber as staffMobileNumber,DeliveryStaff.email as staffeEmail,DeliveryStaff.tripStatus"))
-                        ->leftjoin('Users','Orders.userId','=','Users.id')
-                        ->leftjoin('DeliveryStaff', function ($join) {
-                            $join->on('Orders.deliveryStaffId', '=', 'DeliveryStaff.id');
+        $orders =Orders::select(DB::raw("Booking.*,Users.FirstName,Users.Mobile,Users.Email,Users.ExtCode,Provider.FirstName as staffName,Provider.Mobile as staffMobileNumber,Provider.Email as staffeEmail"))
+                        ->leftjoin('Users','Booking.UserId','=','Users.Id')
+                        ->leftjoin('Provider', function ($join) {
+                            $join->on('Booking.ProviderId', '=', 'Provider.Id');
                         })
-                        ->where(['Orders.id'=>$orderId ,'Orders.outletId' =>$outletId])
+                        ->where(['Booking.id'=>$orderId ,'Booking.outletId' =>$outletId])
                         ->first();
 
         return $orders;

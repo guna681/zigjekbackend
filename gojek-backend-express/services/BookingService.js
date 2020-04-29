@@ -641,7 +641,7 @@ module.exports = function () {
     var response = {}
     try {
       var ride = {}
-      ride.CountryId = 1
+      // ride.CountryId = 1
       var rides = await bookingRepository.getRideVehicleType(ride)
       if (rides.error) {
         response.error = true
@@ -912,7 +912,8 @@ module.exports = function () {
         service.DestinyLat = data.latitude
         service.DestinyLong = data.longitude
         service.PaymentMode = data.paymentMode
-        service.Status = 'assigned'
+        service.ServiceIds = data.serviceData
+        service.Status = 'pending'
         service.Type = 'services'
 
         var createService = await bookingRepository.addServiceRequest(service)
@@ -976,6 +977,39 @@ module.exports = function () {
         }
         resolve(response)
       } catch (err) {
+        err.response = true
+        err.msg = 'OOPS'
+        resolve(err)
+      }
+    })
+  }
+
+  this.getServiceAddons = (type) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      try {
+        var addOnsTitle = await bookingRepository.fetchAddonsTitle(type)
+        var titleIds = addOnsTitle.error ? [] : addOnsTitle.result.map((element) => { return element.Id })
+        var addOnsList = await bookingRepository.fetchAddons(titleIds)
+        if (addOnsTitle.error) {
+          response.error = true
+          response.msg = 'NO_DATA'
+        } else {
+          var addOns = addOnsTitle.result.map((title) => {
+            var data = {}
+            data.id = title.Id
+            data.title = title.Name
+            data.type = title.Type
+            data.data = addOnsList.result.filter((addons) => title.Id === addons.titleId)
+            return data
+          })
+          response.error = false
+          response.data = addOns
+          response.msg = 'VALID'
+        }
+        resolve(response)
+      } catch (err) {
+        console.log(err)
         err.response = true
         err.msg = 'OOPS'
         resolve(err)
