@@ -479,7 +479,7 @@ module.exports = {
       'pt': 'Os dados foram atualizados com sucesso'
     },
     'BOOKING_ADDED': {
-      'default': 'Your booking has been confirmed. Please wait until we match our best Driver for you.',
+      'default': 'Your booking has been confirmed. Please wait until we match our best provider for you.',
       'ar': 'تم تأكيد الحجز الخاص بك. يرجى الانتظار حتى نطابق أفضل سائق لدينا.',
       'es': 'Su reserva ha sido confirmada. Espere hasta que coincidamos con nuestro mejor controlador para usted.',
       'pt': 'Sua reserva foi confirmada. Por favor, espere até combinarmos com o nosso melhor Driver para você.'

@@ -196,10 +196,10 @@ class OutletsRepostitory extends Outlets
 
     public function lastOutletOrders($outletId)
     {
-        $orders =Orders::select('Orders.id as orderId','Orders.orderReferenceId','Orders.netAmount','Orders.orderStatus','Orders.orderPlaceTime','Orders.confirmedTime','Users.mobileNumber','Users.email','Orders.updated_at')
-            ->leftjoin('Users','Orders.userId','=','Users.id')
-            ->where('Orders.outletId',$outletId)
-            ->orderby('Orders.id', 'DESC')
+        $orders =Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.orderStatus','Booking.created_at','Users.Mobile','Users.Email','Booking.updated_at')
+            ->leftjoin('Users','Booking.userId','=','Users.id')
+            ->where('Booking.outletId',$outletId)
+            ->orderby('Booking.id', 'DESC')
             ->take(10)->get();
 
         return $orders;

@@ -11,7 +11,7 @@ module.exports = function () {
     var message = {}
     try {
       paramsErrorMsg.setLocale(lang)
-      var errorMessage = error[0].msg 
+      var errorMessage = error[0].msg
       var msg = errorMessage.split(',')
       message.error = status
       message.msg = paramsErrorMsg.translate(msg[0], msg[1], msg[2], msg[3])
@@ -21,7 +21,7 @@ module.exports = function () {
     }
     callback(message)
   }
-  
+
   this.ctrlHandler = (error, status, lang, callback) => {
     lang = supportedLang.includes(lang) === true ? lang : 'default'
     var message = {}

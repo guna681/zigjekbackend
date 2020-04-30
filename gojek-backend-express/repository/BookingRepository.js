@@ -7,6 +7,8 @@ module.exports = function () {
   const users = 'Users'
   const serviceCategory = 'ServiceCategory'
   const serviceSubCategory = 'ServiceSubCategory'
+  const serviceAddoOnsTitle = 'ServiceAddOnsTitle'
+  const serviceAddoOns = 'ServiceAddOns'
 
   require('dotenv').config({ path: './../.env' })
   var config = {
@@ -638,6 +640,57 @@ module.exports = function () {
       knex(serviceSubCategory)
         .select('')
         .leftJoin('')
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchAddonsTitle = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceAddoOnsTitle)
+        .where(data)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          console.log(err)
+          err.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchAddons = (titleIds) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceAddoOns)
+        .select('id', 'name', 'price', 'currencyType', 'titleId')
+        .whereIn('TitleId', titleIds)
+        .where('Status', 1)
         .then((result) => {
           if (result.length > 0) {
             output.error = false

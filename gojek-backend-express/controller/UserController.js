@@ -923,12 +923,14 @@ module.exports = function () {
         response.error = true
         response.msg = createBooking.msg
       } else {
-        var content = {}
-        content.data = 'incoming_booking'
-        content.title = 'Booking Alert'
-        content.body = 'You have new booking request'
-        var providerInfo = await providerService.getProivderMessageToken(req.providerId)
-        pushNotification.sendPushNotificationByDeviceType(providerInfo.data, content)
+        if (req.providerId) {
+          var content = {}
+          content.data = 'incoming_booking'
+          content.title = 'Booking Alert'
+          content.body = 'You have new booking request'
+          var providerInfo = await providerService.getProivderMessageToken(req.providerId)
+          pushNotification.sendPushNotificationByDeviceType(providerInfo.data, content)
+        }
         response.error = false
         response.msg = createBooking.msg
       }
@@ -977,6 +979,32 @@ module.exports = function () {
         }
         callback(response)
       })
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
+
+  this.getServiceAddonsCtrl = async (req, callback) => {
+    var response = {}
+    try {
+      var data
+      if (req.categoryId) {
+        data = { CategoryId: req.categoryId }
+      } else if (req.subCategoryId) {
+        data = { SubCategoryId: req.subCategoryId }
+      }
+      var addOns = await bookingService.getServiceAddons(data)
+      if (addOns.error) {
+        response.error = true
+        response.msg = addOns.msg
+      } else {
+        response.error = false
+        response.msg = addOns.msg
+        response.data = addOns.data
+      }
+      callback(response)
     } catch (err) {
       err.error = true
       err.msg = 'OOPS'

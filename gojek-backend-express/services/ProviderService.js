@@ -828,9 +828,9 @@ module.exports = function () {
           }
         ],
         'cardetails': {
-          'carName': 'Test Car',
-          'carType': 'All',
-          'carImage': 'https://www.cartoq.com/wp-content/uploads/2018/07/Baleno_2.jpg'
+          'carName': 'No Vehicle',
+          'carType': 'Add new vehicle',
+          'carImage': process.env.BASE_URL + 'stop.png'
         },
         'activeVehicle': null
       }
