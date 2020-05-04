@@ -895,7 +895,10 @@ module.exports = function (server, validator) {
       .isNumeric().withMessage('INVALID: $[1],Group Id')
       .optional(),
     validator.check('serviceData')
-      .isJSON().withMessage('INVALID: $[1], Service Data'),
+      .isJSON().withMessage('INVALID: $[1],Service Data'),
+    validator.check('addons')
+      .isJSON().withMessage('INVALID: $[1],Add ons Data')
+      .optional(),
     validator.check('bookingDate')
       .isISO8601().toDate().withMessage('INVALID: $[1],Booking date')
       .optional(),

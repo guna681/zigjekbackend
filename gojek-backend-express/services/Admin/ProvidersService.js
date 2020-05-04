@@ -5,8 +5,8 @@ module.exports = function () {
   require('dotenv').config({ path: './../.env' })
 
   var providersRepository = new ProvidersRepository()
-  var common = new Common();
   var pushNotification = new PushNotification()
+  var common = new Common()
 
   this.providersListPageViewService = async (data, callback) => {
     var response = {}
