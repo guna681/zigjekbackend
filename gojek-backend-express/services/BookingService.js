@@ -913,6 +913,7 @@ module.exports = function () {
         service.DestinyLong = data.longitude
         service.PaymentMode = data.paymentMode
         service.ServiceIds = data.serviceData
+        service.ServiceAddons = data.addons === undefined ? '[]' : data.addons
         service.Status = 'pending'
         service.Type = 'services'
 
@@ -1009,7 +1010,56 @@ module.exports = function () {
         }
         resolve(response)
       } catch (err) {
-        console.log(err)
+        err.response = true
+        err.msg = 'OOPS'
+        resolve(err)
+      }
+    })
+  }
+  this.getServiceInfo = (data) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      try {
+        var serviceIds = data.map((element) => { return element.serviceId })
+        var serviceList = await bookingRepository.fetchServiceInfo(serviceIds)
+        if (serviceList.error) {
+          response.error = true
+          response.msg = 'NO_DATA'
+        } else {
+          var alterServiceList = serviceList.result.map((service) => {
+            var element = data.filter(qty => service.id == qty.serviceId)
+            service.qty = element[0].qty
+            return service
+          })
+          response.error = false
+          response.data = alterServiceList
+          response.msg = 'VALID'
+        }
+        resolve(response)
+      } catch (err) {
+        err.response = true
+        err.msg = 'OOPS'
+        resolve(err)
+      }
+    })
+  }
+
+  this.getAddonsInfo = (data) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      try {
+        var addonId = data.map((element) => { return element.addonsId })
+        var addonList = await bookingRepository.fetchAddonsInfo(addonId)
+        if (addonList.error) {
+          response.error = true
+          response.msg = 'NO_DATA'
+        } else {
+          response.error = false
+          response.data = addonList.result
+          response.msg = 'VALID'
+        }
+        resolve(response)
+      } catch (err) {
         err.response = true
         err.msg = 'OOPS'
         resolve(err)

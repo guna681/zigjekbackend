@@ -570,6 +570,10 @@ module.exports = function () {
           data['bookingDate'] = bookingInfo.BookingTimestamp
           data['serviceStartImage'] = bookingInfo.ServiceStartImage
           data['serviceEndImage'] = bookingInfo.ServiceEndImage
+          var serviceList = await bookingService.getServiceInfo(bookingInfo.ServiceIds)
+          data['serviceList'] = serviceList.error ? [] : serviceList.data
+          var addonsList = await bookingService.getAddonsInfo(bookingInfo.ServiceAddons)
+          data['serviceAddonsList'] = addonsList.error ? [] : addonsList.data
           receipt.push({ fieldName: 'Tax', value: bookingInfo.Tax })
           receipt.push({ fieldName: 'Fare', value: String(bookingInfo.Estimation) })
           receipt.push({ fieldName: 'Sub Total', value: String(Number(bookingInfo.Estimation) + Number(bookingInfo.Tax)) })
