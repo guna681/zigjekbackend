@@ -924,6 +924,7 @@ module.exports = function () {
         } else {
           response.error = false
           response.msg = 'BOOKING_ADDED'
+          response.data = { bookingNo: createService.result }
         }
         resolve(response)
       } catch (err) {
@@ -1037,7 +1038,7 @@ module.exports = function () {
         }
         resolve(response)
       } catch (err) {
-        err.response = true
+        err.error = true
         err.msg = 'OOPS'
         resolve(err)
       }

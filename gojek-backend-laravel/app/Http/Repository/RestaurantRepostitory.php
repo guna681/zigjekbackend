@@ -220,6 +220,7 @@ class RestaurantRepostitory
             $outlets->save();
         } catch (\Illuminate\Database\QueryException $ex) {
             $jsonresp = $ex->getMessage();
+            Log::debug($jsonresp);
             DB::rollBack();            
             return false;
         }

@@ -571,6 +571,7 @@ module.exports = function () {
           data['serviceStartImage'] = bookingInfo.ServiceStartImage
           data['serviceEndImage'] = bookingInfo.ServiceEndImage
           var serviceList = await bookingService.getServiceInfo(bookingInfo.ServiceIds)
+          console.log(serviceList)
           data['serviceList'] = serviceList.error ? [] : serviceList.data
           var addonsList = await bookingService.getAddonsInfo(bookingInfo.ServiceAddons)
           data['serviceAddonsList'] = addonsList.error ? [] : addonsList.data
@@ -935,8 +936,12 @@ module.exports = function () {
           var providerInfo = await providerService.getProivderMessageToken(req.providerId)
           pushNotification.sendPushNotificationByDeviceType(providerInfo.data, content)
         }
+
+        var availableProvider = await providerService.getServiceProviderBasedOnDistance(req)
+        console.log(availableProvider)
         response.error = false
         response.msg = createBooking.msg
+        response.data = createBooking.data
       }
       callback(response)
     } catch (err) {

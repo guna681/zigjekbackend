@@ -48,8 +48,7 @@ Class OutletsOrderService
 
         $orderManagementRepostitory = new OrderManagementRepostitory();
         $orders     = $orderManagementRepostitory->getAdminOrders($arg->orderId);
-        print_r($orders);
-        die;
+        
         $data       = new DataService();
         if ($orders) {
 
@@ -87,7 +86,7 @@ Class OutletsOrderService
             $ordersData->mobileNumber = $orders->contactNumber;
 
             $orderManagementService    = new OrderManagementService();
-            $ordersData->dishes        = $orderManagementService->getOrderDishes($orders->id);
+            $ordersData->dishes        = $orderManagementService->getOrderDishes($orders->Id);
 
 
             $cartService = new CartService();
@@ -101,7 +100,7 @@ Class OutletsOrderService
             $ordersData->billTotals = array_collapse($totalcharges);
 
             $paymentGateway = new IntegrationSettingRepository();
-            $ordersData->paymentDetails = $paymentGateway->getPaymentGatewayDetails($orders->PaymentTypeId);
+            $ordersData->paymentDetails = $orders->PaymentMode;
 
             $data->error = Common::error_false;
             $data->errorMessage = __('validation.sucess');

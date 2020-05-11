@@ -1762,4 +1762,23 @@ module.exports = function () {
       callback(response)
     }
   }
+
+  this.getServiceProviderBasedOnDistance = (data) => {
+    var response = {}
+    var lat = data.latitude
+    var lon = data.longitude
+    var distance = 5
+    var limit = 5
+    return new Promise(async function (resolve) {
+      var getServiceProivder = await providerRespository.fetchServiceProviderByDistance(lat, lon, distance, limit)
+      if (getServiceProivder.error) {
+        response.error = true
+      } else {
+        var providerIds = getServiceProivder.data.map((element) => { return element.id })
+        response.error = false
+        response.data = providerIds
+      }
+      resolve(response)
+    })
+  }
 }

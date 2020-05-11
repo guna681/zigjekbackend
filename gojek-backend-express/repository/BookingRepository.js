@@ -561,7 +561,7 @@ module.exports = function () {
         .then((result) => {
           if (result[0] > 0) {
             output.error = false
-            output.result = result
+            output.result = result[0]
           } else {
             output.error = true
           }
@@ -588,6 +588,7 @@ module.exports = function () {
         .leftJoin(users, 'Booking.UserId', 'Users.Id')
         .leftJoin(serviceCategory, 'Booking.ServiceCategoryId', 'ServiceCategory.Id')
         .where(data)
+        .where('Booking.Type', 'services')
         .limit(limit)
         .offset(offset)
         .then((result) => {
@@ -601,6 +602,7 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
+          console.log(err)
           err.error = true
           resolve(output)
         }).finally(() => {
@@ -728,6 +730,7 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
+          console.log(err)
           err.error = true
           resolve(output)
         }).finally(() => {

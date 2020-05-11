@@ -1290,4 +1290,30 @@ module.exports = function () {
         })
     })
   }
+
+  this.fetchServiceProviderByDistance = (lat, lon, distance, limit) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(provider)
+        .select('id', knex.raw('ST_Distance_Sphere(point(longitude, latidue), point(?,?)) as distance', [lon, lat]))
+        .having('distance', '<', distance)
+        .where('Type', 'services')
+        .limit(limit)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
 }

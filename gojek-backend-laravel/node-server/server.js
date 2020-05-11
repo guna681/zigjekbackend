@@ -343,6 +343,6 @@ app.post('/weightCalculation', function(req, res) {
 })
 
 
-http.listen(process.env.PORT, function() {
+http.listen(process.env.FOODDELIVERYPORT, function() {
     console.log('listening on localhost:8002')
 })
