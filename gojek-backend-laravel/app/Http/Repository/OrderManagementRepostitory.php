@@ -150,7 +150,7 @@ public function updateOrderViewStatus($arg)
                           ->leftjoin('Users','Booking.UserId','=','Users.id')
                         //   ->where('Orders.orderStatus','<>','DELIVERED')
                         //   ->whereDate('Orders.created_at', DB::raw('CURDATE()'))
-                          ->where('Booking.RideName','=','foodDelivery')
+                          ->where('Booking.RideName','=','Food Delivery')
                           ->orderby('Booking.id', 'DESC')
                           ->paginate($perPage, ['*'], 'page', $pageNumber);
         return $data;
