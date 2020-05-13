@@ -43,11 +43,11 @@ module.exports = function () {
     })
   }
   // bookings List Count Select
-  this.bookingsSelectViewCount = () => {
+  this.bookingsSelectViewCount = (data) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(booking).where(`Type`, 'taxi').count(`Id as count`)
+      knex(booking).where(`Type`, data.type).count(`Id as count`)
         .then((result) => {
           if (result.length) {
             output.error = false
@@ -69,13 +69,13 @@ module.exports = function () {
   // bookings SelectView Page Select
   this.bookingsSelectView = (data) => {
     var output = {}
-    var limit = data.limit
+    var limit = 10
     var page = data.page
     var offset = (page - 1) * limit
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(booking).select()
-        .where(`Type`, 'taxi')
+        .where(`Type`, data.type)
         .limit(limit).offset(offset)
         .orderBy('Id', 'desc')
         .then((result) => {
