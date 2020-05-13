@@ -29,7 +29,6 @@ module.exports = function () {
     var response = {}
     try {
       var bookingscount = await bookingRepository.bookingsSelectViewCount(data)
-      console.log(bookingscount)
       var bookingsData = await bookingRepository.bookingsSelectView(data)
       var result = []
 
