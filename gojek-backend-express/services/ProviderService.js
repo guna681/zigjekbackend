@@ -1511,7 +1511,6 @@ module.exports = function () {
       }
       callback(response)
     } catch (err) {
-      console.log(err)
       err.error = true
       err.msg = 'OOPS'
       callback(response)
@@ -1769,14 +1768,36 @@ module.exports = function () {
     var lon = data.longitude
     var distance = 5
     var limit = 5
+    var service = {}
+    if (data.categoryId) {
+      service.CategoryId = data.categoryId
+    }
+    if (data.subCategoryId) {
+      service.SubCategoryId = data.subCategoryId
+    }
     return new Promise(async function (resolve) {
-      var getServiceProivder = await providerRespository.fetchServiceProviderByDistance(lat, lon, distance, limit)
+      var getServiceProivder = await providerRespository.fetchServiceProviderByDistance(lat, lon, distance, limit, service)
       if (getServiceProivder.error) {
         response.error = true
       } else {
-        var providerIds = getServiceProivder.data.map((element) => { return element.id })
+        var providerIds = getServiceProivder.result.map((element) => { return element.id })
         response.error = false
         response.data = providerIds
+      }
+      resolve(response)
+    })
+  }
+
+  this.getProviderDeviceTokensById = (providerIds) => {
+    var response = {}
+    var providerId = providerIds
+    return new Promise(async function (resolve) {
+      var getDeviceToken = await providerRespository.getProviderDeviceTokenByIds(providerId)
+      if (getDeviceToken.error) {
+        response.error = true
+      } else {
+        response.error = false
+        response.data = getDeviceToken.result
       }
       resolve(response)
     })

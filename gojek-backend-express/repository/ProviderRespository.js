@@ -1291,15 +1291,42 @@ module.exports = function () {
     })
   }
 
-  this.fetchServiceProviderByDistance = (lat, lon, distance, limit) => {
+  this.fetchServiceProviderByDistance = (lat, lon, distance, limit, services) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(provider)
-        .select('id', knex.raw('ST_Distance_Sphere(point(longitude, latidue), point(?,?)) as distance', [lon, lat]))
-        .having('distance', '<', distance)
+        .select('Provider.id', knex.raw('ST_Distance_Sphere(point(ProviderAddress.Longitude, ProviderAddress.Latitude), point(?,?)) / 1000 as distance', [lon, lat]))
+        .leftJoin(providerAddress, 'ProviderAddress.ProviderId', 'Provider.Id')
+        .leftJoin(providerService, 'ProviderService.ProviderId', 'Provider.Id')
+        // .having('distance', '<', distance)
         .where('Type', 'services')
+        .where(services)
         .limit(limit)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        }).catch((output) => {
+          output.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.getProviderDeviceTokenByIds = (providerIds) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(provider)
+        .select('GCMId as token', 'OS as deviceType')
+        .where('Id', providerIds)
         .then((result) => {
           if (result.length > 0) {
             output.error = false

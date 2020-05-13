@@ -1382,7 +1382,7 @@ module.exports = function (app, validator) {
         return res.send(message)
       })
     } else {
-      providersController.providerListPageViewCtrl(data, (result) => {
+      providersController.providerListPageViewCtrl(page, (result) => {
         errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })
