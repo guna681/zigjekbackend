@@ -47,7 +47,7 @@ module.exports = function () {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(booking).count(`Id as count`)
+      knex(booking).where(`Type`, 'taxi').count(`Id as count`)
         .then((result) => {
           if (result.length) {
             output.error = false
@@ -75,6 +75,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(booking).select()
+        .where(`Type`, 'taxi')
         .limit(limit).offset(offset)
         .orderBy('Id', 'desc')
         .then((result) => {
