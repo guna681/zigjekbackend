@@ -2490,7 +2490,7 @@ module.exports = function (app, validator) {
   })
 
   // services Page View
-  app.get(`${basePath}/servicesView`, app.adminauth, (req, res) => {
+  app.get(`${basePath}/servicesTitleListView`, app.adminauth, (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
     if (error.array().length) {
@@ -2498,7 +2498,7 @@ module.exports = function (app, validator) {
         return res.send(message)
       })
     } else {
-      servicesController.servicesViewCtrl((result) => {
+      servicesController.servicesTitleListViewCtrl((result) => {
         this.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })
@@ -2531,5 +2531,23 @@ module.exports = function (app, validator) {
         })
       })
     }
-  }) 
+  })
+
+  // get servicesTitle list
+  app.get(`${basePath}/servicesTitleView/:id`, (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    const id = req.params.id
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.servicesTitleViewCtrl(id, (result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
 }

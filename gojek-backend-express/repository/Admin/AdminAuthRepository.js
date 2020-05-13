@@ -1,6 +1,5 @@
 module.exports = function () {
   require('dotenv').config({ path: './../.env' })
-  console.log(process.env.DB_HOST)
   const config = {
     client: 'mysql2',
     connection: {

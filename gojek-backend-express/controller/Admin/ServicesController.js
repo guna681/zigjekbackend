@@ -6,10 +6,9 @@ module.exports = function () {
 
   var servicesService = new ServicesService();
 
-  this.servicesViewCtrl = (callback) => {
+  this.servicesTitleListViewCtrl = (callback) => {
     var response = {}
     servicesService.servicesViewService((result) => {
-      console.log(result)
       if (result.error) {
         response.error = true
         response.msg = result.msg
@@ -24,6 +23,20 @@ module.exports = function () {
   this.servicesTitleEditCtrl = (req, callback) => {
     var response = {}
     servicesService.servicesTitleEditService(req, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+  this.servicesTitleViewCtrl = (data, callback) => {
+    var response = {}
+    servicesService.servicesTitleViewService(data, (result) => {
       if (result.error) {
         response.error = true
         response.msg = result.msg

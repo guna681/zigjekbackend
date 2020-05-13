@@ -51,4 +51,23 @@ module.exports = function () {
       callback(err)
     }
   }
+  this.servicesTitleViewService = async (data, callback) => {
+    var response = {}
+    try {
+      var appsliderData = await servicesRepository.servicesTitleView(data)
+      if (appsliderData.error === false) {
+        response.error = false
+        response.data = appsliderData.data
+        response.msg = 'VALID'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
 }
