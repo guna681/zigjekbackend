@@ -12,6 +12,7 @@ module.exports = function () {
       var admin = {}
       admin.Email = data.Email
       var adminDetailsData = await adminAuthRepository.fetchadminDetails(admin)
+      console.log(adminDetailsData)
       if (adminDetailsData.error === false) {
         var adminDetails = adminDetailsData.data[0]
         var compare = await common.comparePassword(data.Password, adminDetails.Password)

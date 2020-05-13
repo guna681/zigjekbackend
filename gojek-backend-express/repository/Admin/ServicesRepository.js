@@ -1,6 +1,5 @@
 module.exports = function () {
   require('dotenv').config({ path: './../.env' })
-  console.log(process.env.DB_HOST)
   const config = {
     client: 'mysql2',
     connection: {
@@ -16,21 +15,21 @@ module.exports = function () {
     acquireConnectionTimeout: Number(process.env.DB_TIMEOUT)
   }
   var Knex = require('knex')
-  const admin = 'Admin'
+  const serviceTitle = 'ServiceTitle'
 
-  this.fetchadminDetails = (adminData) => {
+  // services Page Select
+  this.servicesView = () => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(admin)
-        .select('*')
-        .where(adminData)
+      knex(serviceTitle).select()
         .then((result) => {
-          if (result.length === 1) {
+          if (result.length) {
             output.error = false
             output.data = result
           } else {
-            output.error = true
+            output.error = false
+            output.data = result
           }
           resolve(output)
         })
@@ -43,15 +42,16 @@ module.exports = function () {
         })
     })
   }
-  this.adminVerifyJwtToken = (admindata) => {
+  // Update
+  this.servicesTitleEdit = (data) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(admindata.role)
-        .select('*')
-        .where(admindata.where)
+      knex(serviceTitle)
+        .where(data.where)
+        .update(data.data)
         .then((result) => {
-          if (result.length === 1) {
+          if (result) {
             output.error = false
             output.data = result
           } else {

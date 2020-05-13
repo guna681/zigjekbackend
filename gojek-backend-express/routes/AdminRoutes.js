@@ -22,6 +22,7 @@ module.exports = function (app, validator) {
   const BannerAdsCtrl           = require('../controller/Admin/BannerAdsCtrl')
   const PeekChargesCtrl         = require('../controller/Admin/peekChargesCtrl')
   const WalletController        = require('../controller/Admin/WalletController')
+  const ServicesController        = require('../controller/Admin/ServicesController')
 
   var adminAppConfigCtrl      = new AdminAppConfigCtrl();
   var adminAuthController     = new AdminAuthController();
@@ -44,6 +45,7 @@ module.exports = function (app, validator) {
   var walletController        = new WalletController();
   var common                  = new Common();
   var errorHandler            = new ErrorHandler();
+  var servicesController            = new ServicesController();
 
   // admin login route
   app.post(`${basePath}/login`, [
@@ -1346,18 +1348,41 @@ module.exports = function (app, validator) {
       })
     }
   })
-  // Admin Providers View
-  app.get(`${basePath}/providerListView/:page`, app.adminauth, (req, res) => {
+  // // Admin Providers View
+  // app.get(`${basePath}/providerListView/:page`, app.adminauth, (req, res) => {
+  //   const lang = req.headers.lang
+  //   const error = validator.validation(req)
+  //   var limit = 10
+  //   var page = { page: req.params.page, limit: limit }
+  //   if (error.array().length) {
+  //     errorHandler.requestHandler(error.array(), true, lang, (message) => {
+  //       return res.send(message)
+  //     })
+  //   } else {
+  //     providersController.providerListPageViewCtrl(page, (result) => {
+  //       errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+  //         return res.send(message)
+  //       })
+  //     })
+  //   }
+  // })
+  // Admin Email Template Update
+  app.post(`${basePath}/providerListView`, [
+    validator.check('page').isLength({ min: 1, max: 50 })
+      .withMessage('INVALID: $[1],page'),
+    validator.check('type').isIn(['services', 'taxi']).isLength({ min: 1, max: 45 })
+      .withMessage('INVALID: $[1],type')
+  ], app.adminauth, (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
-    var limit = 10
-    var page = { page: req.params.page, limit: limit }
+    var data = req.body
     if (error.array().length) {
       errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        message.data = error.array()
         return res.send(message)
       })
     } else {
-      providersController.providerListPageViewCtrl(page, (result) => {
+      providersController.providerListPageViewCtrl(data, (result) => {
         errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })
@@ -2463,4 +2488,48 @@ module.exports = function (app, validator) {
       })
     }
   })
+
+  // services Page View
+  app.get(`${basePath}/servicesView`, app.adminauth, (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.servicesViewCtrl((result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
+  // services  Update
+  app.post(`${basePath}/servicesTitleEdit`, [
+    validator.check('Title').isLength({ min: 1, max: 45 }).trim()
+      .withMessage('INVALID: $[1],Title'),
+    validator.check('Color').trim().isLength({ min: 1, max: 255 })
+      .withMessage('INVALID: $[1],Description'),
+    validator.check('Status').isLength({ min: 1, max: 10 })
+      .withMessage('INVALID: $[1],Status'),
+    validator.check('Id').isLength({ min: 1, max: 10 })
+      .withMessage('INVALID: $[1],Id')
+  ], app.adminauth, (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        message.data = error.array()
+        return res.send(message)
+      })
+    } else {
+      servicesController.servicesTitleEditCtrl(data, (result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  }) 
 }
