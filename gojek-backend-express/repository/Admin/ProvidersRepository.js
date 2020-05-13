@@ -27,6 +27,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(provider).count(`Id as count`)
+      .where(`Type`, 'taxi')
         .then((result) => {
           if (result.length) {
             output.error = false
@@ -48,12 +49,14 @@ module.exports = function () {
   // Provider List Select
   this.providersPageListView = (data) => {
     var output = {}
-    var limit = data.limit
+    var limit = 10
     var page = data.page
     var offset = (page - 1) * limit
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(provider).select().limit(limit).offset(offset)
+      knex(provider).select()
+      .where(`Type`, data.type)
+      .limit(limit).offset(offset)
         .then((result) => {
           if (result.length) {
             output.error = false
