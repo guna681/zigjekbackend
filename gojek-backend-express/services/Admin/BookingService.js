@@ -28,7 +28,7 @@ module.exports = function () {
   this.bookingsListSelectService = async (data, callback) => {
     var response = {}
     try {
-      var bookingscount = await bookingRepository.bookingsSelectViewCount()
+      var bookingscount = await bookingRepository.bookingsSelectViewCount(data)
       var bookingsData = await bookingRepository.bookingsSelectView(data)
       var result = []
 
