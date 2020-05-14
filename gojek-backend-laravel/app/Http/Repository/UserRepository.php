@@ -107,7 +107,7 @@ class UserRepository
 
     public  function getUser($data){
         $data=User::select('id','FirstName as userName','email','Mobile as mobileNumber','ExtCode as countryCode','status','deviceToken','os',
-            'stripeCustomerId', 'latitude', 'longitude')->where('id',$data)->first();
+            'StripeCustomerID', 'latitude', 'longitude')->where('id',$data)->first();
         return $data;
     }
 

@@ -194,6 +194,7 @@ module.exports = function () {
       const bookingCancel = 'cancelled'
       const blockProviderStatus = 'blocked'
       const activeProviderStatus = 'active'
+      const bookingUnassigned = 'unassigned'
       var providerList
       var userDeviceInfo
       var providerId
@@ -218,7 +219,6 @@ module.exports = function () {
         }
       ]
       var waitingList = await bookingService.getBookingWaitlist()
-
       if (waitingList.error) {
         response.error = true
         response.msg = waitingList.msg
@@ -259,12 +259,12 @@ module.exports = function () {
         } else if (booking.type === 'delivery') {
           providerList = await providerService.getActiveDeliveryProviderByCellId(source, neighbouringCellID, activeProviderStatus, weights, providerBlockList(mergeProviderBlockList))
           if (providerList.error) {
-            content.data = 'booking_cancelled'
-            content.title = 'Booking Cancelled'
-            content.body = 'Sorry we dont have service at your location. Please try after some time'
-            userDeviceInfo = await userService.getUserDeviceToken(waitingList.data[0].userId)
-            pushNotification.sendPushNotificationByDeviceType(userDeviceInfo.data, content)
-            bookingService.changeBookingStatus(bookingId, bookingCancel)
+            // content.data = 'booking_cancelled'
+            // content.title = 'Booking Cancelled'
+            // content.body = 'Sorry we dont have service at your location. Please try after some time'
+            // userDeviceInfo = await userService.getUserDeviceToken(waitingList.data[0].userId)
+            // pushNotification.sendPushNotificationByDeviceType(userDeviceInfo.data, content)
+            bookingService.changeBookingStatus(bookingId, bookingUnassigned)
             providerService.releaseProviderService(assignedList)
             response.error = true
             response.msg = providerList.msg
@@ -317,9 +317,10 @@ module.exports = function () {
   this.providerOngoingBookingCtrl = async (req, callback) => {
     var response = {}
     var data = req
+    var type = data.auth.Type
     var bookingStatus = ['assigned', 'accepted', 'pickedup', 'arrived', 'dropped']
     try {
-      var booking = await bookingService.getProviderBooking(data.auth.Id, bookingStatus)
+      var booking = await bookingService.getProviderBooking(data.auth.Id, bookingStatus, type)
       if (booking.error || (booking.data.type === 'services' && booking.data.status === 'accepted')) {
         response.error = true
         response.msg = 'NO_BOOKING'

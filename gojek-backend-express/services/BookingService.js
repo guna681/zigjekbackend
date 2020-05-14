@@ -165,7 +165,7 @@ module.exports = function () {
         var condition = {}
         var data = {}
         condition.Id = bookingId
-        data.ProviderId = providerId
+        data.ProviderId = providerId.toString()
         data.VehicleName = providerDetails.vehicleName + '(' + providerDetails.vehicleModel + ')'
         var provider = await bookingRepository.updateBookingProviderId(condition, data)
         if (provider.error) {
@@ -312,7 +312,7 @@ module.exports = function () {
     })
   }
 
-  this.getProviderBooking = async (providerId, status) => {
+  this.getProviderBooking = async (providerId, status, type) => {
     var response = {}
     return new Promise(async function (resolve) {
       try {
@@ -382,7 +382,7 @@ module.exports = function () {
     var response = {}
     return new Promise(async function (resolve) {
       try {
-        var status = ['assigned']
+        var status = ['assigned', 'unassigned']
         var data = {}
         data.ProviderId = null
         data.Status = 'waiting'
@@ -580,6 +580,7 @@ module.exports = function () {
     var response = {}
     return new Promise(async function (resolve) {
       try {
+        providerId = providerId.toString()
         var booking = await bookingRepository.updateRejectProvider(providerId, bookingId)
         if (booking.error) {
           response.error = true
@@ -1079,12 +1080,11 @@ module.exports = function () {
     var response = {}
     return new Promise(async function (resolve) {
       try {
-        var data = {}
-        data.Id = bookingId
         var condition = {}
+        condition.Id = bookingId
+        var data = {}
         providerIds = providerIds.map((element) => { return element.toString() })
-        condition.AssignedProviderIds = JSON.stringify(providerIds)
-        condition.Status = 'active'
+        data.AssignedProviderIds = JSON.stringify(providerIds)
         var bookingUpdate = await bookingRepository.updateBookingInfo(data, condition)
         if (bookingUpdate.error) {
           response.error = true

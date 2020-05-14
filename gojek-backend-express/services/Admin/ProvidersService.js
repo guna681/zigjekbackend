@@ -11,7 +11,7 @@ module.exports = function () {
   this.providersListPageViewService = async (data, callback) => {
     var response = {}
     try {
-      var providersCount = await providersRepository.providersListCount()
+      var providersCount = await providersRepository.providersListCount(data)
       var providersListSData = await providersRepository.providersPageListView(data)
       if (providersListSData.error === false && providersCount.error === false) {
         providersListSData.data.forEach((j, index) => {

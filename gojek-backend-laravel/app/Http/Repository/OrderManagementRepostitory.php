@@ -167,7 +167,7 @@ public function updateOrderViewStatus($arg)
                  ->leftjoin('Provider', function ($join) {
                 $join->on('Booking.ProviderId', '=', 'Provider.Id');
                      })
-                 ->where(['Booking.id'=>$orderId,'Booking.RideName'=>'foodDelivery'])
+                 ->where(['Booking.id'=>$orderId,'Booking.RideName'=>'Food Delivery'])
                  ->first();
 
         return $orders;

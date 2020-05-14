@@ -172,6 +172,44 @@ module.exports = function () {
     })
   }
 
+  this.fetchBookingUsingType = (data, status, limit, type) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex.transaction((trx) => {
+        trx(booking)
+          .transacting(trx)
+          .where(data)
+          .whereIn('Status', status)
+          .whereIn('Type', ['services'])
+          .having('CreateAt', '<', knex.fn.now())
+          .limit(limit)
+          .orderBy(knex.raw('FIELD(Status, "pending")'))
+          .then(trx.commit)
+          .catch((err) => {
+            trx.rollback()
+            throw err
+          })
+      })
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
   this.updateBookingState = (conditon, data) => {
     var output = {}
     return new Promise(function (resolve) {
