@@ -1647,15 +1647,14 @@ module.exports = function (app, validator) {
     }
   })
   // Admin Select Bookings
-  app.post(`${basePath}/bookingsListView`, [
-    validator.check('page').isLength({ min: 1, max: 50 })
-      .withMessage('INVALID: $[1],page'),
+  app.post(`${basePath}/bookingsListView/:page`, [
     validator.check('type').isIn(['services', 'taxi']).isLength({ min: 1, max: 45 })
       .withMessage('INVALID: $[1],type')
   ], app.adminauth, (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
     var data = req.body
+    data.page = req.params.page
     if (error.array().length) {
       errorHandler.requestHandler(error.array(), true, lang, (message) => {
         return res.send(message)
