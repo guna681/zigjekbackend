@@ -20,7 +20,7 @@ use App\Http\Utility\FCMPushNotification;
 use App\Http\Cron\S2ServiceProvider;
 use App\Http\Libraries\ServiceProviders\FCMPushNotificationServiceProvider;
 use App\Http\Service\PaymentService;
-
+Use Log;
 Class  OrderService
 {
 
@@ -78,7 +78,7 @@ Class  OrderService
             $stripeCustomerId = $userDetails->stripeCustomerId;
             $orderdata = $orderDetails->orderDetails;
             array_push($origin, $orderdata->latitude, $orderdata->longitude);
-            $distanceData = $s2ServiceProvider->getDistanceCalculation($origin, $destination);
+            // $distanceData = $s2ServiceProvider->getDistanceCalculation($origin, $destination);
 
             $outletToRestaurantDistance                   = $this->distanceTo($origin, $destination);
 
@@ -104,7 +104,6 @@ Class  OrderService
               $lastMileData->outletName   = $orderdata->outletName;
               $lastMileData->serviceCommission   = $orderdata->serviceCommission;
             $updateLastMile                = $orderRepostitory->updateLastMile($lastMileData);
-            
             // if($distanceData->error === false) {     
             //     $updateDate = (object) array();
             //     $appConfigRepostitory = new AppConfigRepostitory();

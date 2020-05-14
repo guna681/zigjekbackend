@@ -14,7 +14,7 @@ Class PaymentRepository
     public function listPayMentGateways()
     {
         $path    = url('/').'/images/';
-        $data =IntegrationSetting::select(DB::raw("id,name,type,CONCAT('$path',image)as image,status"))
+        $data =IntegrationSetting::select(DB::raw("id,name,type,CONCAT('$path',image)as image,status,paymentType"))
                                   ->where(['type'=>Constant::PAYMENT_GATEWAY,'status'=>'1'])
                                   ->get();
         return $data;

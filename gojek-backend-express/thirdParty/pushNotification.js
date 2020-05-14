@@ -130,7 +130,59 @@ module.exports = function () {
       } catch (err) {
         err.error = false
         resolve(err)
-      } 
+      }
+    })
+  }
+
+  this.sendBulkNotificationToProvider = (deviceInfo, content, sound) => {
+    console.log(deviceInfo, content, sound)
+    var response = {}
+    return new Promise(function (resolve) {
+      try {
+        var messages
+        sound = typeof sound === 'undefined' ? 'default' : sound
+        messages = {
+          'registrationToken': deviceInfo,
+          'notification': {
+            'title': content.title,
+            'body': content.body
+          },
+          'data': {
+            'title': content.title,
+            'body': content.body,
+            'data': content.data
+          },
+          'android': {
+            'priority': 'high'
+          },
+          'apns': {
+            'headers': {
+              'apns-priority': '5'
+            },
+            'payload': {
+              'aps': {
+                'category': 'NEW_MESSAGE_CATEGORY',
+                'sound': sound
+              }
+            }
+          }
+        }
+        console.log(messages)
+        admin.messaging().sendToDevice(messages)
+          .then((result) => {
+            console.log('FCM Success', result)
+            response.error = false
+          })
+          .catch((err) => {
+            console.log('FCM Error', err)
+            err.error = true
+            resolve(err)
+          })
+      } catch (err) {
+        console.log('FCM Error', err)
+        err.error = false
+        resolve(err)
+      }
     })
   }
 }

@@ -22,12 +22,18 @@ module.exports = function () {
   const providervehicledoc = 'ProviderDocuments'
   const doctype = 'DocumentType'
   // Users List Count Select
-  this.providersListCount = () => {
+  this.providersListCount = (data) => {
     var output = {}
+     if (data.IsDeliveryOpt){
+    var IsDeliveryOpt = '1'
+    } else {
+    var IsDeliveryOpt = '0' 
+    }
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(provider).count(`Id as count`)
       .where(`Type`, 'taxi')
+      .where(`IsDeliveryOpt`, IsDeliveryOpt)
         .then((result) => {
           if (result.length) {
             output.error = false
@@ -52,10 +58,16 @@ module.exports = function () {
     var limit = 10
     var page = data.page
     var offset = (page - 1) * limit
+    if (data.IsDeliveryOpt){
+    var IsDeliveryOpt = '1'
+    } else {
+    var IsDeliveryOpt = '0'
+    }
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(provider).select()
       .where(`Type`, data.type)
+      .where(`IsDeliveryOpt`, IsDeliveryOpt)
       .limit(limit).offset(offset)
         .then((result) => {
           if (result.length) {

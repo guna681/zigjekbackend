@@ -165,7 +165,7 @@ module.exports = function () {
         var condition = {}
         var data = {}
         condition.Id = bookingId
-        data.ProviderId = providerId
+        data.ProviderId = providerId.toString()
         data.VehicleName = providerDetails.vehicleName + '(' + providerDetails.vehicleModel + ')'
         var provider = await bookingRepository.updateBookingProviderId(condition, data)
         if (provider.error) {
@@ -312,7 +312,7 @@ module.exports = function () {
     })
   }
 
-  this.getProviderBooking = async (providerId, status) => {
+  this.getProviderBooking = async (providerId, status, type) => {
     var response = {}
     return new Promise(async function (resolve) {
       try {
@@ -382,7 +382,7 @@ module.exports = function () {
     var response = {}
     return new Promise(async function (resolve) {
       try {
-        var status = ['assigned']
+        var status = ['assigned', 'unassigned']
         var data = {}
         data.ProviderId = null
         data.Status = 'waiting'
@@ -580,6 +580,7 @@ module.exports = function () {
     var response = {}
     return new Promise(async function (resolve) {
       try {
+        providerId = providerId.toString()
         var booking = await bookingRepository.updateRejectProvider(providerId, bookingId)
         if (booking.error) {
           response.error = true
@@ -837,6 +838,8 @@ module.exports = function () {
     return new Promise(async function (resolve) {
       try {
         var condition = {}
+        var orderId = []
+        var dishesList = []
         condition.Type = data.type
         page = data.page
         var orderList
@@ -849,6 +852,9 @@ module.exports = function () {
           orderList = await bookingRepository.fetchOrderList(condition, page)
         } else if (data.type === 'delivery') {
           orderList = await bookingRepository.fetchDeliveryOrders(condition, page)
+          orderId = orderList.error ? [] : orderList.result.map(element => { return element.Id })
+          // console.log(orderId)
+          dishesList = await bookingRepository.getMultiDishesOrdered(orderId)
         } else if (data.type === 'services') {
           delete condition.Type
           orderList = await bookingRepository.fetchServiceList(condition, page)
@@ -873,6 +879,7 @@ module.exports = function () {
             data['total'] = (element.CurrencyType + element.TotalAmount).toString()
             data['isActive'] = element.IsActive
             data['status'] = element.Status
+            data['dishList'] = dishesList ? [] : dishesList.result.filter(dish => dish.orderId === element.Id)
             data['vehicleName'] = element.VehicleName
             data['paymentMode'] = element.PaymentMode
             data['createdTime'] = element.CreateAt
@@ -889,6 +896,7 @@ module.exports = function () {
         }
         resolve(response)
       } catch (err) {
+        console.log(err)
         err.response = true
         err.msg = 'OOPS'
         resolve(err)
@@ -924,6 +932,7 @@ module.exports = function () {
         } else {
           response.error = false
           response.msg = 'BOOKING_ADDED'
+          response.data = { bookingNo: createService.result }
         }
         resolve(response)
       } catch (err) {
@@ -1037,7 +1046,7 @@ module.exports = function () {
         }
         resolve(response)
       } catch (err) {
-        err.response = true
+        err.error = true
         err.msg = 'OOPS'
         resolve(err)
       }
@@ -1057,6 +1066,31 @@ module.exports = function () {
           response.error = false
           response.data = addonList.result
           response.msg = 'VALID'
+        }
+        resolve(response)
+      } catch (err) {
+        err.response = true
+        err.msg = 'OOPS'
+        resolve(err)
+      }
+    })
+  }
+
+  this.updateServiceBookingInfo = (bookingId, providerIds) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      try {
+        var condition = {}
+        condition.Id = bookingId
+        var data = {}
+        providerIds = providerIds.map((element) => { return element.toString() })
+        data.AssignedProviderIds = JSON.stringify(providerIds)
+        var bookingUpdate = await bookingRepository.updateBookingInfo(data, condition)
+        if (bookingUpdate.error) {
+          response.error = true
+        } else {
+          response.error = false
+          response.data = bookingUpdate.result
         }
         resolve(response)
       } catch (err) {

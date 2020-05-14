@@ -265,7 +265,7 @@ Class  CartService{
                                                     });
         $itemTotal                  = (object)array();
         $itemTotal->displayKey   = __('validation.itemTotalName');
-        $itemTotal->displayValue   = $currency .number_format($slashedPrice,2);
+        $itemTotal->displayValue   = $currency .number_format($total,2);
         $itemTotal->itemTotal       = $total;
         $itemTotal->percentage      = $total;
         $dishtotal[]                = $itemTotal;

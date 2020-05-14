@@ -927,16 +927,25 @@ module.exports = function () {
         response.error = true
         response.msg = createBooking.msg
       } else {
+        var content = {}
+        content.data = 'incoming_booking'
+        content.title = 'Booking Alert'
+        content.body = 'You have new booking request'
         if (req.providerId) {
-          var content = {}
-          content.data = 'incoming_booking'
-          content.title = 'Booking Alert'
-          content.body = 'You have new booking request'
           var providerInfo = await providerService.getProivderMessageToken(req.providerId)
           pushNotification.sendPushNotificationByDeviceType(providerInfo.data, content)
         }
+
+        var availableProvider = await providerService.getServiceProviderBasedOnDistance(req)
+        if (availableProvider.error === false) {
+          var bookingId = createBooking.data.bookingNo
+          var deviceToken = await providerService.getProviderDeviceTokensById(availableProvider.data)
+          var token = deviceToken.error ? '' : deviceToken.data.map((element) => pushNotification.sendPushNotificationByDeviceType(element, content, 'default'))
+          bookingService.updateServiceBookingInfo(bookingId, availableProvider.data)
+        }
         response.error = false
         response.msg = createBooking.msg
+        response.data = createBooking.data
       }
       callback(response)
     } catch (err) {

@@ -172,6 +172,44 @@ module.exports = function () {
     })
   }
 
+  this.fetchBookingUsingType = (data, status, limit, type) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex.transaction((trx) => {
+        trx(booking)
+          .transacting(trx)
+          .where(data)
+          .whereIn('Status', status)
+          .whereIn('Type', ['services'])
+          .having('CreateAt', '<', knex.fn.now())
+          .limit(limit)
+          .orderBy(knex.raw('FIELD(Status, "pending")'))
+          .then(trx.commit)
+          .catch((err) => {
+            trx.rollback()
+            throw err
+          })
+      })
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
   this.updateBookingState = (conditon, data) => {
     var output = {}
     return new Promise(function (resolve) {
@@ -441,6 +479,31 @@ module.exports = function () {
     })
   }
 
+  this.getMultiDishesOrdered = (orderId) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(orderItems)
+        .select('orderId', knex.raw(`CONCAT(dishName,' X',quantity) as dishName, isVeg, quantity, price as dishTotal`))
+        .whereIn('orderId', orderId)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
   this.getOutletDetails = (orderId) => {
     var output = {}
     return new Promise(function (resolve) {
@@ -561,7 +624,7 @@ module.exports = function () {
         .then((result) => {
           if (result[0] > 0) {
             output.error = false
-            output.result = result
+            output.result = result[0]
           } else {
             output.error = true
           }
@@ -588,6 +651,7 @@ module.exports = function () {
         .leftJoin(users, 'Booking.UserId', 'Users.Id')
         .leftJoin(serviceCategory, 'Booking.ServiceCategoryId', 'ServiceCategory.Id')
         .where(data)
+        .where('Booking.Type', 'services')
         .limit(limit)
         .offset(offset)
         .then((result) => {
@@ -676,7 +740,6 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
-          console.log(err)
           err.error = true
           resolve(output)
         }).finally(() => {
@@ -756,6 +819,34 @@ module.exports = function () {
           err.error = true
           resolve(output)
         }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.updateBookingInfo = (data, conditon) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(booking)
+        .where(conditon)
+        .update(data)
+        .then((result) => {
+          console.log(result)
+          if (result > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          console.log(err)
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
           knex.destroy()
         })
     })
