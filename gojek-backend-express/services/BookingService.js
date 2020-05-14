@@ -1084,6 +1084,7 @@ module.exports = function () {
         var condition = {}
         providerIds = providerIds.map((element) => { return element.toString() })
         condition.AssignedProviderIds = JSON.stringify(providerIds)
+        condition.Status = 'active'
         var bookingUpdate = await bookingRepository.updateBookingInfo(data, condition)
         if (bookingUpdate.error) {
           response.error = true
