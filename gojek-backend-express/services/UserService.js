@@ -188,7 +188,7 @@ module.exports = function () {
 
             var deviceDetails = {}
             deviceDetails.UserId = userInfo.result[0].Id
-            deviceDetails.DeviceId = deviceId
+            // deviceDetails.DeviceId = deviceId
             var updateLangName = {}
             var UserId = userInfo.result[0].Id
             updateLangName.Language = data.languageName
@@ -542,7 +542,7 @@ module.exports = function () {
 
       var userDeviceInfo = {}
       userDeviceInfo.UserId = data.auth.Id
-      userDeviceInfo.DeviceId = data.uuid
+      // userDeviceInfo.DeviceId = data.uuid
 
       var token = await userRepository.updateUserFCMToken(device, userDeviceInfo)
       if (token.error) {

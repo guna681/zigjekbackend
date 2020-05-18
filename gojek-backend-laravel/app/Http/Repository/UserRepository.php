@@ -107,7 +107,7 @@ class UserRepository
 
     public  function getUser($data){
         $data=User::select('id','FirstName as userName','email','Mobile as mobileNumber','ExtCode as countryCode','status','deviceToken','os',
-            'StripeCustomerID', 'latitude', 'longitude')->where('id',$data)->first();
+            'StripeCustomerID', 'latitude', 'longitude', 'CurrentAddressId')->where('id',$data)->first();
         return $data;
     }
 
@@ -523,6 +523,11 @@ class UserRepository
         return true;
     }
 
+    // address  modlue functions
 
+    public function currentAddress($userid,$userCurrentAddress){
+        $data=Address::select(DB::raw("fullAddress,id,userId,location,houseFlatNo,landMark,latitude,longitude,type,currentAddress"))->where(['userId'=>$userid,'unSaved'=>0,'isDeleted'=>0,'id'=>$userCurrentAddress])->get();
+        return $data;
+    }
 
 }

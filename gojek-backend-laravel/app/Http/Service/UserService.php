@@ -746,6 +746,24 @@ Class UserService
         }
         return $accessToken;
     }
+     public function currentAddress($userid)
+    {
+        $userRepository = new UserRepository();
+        $userCurrentAddress    = $userRepository->getUser($userid);
+        $useraddress    = $userRepository->currentAddress($userid,$userCurrentAddress->CurrentAddressId);
+        $data           = new DataService();
+        if (!$useraddress->isEmpty()) {
+            $data->error        = Common::error_false;
+            $data->errorMessage = __('validation.sucess');
+            $data->address      = $useraddress[0];
+        } else {
+            $data->error        = Common::error_true;
+            $data->errorMessage = trans('validation.noAddress');
+            $data->address      = [];
+        }
+        return $data;
+
+    }    
 }
 
 

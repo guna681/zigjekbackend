@@ -8,7 +8,7 @@ module.exports = function () {
     condition.Type = type
     async.parallel({
       authConfig: function (done) {
-        var configType = ['AUTH_TYPE', 'OTP_TIMER', 'MAP_API_KEY', 'WAITING_TIME', 'MAX_RANGE', 'SOS_NUMBER']
+        var configType = ['AUTH_TYPE', 'OTP_TIMER', 'MAP_API_KEY', 'WAITING_TIME', 'MAX_RANGE', 'SOS_NUMBER', 'STRIPE_PUBLIC']
         var config = {}
         appConfigRepository.authType(condition, configType, (result) => {
           if (result.error) {

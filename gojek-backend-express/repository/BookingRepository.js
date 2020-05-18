@@ -172,19 +172,19 @@ module.exports = function () {
     })
   }
 
-  this.fetchBookingUsingType = (data, status, limit, type) => {
+  this.fetchBookingUsingType = (data, limit, type) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex.transaction((trx) => {
         trx(booking)
           .transacting(trx)
-          .where(data)
-          .whereIn('Status', status)
-          .whereIn('Type', ['services'])
+          .whereRaw(`JSON_CONTAINS(AssignedProviderIds, '["?"]')`, [data.ProviderId])
+          .where('Status', 'pending')
+          .whereNull('ProviderId')
+          .whereIn('Type', [type])
           .having('CreateAt', '<', knex.fn.now())
           .limit(limit)
-          .orderBy(knex.raw('FIELD(Status, "pending")'))
           .then(trx.commit)
           .catch((err) => {
             trx.rollback()
@@ -201,6 +201,7 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
+          console.log(err)
           err.error = true
           resolve(err)
         })

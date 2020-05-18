@@ -106,9 +106,8 @@ module.exports = function () {
         response.msg = result.msg
       } else {
         var userId = await common.getPayloadFromToken(result.data.token, process.env.JWT_SECRET)
-        // var striperes = await paymentHelperService.createPaymentCustomerId(data.email)
-        // var stripeCustomerId = striperes.data.id
-        var stripeCustomerId = 1234
+        var striperes = await paymentHelperService.createPaymentCustomerId(data.email)
+        var stripeCustomerId = striperes.data.id
         stripeData.StripeCustomerID = stripeCustomerId
         await userService.updateUserStripeCustomerID(stripeData, userId.data.Id)
         var smtp = await appConfigService.getSMTPConfig()
