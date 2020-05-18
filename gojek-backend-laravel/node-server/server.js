@@ -40,7 +40,7 @@ io.on('connection', function(socket) {
         var longitude = parseFloat(data.longitude).toFixed(6)
         var id = data.staffId
 
-        var level = 10
+        var level = 11
         var key = S2.latLngToKey(latitude, longitude, level)
         var cellId = S2.keyToId(key)
 
@@ -202,7 +202,7 @@ app.post('/s2CellId', function(req, res) {
 
     var latitude = req.body.latitude
     var longitude = req.body.longitude
-    var level = 10
+    var level = 11
 
     console.log(req.body)
     var key = S2.latLngToKey(latitude, longitude, level)
@@ -215,9 +215,6 @@ app.post('/s2CellId', function(req, res) {
     data.key = key
 
     res.send(data)
-
-
-
 })
 
 
@@ -343,6 +340,6 @@ app.post('/weightCalculation', function(req, res) {
 })
 
 
-http.listen(process.env.FOODDELIVERYPORT, function() {
+http.listen(process.env.PORT, function() {
     console.log('listening on localhost:8002')
 })

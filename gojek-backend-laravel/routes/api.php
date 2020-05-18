@@ -69,6 +69,7 @@ Route::post('updateAddress','UserController@updateAddress')->middleware('auth:ap
 Route::post('getCurrentAddress','UserController@getCurrentAddress')->middleware('auth:api');
 Route::post('setCurrentAddress','UserController@setCurrentAddress')->middleware('auth:api');
 Route::post('destroyAddress','UserController@destroyAddress')->middleware('auth:api');
+Route::get('currentAddress','UserController@currentAddress')->middleware('auth:api');
 
 
 // Restraunt  list module

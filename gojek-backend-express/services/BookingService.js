@@ -319,7 +319,8 @@ module.exports = function () {
         var limit = 1
         var condition = {}
         condition.ProviderId = providerId
-        var bookingDetails = await bookingRepository.fetchBookingUsingState(condition, status, limit)
+        var pendingServiceInfo = await bookingRepository.fetchBookingUsingType(condition, limit, type)
+        var bookingDetails = pendingServiceInfo.error ? await bookingRepository.fetchBookingUsingState(condition, status, limit) : pendingServiceInfo
         if (bookingDetails.error) {
           response.error = true
           response.msg = 'NO_BOOKING'

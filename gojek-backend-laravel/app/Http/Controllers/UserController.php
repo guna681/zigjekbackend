@@ -632,6 +632,16 @@ Class  UserController extends Controller
         $responsedata  = Defaults::encode($response);
         return $responsedata;
     }
+        /* user address module */
+
+
+    public  function currentAddress(request $request){
+         $userId        =Auth::guard('api')->user()->Id;
+         $userService   = new UserService();
+         $response      =$userService->currentAddress($userId);
+         $responsedata  =Defaults::encode($response);
+         return $responsedata;
+    }  
 }
 
 
