@@ -111,6 +111,7 @@ class StripeService
     }
 
     public static function listCardOfCustomer($data){
+        $userRepository = new UserRepository();
         $integrationSettingRepository = new IntegrationSettingRepository();
         $data               = array();
         $data['error']        = Common::error_false;
@@ -118,7 +119,10 @@ class StripeService
         $stripe             = $integrationSettingRepository->getStripeKey();
         $stripeKey = $stripe['value'];
         // $stripeKey             = $this->getStripeServiceApiKey();
-        $stripe_customer_id=Auth::guard('api')->Users()->StripeCustomerID;
+        $userId  = Auth::guard('api')->user()->Id;
+        $users               = $userRepository->getUser($userId);
+        // $stripe_customer_id=Auth::guard('api')->Users()->StripeCustomerID;
+        $stripe_customer_id = $users->stripe_customer_id;
         $stripe=Stripe::setApiKey($stripeKey);
         $setkey=\Stripe\Stripe::setApiKey($stripeKey);
         $cards = \Stripe\Customer::allSources(
