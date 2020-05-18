@@ -118,7 +118,7 @@ class StripeService
         $stripe             = $integrationSettingRepository->getStripeKey();
         $stripeKey = $stripe['value'];
         // $stripeKey             = $this->getStripeServiceApiKey();
-        $stripe_customer_id=Auth::guard('api')->user()->stripeCustomerId;
+        $stripe_customer_id=Auth::guard('api')->Users()->StripeCustomerID;
         $stripe=Stripe::setApiKey($stripeKey);
         $setkey=\Stripe\Stripe::setApiKey($stripeKey);
         $cards = \Stripe\Customer::allSources(

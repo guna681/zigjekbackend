@@ -70,4 +70,27 @@ module.exports = function () {
       callback(err)
     }
   }
+  this.servicesListingService = async (data, callback) => {
+    var response = {}
+    try {
+      var serviceCategoryData = await servicesRepository.ProviderserviceCategory(data)
+      var serviceSubCategoryData = await servicesRepository.ProviderserviceSubCategory(data)
+      if (serviceCategoryData.error === false) {
+        var res = {}
+        res.serviceCategory = serviceCategoryData.data
+        res.serviceSubCategory = serviceSubCategoryData.data
+        response.error = false
+        response.data = res
+        response.msg = 'VALID'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
 }
