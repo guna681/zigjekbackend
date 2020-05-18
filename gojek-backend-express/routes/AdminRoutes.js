@@ -2553,4 +2553,24 @@ module.exports = function (app, validator) {
       })
     }
   })
+
+  // services List View
+  app.post(`${basePath}/servicesListing`, [
+    validator.check('providerId').isLength({ min: 1, max: 45 }).trim()
+      .withMessage('INVALID: $[1],providerId')], app.adminauth, (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.servicesListingCtrl(data, (result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
 }

@@ -16,7 +16,8 @@ module.exports = function () {
   }
   var Knex = require('knex')
   const serviceTitle = 'ServiceTitle'
-
+  const providerService = 'ProviderService'
+  const serviceCategory = 'ServiceCategory'
   // services Page Select
   this.servicesView = () => {
     var output = {}
@@ -75,6 +76,61 @@ module.exports = function () {
       var knex = new Knex(config)
       knex(serviceTitle).select()
         .where('Id', id)
+        .then((result) => {
+          if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = false
+            output.data = result
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+  // services Page Select
+  this.ProviderserviceCategory = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerService).select('*', knex.raw('CONCAT(?, ServiceCategory.Icon) as image', [process.env.BASE_URL + process.env.SERVICE_PATH]))
+        .leftJoin('ServiceCategory', 'ServiceCategory.Id', `ProviderService.CategoryId`)
+        .where(`ProviderService.ProviderId`, data.providerId)
+        .then((result) => {
+          if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = false
+            output.data = result
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  // services category Select
+  this.ProviderserviceSubCategory = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(providerService).select('*', knex.raw('CONCAT(?, ServiceSubCategory.Image) as image', [process.env.BASE_URL + process.env.SERVICE_PATH]))
+        .leftJoin('ServiceSubCategory', 'ServiceSubCategory.Id', `ProviderService.SubCategoryId`)
+        .where(`ProviderService.ProviderId`, data.providerId)
         .then((result) => {
           if (result.length) {
             output.error = false
