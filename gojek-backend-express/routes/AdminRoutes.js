@@ -2554,7 +2554,7 @@ module.exports = function (app, validator) {
     }
   })
 
-  // Dashboard List View
+  // services List View
   app.post(`${basePath}/servicesListing`, [
     validator.check('providerId').isLength({ min: 1, max: 45 }).trim()
       .withMessage('INVALID: $[1],providerId')], app.adminauth, (req, res) => {
