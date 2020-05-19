@@ -201,7 +201,6 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
-          console.log(err)
           err.error = true
           resolve(err)
         })
@@ -833,7 +832,6 @@ module.exports = function () {
         .where(conditon)
         .update(data)
         .then((result) => {
-          console.log(result)
           if (result > 0) {
             output.error = false
             output.result = result
@@ -843,7 +841,6 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
-          console.log(err)
           err.error = true
           resolve(err)
         })

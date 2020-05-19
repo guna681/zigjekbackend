@@ -328,9 +328,9 @@ module.exports = function () {
         this.formdatedata = typeof this.formdatedata === 'undefined' ? null : this.formdatedata
         var bookingInfo = booking.data
         var status = bookingInfo.status
+        var userId = bookingInfo.userId
+        var userInfo = await userService.getUserBookingInfo(userId)
         if (bookingStatus.indexOf(status) >= 0) {
-          var userId = bookingInfo.userId
-          var userInfo = await userService.getUserBookingInfo(userId)
           if (userInfo.error) {
             bookingInfo.userInfo = null
           } else {
@@ -348,13 +348,14 @@ module.exports = function () {
             bookingInfo.userInfo = userInfo.data
           }
         } else {
-          bookingInfo.userInfo = null
+          bookingInfo.userInfo = userInfo.error ? null : userInfo.data
         }
         var bookResponse = bookingInfo
         response.error = false
         response.msg = booking.msg
         response.data = bookResponse
       }
+      console.log(response)
       callback(response)
     } catch (err) {
       err.error = true

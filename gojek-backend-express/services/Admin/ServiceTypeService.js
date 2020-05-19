@@ -1,10 +1,8 @@
 module.exports = function () {
   const ServiceTypeRepository = require('../../repository/Admin/ServiceTypeRepository')
-  const Common = require('../../Utils/common')
   require('dotenv').config({ path: './../.env' })
 
-  var serviceTypeRepository = new ServiceTypeRepository();
-  var common = new Common();
+  var serviceTypeRepository = new ServiceTypeRepository()
 
   this.rideTypeAddService = async (data, callback) => {
     var response = {}
@@ -12,7 +10,7 @@ module.exports = function () {
       var ridedata = {
         Name: data.Name,
         Description: data.Description,
-        CountryId: data.CountryId,
+        CountryId: data.CountryId
       }
       var rideTypeIData = await serviceTypeRepository.rideTypeAdd(ridedata)
       if (rideTypeIData.error === false) {
@@ -227,7 +225,9 @@ module.exports = function () {
       callback(err)
     }
   }
+
   this.stateSelectViewService = async (data, callback) => {
+    console.log(data)
     var response = {}
     try {
       var stateSelectSData = await this.stateSelectView(data)
@@ -250,68 +250,44 @@ module.exports = function () {
     var response = {}
     try {
       var output = {}
-      var result = []
       var ridevehiclecount = await serviceTypeRepository.rideVehicleViewCount()
       var rideVehicleTypeSData = await serviceTypeRepository.rideVehicleTypeView(req)
-      rideVehicleTypeSData.data.forEach((i, index) => {
-        var s = i.StateIds.toString()
-        var d = i.CityIds.toString()
-        this.stateSelectViewService(s, (state) => {
-          if (state.error) {
-            output.error = true
-          } else {
-            var statename = []
-            state['data'].forEach((ss) => {
-              statename.push(ss.StateName)
-            })
-            this.citySelectViewService(d, (city) => {
-              if (city.error) {
-                output.error = true
-              } else {
-                var Citynames = []
-                city['data'].forEach((j) => {
-                  Citynames.push(j.CityName)
-                })
-                result.push({
-                  Id: i.Id,
-                  CountryId: i.CountryId,
-                  CountryName: i.CountryName,
-                  RideTypeId: i.RideTypeId,
-                  Name: i.Name,
-                  IconPassive: i.IconPassive,
-                  IconActive: i.IconActive,
-                  BaseCharge: i.BaseCharge,
-                  MinCharge: i.MinCharge,
-                  CurrencyType: i.CurrencyType,
-                  CommissionPercentage: i.CommissionPercentage,
-                  WaitingCharge: i.WaitingCharge,
-                  Capacity: i.Capacity,
-                  ShortDesc: i.ShortDesc,
-                  IsActive: i.IsActive,
-                  LongDesc: i.LongDesc,
-                  IsPoolEnabled: i.IsPoolEnabled,
-                  StateName: statename,
-                  CityName: Citynames
-                })
-              }
-              if (--rideVehicleTypeSData.data.length === 0) {
-                output.data = result
-                output.Count = ridevehiclecount.data[0].count
-                if (result.length) {
-                  response.error = false
-                  response.data = output
-                  response.msg = 'VALID'
-                } else {
-                  response.error = true
-                  response.msg = 'FAILED'
-                }
-                callback(response)
-              }
-            })
-          }
+      if (rideVehicleTypeSData.error) {
+        response.error = true
+        response.msg = 'FAILED'
+      } else {
+        var data = rideVehicleTypeSData.data.map((element) => {
+          var result = {}
+          result.Id = element.Id
+          result.CountryId = element.CountryId
+          result.CountryName = element.CountryName
+          result.RideTypeId = element.RideTypeId
+          result.Name = element.Name
+          result.IconPassive = element.IconPassive
+          result.IconActive = element.IconActive
+          result.BaseCharge = element.BaseCharge
+          result.MinCharge = element.MinCharge
+          result.CurrencyType = element.CurrencyType
+          result.CommissionPercentage = element.CommissionPercentage
+          result.WaitingCharge = element.WaitingCharge
+          result.Capacity = element.Capacity
+          result.ShortDesc = element.ShortDesc
+          result.IsActive = element.IsActive
+          result.LongDesc = element.LongDesc
+          result.IsPoolEnabled = element.IsPoolEnabled
+          result.StateName = []
+          result.CityName = []
+          return result
         })
-      })
+        output.data = data
+        output.Count = ridevehiclecount
+        response.error = false
+        response.data = output
+        response.msg = 'VALID'
+      }
+      callback(response)
     } catch (err) {
+      console.log(err)
       err.error = true
       err.msg = 'OOPS'
       callback(err)

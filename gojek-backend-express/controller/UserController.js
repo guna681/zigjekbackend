@@ -588,6 +588,7 @@ module.exports = function () {
           providerInfo['name'] = provider.data.firstName + ' ' + provider.data.lastName
           providerInfo['image'] = provider.data.image
           providerInfo['rating'] = provider.data.rating
+          providerInfo['mobile'] = provider.data.countryCode + provider.data.mobile
           bookingDetails.providerInfo = providerInfo
         }
         response.error = false
