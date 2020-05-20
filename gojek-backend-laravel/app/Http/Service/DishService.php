@@ -146,6 +146,8 @@ public function dishes($subCategory){
 			$availableTo            =strtotime($item->showToTime);		
 			$dishes->availableFrom  =floor($availableFrom/ 60);
 			$dishes->availableTo    =floor($availableTo/ 60);
+			$dishes->availableFromTime  =$item->showFromTime;
+			$dishes->availableToTime    =$item->showToTime;
 			$dishes->isAvailable    =Common::error_true;
 			$dishes->description    =$item->description;
 			$dishes->dishCustomisation=self::getCustomisation($item->dishId);
@@ -190,6 +192,8 @@ public function dishes($subCategory){
 			$availableTo            =strtotime($item->showToTime);		
 			$dishes->availableFrom  =floor($availableFrom/ 60);
 			$dishes->availableTo    =floor($availableTo/ 60);
+			$dishes->availableFromTime  =$item->showFromTime;
+			$dishes->availableToTime    =$item->showToTime;
             $dishes->isAvailable    =Common::error_true;
 			$dishes->dishCustomisation=self::getCustomisation($item->dishId);
 			if(!$dishes->dishCustomisation->isEmpty()){

@@ -1,51 +1,50 @@
 module.exports = function (app, validator) {
   const basePath = '/api/admin'
-  const ErrorHandler         = require('../Utils/error')
-  const Common                  = require('../Utils/common')
+  const ErrorHandler = require('../Utils/error')
+  const Common = require('../Utils/common')
   require('dotenv').config({ path: './../.env' })
-  const AdminAppConfigCtrl      = require('../controller/Admin/AdminAppConfigCtrl')
-  const AdminAuthController     = require('../controller/Admin/AdminAuthController')
-  const LocalizationController  = require('../controller/Admin/LocalizationController')
-  const DoctypeController       = require('../controller/Admin/DoctypeController')
+  const AdminAppConfigCtrl = require('../controller/Admin/AdminAppConfigCtrl')
+  const AdminAuthController = require('../controller/Admin/AdminAuthController')
+  const LocalizationController = require('../controller/Admin/LocalizationController')
+  const DoctypeController = require('../controller/Admin/DoctypeController')
   const EmailTemplateController = require('../controller/Admin/EmailTemplateController')
-  const ProvidersController     = require('../controller/Admin/ProvidersController')
-  const ServiceTypeController   = require('../controller/Admin/ServiceTypeController')
-  const UsersController         = require('../controller/Admin/UsersController')
-  const VehicleController       = require('../controller/Admin/VehicleController')
-  const AppSliderController     = require('../controller/Admin/AppSliderController')
-  const FileUploadCtrl          = require('../controller/Admin/FileUploadCtrl')
-  const BookingController       = require('../controller/Admin/BookingController')
-  const SearchController        = require('../controller/Admin/SearchController')
-  const DashboardController     = require('../controller/Admin/DashboardController')
-  const PromoCodesCtrl          = require('../controller/Admin/PromoCodesCtrl')
-  const ReviewManagementCtrl    = require('../controller/Admin/ReviewManagementCtrl')
-  const BannerAdsCtrl           = require('../controller/Admin/BannerAdsCtrl')
-  const PeekChargesCtrl         = require('../controller/Admin/peekChargesCtrl')
-  const WalletController        = require('../controller/Admin/WalletController')
-  const ServicesController        = require('../controller/Admin/ServicesController')
+  const ProvidersController = require('../controller/Admin/ProvidersController')
+  const ServiceTypeController = require('../controller/Admin/ServiceTypeController')
+  const UsersController = require('../controller/Admin/UsersController')
+  const VehicleController = require('../controller/Admin/VehicleController')
+  const AppSliderController = require('../controller/Admin/AppSliderController')
+  const FileUploadCtrl = require('../controller/Admin/FileUploadCtrl')
+  const BookingController = require('../controller/Admin/BookingController')
+  const SearchController = require('../controller/Admin/SearchController')
+  const DashboardController = require('../controller/Admin/DashboardController')
+  const PromoCodesCtrl = require('../controller/Admin/PromoCodesCtrl')
+  const ReviewManagementCtrl = require('../controller/Admin/ReviewManagementCtrl')
+  const BannerAdsCtrl = require('../controller/Admin/BannerAdsCtrl')
+  const PeekChargesCtrl = require('../controller/Admin/peekChargesCtrl')
+  const WalletController = require('../controller/Admin/WalletController')
+  const ServicesController = require('../controller/Admin/ServicesController')
 
-  var adminAppConfigCtrl      = new AdminAppConfigCtrl();
-  var adminAuthController     = new AdminAuthController();
-  var localizationController  = new LocalizationController();
-  var doctypeController       = new DoctypeController();
-  var emailTemplateController = new EmailTemplateController();
-  var providersController     = new ProvidersController();
-  var serviceTypeController   = new ServiceTypeController();
-  var usersController         = new UsersController();
-  var vehicleController       = new VehicleController();
-  var appSliderController     = new AppSliderController();
-  var fileUploadCtrl          = new FileUploadCtrl();
-  var bookingController       = new BookingController();
-  var searchController        = new SearchController();
-  var dashboardController     = new DashboardController();
-  var promoCodesCtrl          = new PromoCodesCtrl();
-  var reviewManagementCtrl    = new ReviewManagementCtrl();
-  var bannerAdsCtrl           = new BannerAdsCtrl();
-  var peekChargesCtrl         = new PeekChargesCtrl();
-  var walletController        = new WalletController();
-  var common                  = new Common();
-  var errorHandler            = new ErrorHandler();
-  var servicesController            = new ServicesController();
+  var adminAppConfigCtrl = new AdminAppConfigCtrl()
+  var adminAuthController = new AdminAuthController()
+  var localizationController = new LocalizationController()
+  var doctypeController = new DoctypeController()
+  var emailTemplateController = new EmailTemplateController()
+  var providersController = new ProvidersController()
+  var serviceTypeController = new ServiceTypeController()
+  var usersController = new UsersController()
+  var vehicleController = new VehicleController()
+  var appSliderController = new AppSliderController()
+  var fileUploadCtrl = new FileUploadCtrl()
+  var bookingController = new BookingController()
+  var searchController = new SearchController()
+  var dashboardController = new DashboardController()
+  var promoCodesCtrl = new PromoCodesCtrl()
+  var reviewManagementCtrl = new ReviewManagementCtrl()
+  var bannerAdsCtrl = new BannerAdsCtrl()
+  var peekChargesCtrl = new PeekChargesCtrl()
+  var walletController = new WalletController()
+  var errorHandler = new ErrorHandler()
+  var servicesController = new ServicesController()
 
   // admin login route
   app.post(`${basePath}/login`, [
@@ -236,7 +235,7 @@ module.exports = function (app, validator) {
       })
     }
   })
-  
+
   // Admin List Select State
   app.get(`${basePath}/stateListView/:id`, app.adminauth, (req, res) => {
     const lang = req.headers.lang
@@ -654,7 +653,7 @@ module.exports = function (app, validator) {
         return res.send(message)
       })
     } else {
-      doctypeController.adminDocTypeDeleteCtrl(data,(result) => {
+      doctypeController.adminDocTypeDeleteCtrl(data, (result) => {
         errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })
@@ -2567,6 +2566,28 @@ module.exports = function (app, validator) {
       })
     } else {
       servicesController.servicesListingCtrl(data, (result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
+
+  app.post(`${basePath}/s2CellId`, [
+    validator.check('latitude').isNumeric().trim()
+      .withMessage('INVALID: $[1], latitude'),
+    validator.check('longitude').isNumeric().trim()
+      .withMessage('INVALID: $[1], longitude')
+  ], (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.getS2CellGeomentryCtrl(data, (result) => {
         this.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })

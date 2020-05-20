@@ -2,7 +2,6 @@ module.exports = function () {
   const ServicesService = require('../../services/Admin/ServicesService')
   const Common = require('../../Utils/common')
   require('dotenv').config({ path: './../.env' })
-  var common = new Common();
 
   var servicesService = new ServicesService();
 
@@ -52,6 +51,21 @@ module.exports = function () {
   this.servicesListingCtrl = (data, callback) => {
     var response = {}
     servicesService.servicesListingService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.getS2CellGeomentryCtrl = (req, callback) => {
+    var response = {}
+    servicesService.getS2CellGeomentryService(req, (result) => {
       if (result.error) {
         response.error = true
         response.msg = result.msg

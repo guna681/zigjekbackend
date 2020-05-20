@@ -118,6 +118,7 @@ module.exports = function () {
       callback(response)
     })
   }
+
   this.rideVehicleTypeEditCtrl = (req, callback) => {
     var response = {}
     serviceTypeService.rideVehicleTypeEditService(req, (result) => {

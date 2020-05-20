@@ -415,7 +415,7 @@ module.exports = function () {
         data.IsUserReviewed = 'no'
         var limit = 1
         var bookingInfo = await bookingRepository.fetchBookingUsingState(data, status, limit)
-        if (bookingInfo.error) {
+        if (bookingInfo.error || bookingInfo.data['Type'] !== 'taxi') {
           response.error = true
           response.msg = 'NO_BOOKING'
         } else {

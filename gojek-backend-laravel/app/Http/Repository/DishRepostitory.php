@@ -19,7 +19,7 @@ use App\Http\Repository\CartRepostitory;
 use App\Http\Repository\CurrencyRepostitory;
 use App\Http\Repository\CustomisationCategoryRepostitory;
 use DB;
-
+Use Log;
 class DishRepostitory extends Dishes
 {
 
@@ -280,13 +280,15 @@ class DishRepostitory extends Dishes
 
 
         } catch (\Illuminate\Database\QueryException $ex) {
-            $jsonresp = $ex->getMessage();    
+            $jsonresp = $ex->getMessage();  
 
+Log::debug($jsonresp);
             DB::rollBack();
             return false;
         }
 
          
+if ($data->isCustomisation == 1) {
 
         foreach(json_decode($data->customisationCategory) as $key=>$customdata){
 
@@ -309,7 +311,7 @@ class DishRepostitory extends Dishes
 
         }
 
-
+}
 
 
         DB::Commit();
