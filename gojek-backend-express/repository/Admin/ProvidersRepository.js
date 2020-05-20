@@ -24,17 +24,23 @@ module.exports = function () {
   // Users List Count Select
   this.providersListCount = (data) => {
     var output = {}
-     if (data.IsDeliveryOpt){
-    var IsDeliveryOpt = '1'
-    } else {
-    var IsDeliveryOpt = '0' 
-    }
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(provider).count(`Id as count`)
-      .where(`Type`, 'taxi')
-      .where(`IsDeliveryOpt`, IsDeliveryOpt)
-        .then((result) => {
+    var query = knex(provider).count(`Id as count`)
+      // .where(`Type`, 'taxi')
+      // .where(`IsDeliveryOpt`, IsDeliveryOpt)
+      if (data.type == 'taxi') {
+        if (data.IsDeliveryOpt == 0) {
+          query.where('Type', data.type)
+          query.where('IsDeliveryOpt', data.IsDeliveryOpt)
+        } else {
+          query.where('Type', data.type)
+        }
+      } else {
+        query.where('Type', data.type)
+        query.where('IsDeliveryOpt', data.IsDeliveryOpt)
+      }
+      query.then((result) => {
           if (result.length) {
             output.error = false
             output.data = result
@@ -58,26 +64,30 @@ module.exports = function () {
     var limit = 10
     var page = data.page
     var offset = (page - 1) * limit
-    if (data.IsDeliveryOpt){
-    var IsDeliveryOpt = '1'
-    } else {
-    var IsDeliveryOpt = '0'
-    }
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(provider).select()
-      .where(`Type`, data.type)
-      .where(`IsDeliveryOpt`, IsDeliveryOpt)
-      .limit(limit).offset(offset)
-        .then((result) => {
-          if (result.length) {
-            output.error = false
-            output.data = result
-          } else {
-            output.error = true
-          }
-          resolve(output)
-        })
+      var query = knex(provider).select()
+        .limit(limit).offset(offset)
+      if (data.type == 'taxi') {
+        if (data.IsDeliveryOpt == 0) {
+          query.where('Type', data.type)
+          query.where('IsDeliveryOpt', data.IsDeliveryOpt)
+        } else {
+          query.where('Type', data.type)
+        }
+      } else {
+        query.where('Type', data.type)
+        query.where('IsDeliveryOpt', data.IsDeliveryOpt)
+      }
+      query.then((result) => {
+        if (result.length) {
+          output.error = false
+          output.data = result
+        } else {
+          output.error = true
+        }
+        resolve(output)
+      })
         .catch((err) => {
           err.error = true
           err.data = null
