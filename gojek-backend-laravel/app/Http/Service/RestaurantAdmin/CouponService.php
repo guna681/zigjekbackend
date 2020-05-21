@@ -67,4 +67,21 @@ Class  CouponService{
         return $data;
     }
     
+      public function restaurantCouponListService($data)
+    {
+        $couponRepostitory       = new CouponRepostitory();
+        $listCoupon                 = $couponRepostitory->restaurantCouponList($data);
+        $data                    = new DataService();
+        if ($listCoupon) {
+            $data->error         = Common::error_false;
+            $data->errorMessage  = __('validation.sucess');
+            $data->CouponList       = $listCoupon;
+        } else {
+            $data->error         = Common::error_true;
+            $data->errorMessage  = __('validation.failure');
+            $data->banners       = $listCoupon;
+        }
+
+        return $data;
+    }  
 }

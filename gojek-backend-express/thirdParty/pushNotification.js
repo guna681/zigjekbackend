@@ -135,7 +135,6 @@ module.exports = function () {
   }
 
   this.sendBulkNotificationToProvider = (deviceInfo, content, sound) => {
-    console.log(deviceInfo, content, sound)
     var response = {}
     return new Promise(function (resolve) {
       try {
@@ -167,7 +166,6 @@ module.exports = function () {
             }
           }
         }
-        console.log(messages)
         admin.messaging().sendToDevice(messages)
           .then((result) => {
             console.log('FCM Success', result)

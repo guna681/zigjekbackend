@@ -1,8 +1,7 @@
 module.exports = function () {
   require('dotenv').config({ path: './../.env' })
   const WalletRepository = require('../repository/WalletRepository')
-
-  var walletRepository = new WalletRepository();
+  var walletRepository = new WalletRepository()
 
   this.createWalletService = async (userId, type, balance) => {
     var response = {}
@@ -95,11 +94,12 @@ module.exports = function () {
         data.UserTypeId = userId
         data.UserType = type
         var wallet = await walletRepository.fetchWalletInfo(data)
-        if (wallet.error) {
+        var walletInfo = wallet.error ? await walletRepository.fetchWalletInfo(data) : wallet
+        if (walletInfo.error) {
           response.error = true
           response.msg = 'ERROR_WALLET'
         } else {
-          var balance = wallet.result.Balance
+          var balance = walletInfo.result.Balance
           response.error = false
           response.data = balance
           response.msg = 'VALID'

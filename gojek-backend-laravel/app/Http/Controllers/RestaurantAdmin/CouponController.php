@@ -83,4 +83,17 @@ Class CouponController extends Controller
         return $responsedata;
     }
 
+/**
+     * List the all coupon and status
+     * @param pageNumber
+     * return the perpage 10 coupondetails
+     * @return json
+     */
+    public function restaurantCouponList(request $request)
+    {
+        $couponService  = new CouponService();
+        $response       = $couponService->restaurantCouponListService($request);
+        $responseData   = Defaults::encode($response);
+        return $responseData;
+    }
 }

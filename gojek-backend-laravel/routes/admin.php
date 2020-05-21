@@ -153,3 +153,6 @@ Route::post('userSearch','Admin\SearchController@userSearch');
 Route::post('DeliveryBoySearch','Admin\SearchController@DeliveryBoySearch');
 Route::post('restaurantsSearch','Admin\SearchController@restaurantsSearch');
 Route::post('orderSearch','Admin\SearchController@orderSearch');
+
+/* coupon */
+Route::get('restaurantCouponList/{page}','RestaurantAdmin\CouponController@restaurantCouponList');

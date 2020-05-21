@@ -227,7 +227,6 @@ module.exports = function () {
   }
 
   this.stateSelectViewService = async (data, callback) => {
-    console.log(data)
     var response = {}
     try {
       var stateSelectSData = await this.stateSelectView(data)
@@ -287,7 +286,6 @@ module.exports = function () {
       }
       callback(response)
     } catch (err) {
-      console.log(err)
       err.error = true
       err.msg = 'OOPS'
       callback(err)
