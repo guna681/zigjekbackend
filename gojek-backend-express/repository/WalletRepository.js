@@ -6,7 +6,7 @@ module.exports = function () {
 
   const config = {
     client: 'mysql2',
-    connection: { 
+    connection: {
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASS,
@@ -98,21 +98,18 @@ module.exports = function () {
       var knex = new Knex(config)
       knex(wallet)
         .where({ UserTypeId: data.UserTypeId, UserType: data.UserType })
-        .then(async result => {
+        .then((result) => {
           if (result.length > 0) {
             output.error = false
             output.result = result[0]
+            resolve(output)
           } else {
-            var walletCreate = await this.insertWallet(data)
-            if (walletCreate.error) {
-              output.error = true
-            } else {
-              var walletInfo = await this.fetchWalletInfo(data)
-              output.result = walletInfo.result
-              output.error = false
-            }
+            knex(wallet)
+              .insert(data)
+              .then(() => {})
+            output.error = true
+            resolve(output)
           }
-          resolve(output)
         })
         .catch(err => {
           err.error = true

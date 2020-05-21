@@ -355,7 +355,6 @@ module.exports = function () {
         response.msg = booking.msg
         response.data = bookResponse
       }
-      console.log(response)
       callback(response)
     } catch (err) {
       err.error = true

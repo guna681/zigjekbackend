@@ -109,7 +109,7 @@ module.exports = function () {
         var striperes = await paymentHelperService.createPaymentCustomerId(data.email)
         var stripeCustomerId = striperes.data.id
         stripeData.StripeCustomerID = stripeCustomerId
-        await userService.updateUserStripeCustomerID(stripeData, userId.data.Id)
+        await userService.updateUserStripeCustomerID(stripeData, userId.data.sub)
         var smtp = await appConfigService.getSMTPConfig()
         var template = await appConfigService.getEmailTemplateList(1)
         var FirstName = data.firstName

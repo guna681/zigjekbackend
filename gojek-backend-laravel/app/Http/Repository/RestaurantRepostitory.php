@@ -215,8 +215,8 @@ class RestaurantRepostitory
             $outlets->restaurantCommission  = $data->commission;
             $outlets->latitude  = $data->latitude;
             $outlets->longitude = $data->longitude;
-            $outlets->s2CellId  = $s2cell->id;
-            $outlets->s2Key     = $s2cell->key;
+            $outlets->s2CellId  = $s2cell->data->id;
+            $outlets->s2Key     = $s2cell->data->key;
             $outlets->save();
         } catch (\Illuminate\Database\QueryException $ex) {
             $jsonresp = $ex->getMessage();

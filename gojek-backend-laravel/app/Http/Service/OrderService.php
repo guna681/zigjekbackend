@@ -189,11 +189,11 @@ Class  OrderService
                         $data->errorMessage = $notificationResp;
 
             }
-            $title= __('validation.invoiceTitle');
-            $mailService->setTitle($title);
-            $mailService->setReceiver($userDetails->email);
-            $mailService->setTemplate(Constant::ORDERINVOICE);
-            $mailService->sendMail($order);
+            // $title= __('validation.invoiceTitle');
+            // $mailService->setTitle($title);
+            // $mailService->setReceiver($userDetails->email);
+            // $mailService->setTemplate(Constant::ORDERINVOICE);
+            // $mailService->sendMail($order);
          
             // $orderDetails= $this->updateCustomisationItem($orders->cartId);
             

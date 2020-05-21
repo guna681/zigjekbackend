@@ -854,7 +854,6 @@ module.exports = function () {
         } else if (data.type === 'delivery') {
           orderList = await bookingRepository.fetchDeliveryOrders(condition, page)
           orderId = orderList.error ? [] : orderList.result.map(element => { return element.Id })
-          // console.log(orderId)
           dishesList = await bookingRepository.getMultiDishesOrdered(orderId)
         } else if (data.type === 'services') {
           delete condition.Type
@@ -897,7 +896,6 @@ module.exports = function () {
         }
         resolve(response)
       } catch (err) {
-        console.log(err)
         err.response = true
         err.msg = 'OOPS'
         resolve(err)

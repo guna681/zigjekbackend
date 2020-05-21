@@ -9,7 +9,7 @@ Class S2ServiceProvider
     {
 
         $data = array('latitude'=>$latitude,'longitude'=>$longitude);
-        $url = 'http://localhost:8002/s2CellId';
+        $url = 'http://134.209.147.250:3000/api/admin/s2CellId';
 
 
         $headers = array(
@@ -41,7 +41,7 @@ Class S2ServiceProvider
 
 
         if($result){
-
+         
            return json_decode($result);
         }else{
 

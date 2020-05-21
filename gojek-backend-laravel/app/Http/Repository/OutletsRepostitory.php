@@ -128,10 +128,9 @@ class OutletsRepostitory extends Outlets
             $s2Cell =$s2cellIdgenerated->getCellId($data->latitude,$data->longitude);
 
 
-
             $update=Outlets::where('id',$data->outletId)
                             ->update(['name'=>$data->outletName,'email'=>$data->email,'isPureVeg'=>$data->isPureVeg,'costForTwo'=>$data->costForTwo,'preparationTime'=>$data->preparationTime,'addressLineOne'=>$data->addressLineOne,'addressLineTwo'=>$data->addressLineTwo,'area'=>$data->area,'city'=>$data->city,'contactNumber'=>$data->contactNumber,'latitude'=>$data->latitude,'longitude'=>$data->longitude,
-                                      's2CellId'=>$s2Cell->id,'s2Key'=>$s2Cell->key,'street'=>$data->street,'restaurantCommission'=>$data->commission,'status'=>$data->status]);
+                                      's2CellId'=>$s2Cell->data->id,'s2Key'=>$s2Cell->data->key,'street'=>$data->street,'restaurantCommission'=>$data->commission,'status'=>$data->status]);
             if($data->outletImage){
                 $defaults    = new Defaults();
                 $images      = $defaults->imageUpload($data->outletImage, Constant::RESTAURANT);

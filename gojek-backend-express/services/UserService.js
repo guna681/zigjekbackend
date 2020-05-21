@@ -730,11 +730,11 @@ module.exports = function () {
       }
     })
   }
-  this.updateUserStripeCustomerID = async (data, userid) => {
+  this.updateUserStripeCustomerID = async (data, userId) => {
     var response = {}
     return new Promise(async function (resolve) {
       try {
-        var updateuserDetails = await userRepository.updateUserProfileUsingId(data, userid)
+        var updateuserDetails = await userRepository.updateUserProfileUsingId(data, userId)
         if (updateuserDetails.error) {
           response.error = true
         } else {

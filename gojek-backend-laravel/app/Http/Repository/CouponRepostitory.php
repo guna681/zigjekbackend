@@ -100,4 +100,15 @@ Class CouponRepostitory{
         return $update;
     }
 
+   public static function restaurantCouponList($arg)
+    {
+        $perPage = Constant::PERPAGE;
+        $data= DB::table('Coupon')
+                  ->select('Coupon.outletId As outletId','Coupon.discountPerscentage','Coupon.maxDiscount','Coupon.couponName','Coupon.status','Outlets.name','Outlets.email','Outlets.image')
+                  ->Join('Outlets', 'Coupon.outletId', '=', 'Outlets.id')
+                  ->where('Coupon.status','1')
+                  ->paginate($perPage, ['*'], 'page', $arg->page);
+        return $data;
+    } 
+
 }

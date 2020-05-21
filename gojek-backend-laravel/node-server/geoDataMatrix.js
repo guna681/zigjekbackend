@@ -13,7 +13,6 @@ module.exports = function () {
     },
     function (err, distance) {
       if (err) {
-        console.log(err)
         callback(err)
       } else {
         callback(distance.json)

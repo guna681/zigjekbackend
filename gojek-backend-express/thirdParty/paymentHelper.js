@@ -9,7 +9,7 @@ module.exports = function () {
       var stripe = new Stripe(process.env.STRIPESKKEY)
       stripe.customers.create({
         email: email,
-        description: 'A customer has been created on Get Taxi For ' + email
+        description: 'A customer has been created on ZigJek For ' + email
       }, function (err, result) {
         if (err) {
           output.error = true
@@ -29,8 +29,6 @@ module.exports = function () {
       stripe.ephemeralKeys.create({ customer: data.customerID }, {
         stripe_version: data.stripe_version }).then((key) => {
         resolve(key)
-      }).catch((err) => {
-        resolve('Something went wrong')
       }).catch((err) => {
         err.error = true
         resolve(output)

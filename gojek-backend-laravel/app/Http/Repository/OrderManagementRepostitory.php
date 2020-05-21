@@ -46,7 +46,7 @@ Class OrderManagementRepostitory
                           ->leftjoin('Users','Booking.userId','=','Users.id')
                           // ->where('Orders.orderStatus','<>','DELIVERED')
                           ->where('outletId',$outletId)
-                          ->where('Booking.RideName','foodDelivery')
+                          ->where('Booking.RideName','food Delivery')
                           ->orderby('Booking.id', 'DESC')
                           ->paginate($perPage, ['*'], 'page', $pageNumber);
 
