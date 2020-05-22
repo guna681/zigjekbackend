@@ -142,7 +142,7 @@ module.exports = function () {
     var response = {}
     var resresult = []
     try {
-      var providersCount = await providersRepository.providersListCount()
+      var providersCount = await providersRepository.providersPushNotificationListCount(data)
       var providersListSData = await providersRepository.providersPushNotificationListView(data)
       if (providersListSData.error === false && providersCount.error === false) {
         providersListSData.data.forEach((j, index) => {
