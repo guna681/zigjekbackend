@@ -160,7 +160,7 @@ Route::post('generateEphemeralKey','UserController@generateEphemeralKey');
 Route::post('addCard','UserController@addCard')->middleware('auth:api');
 
 Route::get('listCard','UserController@listCard')->middleware('auth:api');
-
+Route::post('deleteCard','UserController@deleteCard')->middleware('auth:api');
 // logout API
 
 Route::get('userLogout','UserController@userLogout')->middleware('auth:api');

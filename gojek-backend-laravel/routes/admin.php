@@ -156,3 +156,4 @@ Route::post('orderSearch','Admin\SearchController@orderSearch');
 
 /* coupon */
 Route::get('restaurantCouponList/{page}','RestaurantAdmin\CouponController@restaurantCouponList');
+Route::post('editCoupon','RestaurantAdmin\CouponController@editCoupon');
