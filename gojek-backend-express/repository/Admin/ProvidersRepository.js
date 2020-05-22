@@ -38,7 +38,6 @@ module.exports = function () {
         }
       } else {
         query.where('Type', data.type)
-        query.where('IsDeliveryOpt', data.IsDeliveryOpt)
       }
       query.then((result) => {
           if (result.length) {
@@ -77,7 +76,6 @@ module.exports = function () {
         }
       } else {
         query.where('Type', data.type)
-        query.where('IsDeliveryOpt', data.IsDeliveryOpt)
       }
       query.then((result) => {
         if (result.length) {
@@ -425,6 +423,30 @@ module.exports = function () {
           }
           resolve(output)
         })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+  // provider List Count Select
+  this.providersPushNotificationListCount = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      var query = knex(provider).count(`Id as count`)
+      query.then((result) => {
+        if (result.length) {
+          output.error = false
+          output.data = result
+        } else {
+          output.error = true
+        }
+        resolve(output)
+      })
         .catch((err) => {
           err.error = true
           err.data = null
