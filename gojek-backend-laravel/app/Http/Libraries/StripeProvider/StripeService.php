@@ -45,6 +45,8 @@ class StripeService
 
     public function stripeCharge($customer_id, $token, $amount , $userEmail)
     {
+        // print_r($customer_id);
+        // die;
         $stripeKey             = $this->getStripeServiceApiKey();
         $stripe = Stripe::make($stripeKey);
         $charge = $stripe->charges()->create([
@@ -92,13 +94,17 @@ class StripeService
     }
 
     public static function addCardToCustomer($token){
+        $userRepository = new UserRepository();
         $integrationSettingRepository = new IntegrationSettingRepository();
         $data               = array();
         $data['error']        = Common::error_false;
         $data['errorMessage'] = trans('validation.sucess');
         $stripe             = $integrationSettingRepository->getStripeKey();
         $stripeKey = $stripe['value'];
-        $stripe_customer_id=Auth::guard('api')->user()->stripeCustomerId;
+        // $stripe_customer_id=Auth::guard('api')->user()->stripeCustomerId;
+        $userId  = Auth::guard('api')->user()->Id;
+        $users               = $userRepository->getUser($userId);
+        $stripe_customer_id = $users->StripeCustomerID;
         $stripe=Stripe::setApiKey($stripeKey);
         $setkey=\Stripe\Stripe::setApiKey($stripeKey);
         $card = \Stripe\Customer::createSource(
@@ -122,8 +128,11 @@ class StripeService
         // $stripeKey             = $this->getStripeServiceApiKey();
         $userId  = Auth::guard('api')->user()->Id;
         $users               = $userRepository->getUser($userId);
+        // print_r($users);
         // $stripe_customer_id=Auth::guard('api')->Users()->StripeCustomerID;
-        $stripe_customer_id = $users->stripe_customer_id;
+        $stripe_customer_id = $users->StripeCustomerID;
+        // print_r($stripe_customer_id);
+        // die;
         $stripe=Stripe::setApiKey($stripeKey);
         $setkey=\Stripe\Stripe::setApiKey($stripeKey);
         $cards = \Stripe\Customer::allSources(
@@ -136,5 +145,34 @@ class StripeService
         $response = $cards->data;
         return $response;
     }
+
+      public static function deleteCustomerCard($data){
+        
+        $cardId = $data->cardId;
+        if ($data->token) {
+        $token = $data->token;
+        } else {
+        $userRepository = new UserRepository();        
+        $userId     = Auth::guard('api')->user()->Id;
+        $listCardData                     = $userRepository->getUser($userId);
+        $token      = $listCardData->StripeCustomerID;
+        }
+        $integrationSettingRepository = new IntegrationSettingRepository();
+        $data               = array();
+        $data['error']        = Common::error_false;
+        $data['errorMessage'] = trans('validation.sucess');
+        $stripe             = $integrationSettingRepository->getStripeKey();
+        $stripeKey = $stripe['value'];
+        // $stripeKey             = $this->getStripeServiceApiKey();
+        // $stripe_customer_id=Auth::guard('api')->user()->StripeCustomerID;
+        $stripe=Stripe::setApiKey($stripeKey);
+        $setkey=\Stripe\Stripe::setApiKey($stripeKey);
+        $cards = \Stripe\Customer::deleteSource(
+         $token,
+         $cardId
+        );
+        $response = $cards->deleted;
+        return $response;
+    }  
 
 }

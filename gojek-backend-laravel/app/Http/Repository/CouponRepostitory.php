@@ -95,7 +95,11 @@ Class CouponRepostitory{
 
     public static function editCoupon($arg)
     {
-        $outletId  = Auth::guard('restaurant')->user()->id;
+        if ($arg->outletId) {
+        $outletId = $arg->outletId;
+        } else {
+        $outletId  = Auth::guard('restaurant')->user()->id; 
+        }
         $update=Coupon::where(['id'=>$arg->id])->update(['couponName' => $arg->couponName, 'couponCode' => $arg->couponName, 'discountPerscentage'=> $arg->discountPerscentage, 'maxDiscount'=> $arg->maxDiscount, 'couponStatus'=> $arg->couponStatus]);         
         return $update;
     }
@@ -104,7 +108,7 @@ Class CouponRepostitory{
     {
         $perPage = Constant::PERPAGE;
         $data= DB::table('Coupon')
-                  ->select('Coupon.outletId As outletId','Coupon.discountPerscentage','Coupon.maxDiscount','Coupon.couponName','Coupon.status','Outlets.name','Outlets.email','Outlets.image')
+                  ->select('Coupon.id','Coupon.outletId As outletId','Coupon.discountPerscentage','Coupon.maxDiscount','Coupon.couponName','Coupon.status As couponStatus','Outlets.name','Outlets.email','Outlets.image')
                   ->Join('Outlets', 'Coupon.outletId', '=', 'Outlets.id')
                   ->where('Coupon.status','1')
                   ->paginate($perPage, ['*'], 'page', $arg->page);

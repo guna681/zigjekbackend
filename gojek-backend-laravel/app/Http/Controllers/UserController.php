@@ -607,6 +607,16 @@ Class  UserController extends Controller
 
     }
 
+        public function deleteCard(request $request)
+    {
+
+        $paymentService            = new PaymentService();
+        $response               = $paymentService->deleteCardService($request);
+        $responsedata  = Defaults::encode($response);
+        return $responsedata;
+
+    }
+
     public function userLogout(request $request)
     {
         if (Auth::check()) {

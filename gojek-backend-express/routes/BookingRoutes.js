@@ -7,7 +7,12 @@ module.exports = function (server, validator) {
   var bookingController = new BookingController()
 
   setInterval(async () => {
-    bookingController.bookingHandler((result) => {
+    bookingController.taxiBookingHandler((result) => {
+      errorController.ctrlHandler([result], result.error, 'default', (message) => {
+        // console.log('Booking Service', message)
+      })
+    })
+    bookingController.deliveryBookingHandler((result) => {
       errorController.ctrlHandler([result], result.error, 'default', (message) => {
         // console.log('Booking Service', message)
       })

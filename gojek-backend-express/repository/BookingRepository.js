@@ -172,6 +172,43 @@ module.exports = function () {
     })
   }
 
+  this.fetchBookingUsingStateType = (data, status, limit, type) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex.transaction((trx) => {
+        trx(booking)
+          .transacting(trx)
+          .where(data)
+          .whereIn('Status', status)
+          .whereIn('Type', type)
+          .having('CreateAt', '<', knex.fn.now())
+          .limit(limit)
+          .then(trx.commit)
+          .catch((err) => {
+            trx.rollback()
+            throw err
+          })
+      })
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
   this.fetchBookingUsingType = (data, limit, type) => {
     var output = {}
     return new Promise(function (resolve) {
@@ -180,7 +217,7 @@ module.exports = function () {
         trx(booking)
           .transacting(trx)
           .whereRaw(`JSON_CONTAINS(AssignedProviderIds, '["?"]')`, [data.ProviderId])
-          .where('Status', 'pending')
+          .where('Status', 'assigned')
           .whereNull('ProviderId')
           .whereIn('Type', [type])
           .having('CreateAt', '<', knex.fn.now())
@@ -265,13 +302,14 @@ module.exports = function () {
     })
   }
 
-  this.updatenWaitingBookingList = (data, status, second) => {
+  this.updatenWaitingBookingList = (data, status, second, type) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(booking)
         .update(data)
         .whereIn('Status', status)
+        .whereIn('Type', type)
         .whereRaw('UpdateAt <= NOW() - INTERVAL ' + second + ' SECOND')
         .then((result) => {
           if (result > 0) {

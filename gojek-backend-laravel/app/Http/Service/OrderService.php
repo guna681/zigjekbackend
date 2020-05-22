@@ -74,8 +74,8 @@ Class  OrderService
             $orderDetails= $this->getOrderDetail($orderId, $arg->couponName);
            
             $userDetails = $userRepostitory->getUser($userId);
-            
-            $stripeCustomerId = $userDetails->stripeCustomerId;
+        
+            $stripeCustomerId = $userDetails->StripeCustomerID;
             $orderdata = $orderDetails->orderDetails;
             array_push($origin, $orderdata->latitude, $orderdata->longitude);
             // $distanceData = $s2ServiceProvider->getDistanceCalculation($origin, $destination);

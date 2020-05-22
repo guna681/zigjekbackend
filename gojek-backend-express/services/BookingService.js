@@ -118,7 +118,7 @@ module.exports = function () {
     }
   }
 
-  this.getBookingWaitlist = () => {
+  this.getBookingWaitlist = (type) => {
     var response = {}
     return new Promise(async function (resolve) {
       try {
@@ -126,7 +126,7 @@ module.exports = function () {
         var status = ['waiting']
         condition.ProviderId = null
         var limit = 1
-        var waitingList = await bookingRepository.fetchBookingUsingState(condition, status, limit)
+        var waitingList = await bookingRepository.fetchBookingUsingStateType(condition, status, limit, type)
         if (waitingList.error) {
           response.error = true
           response.msg = 'NO_NEW_BOOKING'
@@ -193,6 +193,7 @@ module.exports = function () {
 
       if (status === 'accept') {
         update.Status = 'accepted'
+        update.ProviderId = data.auth.Id
         message = 'BOOKING_ACCEPT'
       } else if (status === 'arrive') {
         update.Status = 'arrived'
@@ -384,11 +385,12 @@ module.exports = function () {
     return new Promise(async function (resolve) {
       try {
         var status = ['assigned', 'unassigned']
+        var type = ['taxi', 'delivery']
         var data = {}
         data.ProviderId = null
         data.Status = 'waiting'
         data.IsActive = 'no'
-        var booking = await bookingRepository.updatenWaitingBookingList(data, status, timer)
+        var booking = await bookingRepository.updatenWaitingBookingList(data, status, timer, type)
         if (booking.error) {
           response.error = true
           response.msg = 'NO_BOOKING_REASSIGNED'
@@ -921,7 +923,7 @@ module.exports = function () {
         service.PaymentMode = data.paymentMode
         service.ServiceIds = data.serviceData
         service.ServiceAddons = data.addons === undefined ? '[]' : data.addons
-        service.Status = 'pending'
+        service.Status = 'assigned'
         service.Type = 'services'
 
         var createService = await bookingRepository.addServiceRequest(service)
