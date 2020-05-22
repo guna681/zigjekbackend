@@ -77,7 +77,7 @@ module.exports = function () {
         }
       } else {
         query.where('Type', data.type)
-        // query.where('IsDeliveryOpt', data.IsDeliveryOpt)
+        query.where('IsDeliveryOpt', data.IsDeliveryOpt)
       }
       query.then((result) => {
         if (result.length) {
