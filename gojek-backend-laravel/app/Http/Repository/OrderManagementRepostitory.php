@@ -52,7 +52,37 @@ Class OrderManagementRepostitory
 
         return $data;
     }
+    public function listPastOrders($pageNumber,$outletId)
+    {
 
+        $perPage = Constant::PERPAGE;
+        $data    = Orders::select('Orders.id as orderId','Orders.orderReferenceId','Orders.netAmount','Orders.orderStatus','Orders.orderPlaceTime','Orders.confirmedTime','Users.mobileNumber','Users.email','Orders.updated_at')
+                          ->leftjoin('Users','Orders.userId','=','Users.id')
+                          // ->where('Orders.orderStatus','=','DELIVERED')
+                          ->whereIN('Orders.orderStatus', ['DELIVERED','Rejected'])
+                          ->where('outletId',$outletId)
+                          ->orderby('Orders.id', 'DESC')
+                          ->paginate($perPage, ['*'], 'page', $pageNumber);
+
+        return $data;
+    }
+
+    public function listCurrentOrders($pageNumber,$outletId)
+    {
+
+        $perPage = Constant::PERPAGE;
+        $data    = Orders::select('Orders.id as orderId','Orders.orderReferenceId','Orders.netAmount','Orders.orderStatus','Orders.orderPlaceTime','Orders.confirmedTime','Users.mobileNumber','Users.email','Orders.updated_at','Orders.markReady','DeliveryStaff.name as staffName','Orders.restaurantEta')
+                          ->leftjoin('Users','Orders.userId','=','Users.id')
+                          ->whereNotIn('Orders.orderStatus', ['DELIVERED','Rejected'])
+                          ->leftjoin('DeliveryStaff', function ($join) {
+                            $join->on('Orders.deliveryStaffId', '=', 'DeliveryStaff.id');
+                        })
+                          ->where('outletId',$outletId)
+                          ->orderby('Orders.id', 'DESC')
+                          ->paginate($perPage, ['*'], 'page', $pageNumber);
+
+        return $data;
+    }
 
     public function getOrder($orderId, $outletId)
     {
@@ -219,11 +249,74 @@ public function updateOrderViewStatus($arg)
         return $Deliveryboy;
     }
 
-    public function getOrderReportsData($sql)
-    {
-        $result = DB::select($sql);
-        return $result;
+       // public function getOrderReportsData($sql)
+    // {
+    //     $result = DB::select($sql);
+    //     return $result;
+    // }
+
+    public function getPayOutlet(){
+		$data=Outlets::select('Outlets.id','Outlets.name','Outlets.image','Outlets.city','Outlets.state','Outlets.country','Outlets.zipcode','Outlets.contactNumber','Outlets.balanceAmount','Outlets.totalAmount','Restaurant.name as restaurantName')
+		            ->join('Restaurant','Restaurant.id','=','Outlets.restaurantId')
+		            ->where('balanceAmount','!=',0.00)
+		            ->paginate(10);
+		return $data;
     }
+    
+    public function getRestaurantList()
+    {
+        $restaurant =Restaurant::select("Restaurant.id",'Restaurant.name')
+                 ->get();
+
+        return $restaurant;
+    }
+
+
+    public function getOrderReportsData($arg)
+    {
+  
+        $result = Orders::selectRAW('Orders.*,Outlets.restaurantId,Users.userName as username,Users.mobileNumber as usermobile,Restaurant.name as restaurantname,Outlets.email as outletemail,Outlets.name as outletname,Outlets.contactNumber as outletnumber,DeliveryStaff.name as deliveryboyname,DeliveryStaff.email as deliveryboyemail,DeliveryStaff.mobileNumber as deliveryboymobile')
+        ->leftJoin('Outlets', 'Orders.outletId','=','Outlets.id')
+        ->leftJoin('DeliveryStaff', 'Orders.deliveryStaffId','=','DeliveryStaff.id')
+        ->leftJoin('Restaurant', 'Restaurant.id','=','Outlets.restaurantId')
+        ->leftJoin('Users', 'Users.id','=','Orders.userId')
+       //->where('Orders','Orders.orderStatus','=',$arg->orderData)
+        ->when($arg->search, function ($query) use ($arg) {
+
+            if($arg->fromData!=NULL)
+            {
+                $query->whereRAW("date(Orders.created_at) >= '$arg->fromData'");
+            }
+
+            if($arg->toData!=NULL)
+            {
+                $query->whereRAW("date(Orders.created_at) <= '$arg->toData'");
+            }
+            if(!empty($arg->providerData))
+            {
+                $query->whereIn('Orders.deliveryStaffId',$arg->providerData);
+            }
+            if(!empty($arg->outletData))
+            {
+                $query->whereIn('Orders.outletId',$arg->outletData);
+            }
+            if(!empty($arg->orderData))
+            {
+                $query->whereIn('Orders.orderStatus',$arg->orderData);
+            }
+            if(!empty($arg->restaurantData))
+            {
+                $query->whereIn('Outlets.restaurantId',$arg->restaurantData);
+            }
+        })
+        ->paginate(10);
+        return $result;
+    }  
+    // public function getOrderReportsData($sql)
+    // {
+    //     $result = DB::select($sql);
+    //     return $result;
+    // }
 
     // public function updateOrderViewStatus($arg)
     // {
@@ -242,4 +335,91 @@ public function updateOrderViewStatus($arg)
     //     DB::commit();
     //     return true;
     // }
+    public function markReady($arg)
+    {
+
+        DB::beginTransaction();
+
+        try{
+
+            $update= Orders::where('id',$arg->orderId)->update(['markReady'=>$arg->markReady]);
+
+        }catch(\Illuminate\Database\QueryException $ex){
+            $jsonresp=$ex->getMessage();
+            DB::rollBack();
+            return false;
+        }
+        DB::commit();
+        return true;
+    }
+
+
+    public function weekSoFar($outletId,$currencySymbol)
+    { 
+        $fromDate = date("Y-m-d", strtotime('monday this week')). ' 00:00:00'; 
+        $toDate   = date("Y-m-d", strtotime('sunday this week')). ' 23:59:59';
+        $orders = new Dishes();
+        $totalAmount = Orders::where('outletId',$outletId)
+                              ->whereBetween('Orders.deliveredTime',[$fromDate,$toDate])
+                              ->sum('netAmount');
+        $totalOrders = Orders::where('outletId',$outletId)
+                            ->whereBetween('Orders.deliveredTime',[$fromDate,$toDate])
+                            ->count('id');
+         $orders->totalAmount = $currencySymbol. ' ' .$totalAmount;
+         $orders->totalOrders = $totalOrders;   
+        return $orders;
+
+    }
+
+    public function todayRevenue($outletId,$currencySymbol)
+    { 
+        $fromDate = date("Y-m-d"). ' 00:00:00'; 
+        $toDate   = date("Y-m-d"). ' 23:59:59';
+        $orders = new Dishes();
+        $totalAmount = Orders::where('outletId',$outletId)
+                              ->whereBetween('Orders.deliveredTime',[$fromDate,$toDate])
+                              ->sum('netAmount');
+        $totalOrders = Orders::where('outletId',$outletId)
+                            ->whereBetween('Orders.deliveredTime',[$fromDate,$toDate])
+                            ->count('id');
+         $orders->totalAmount = $currencySymbol. ' ' .$totalAmount;;
+         $orders->totalOrders = $totalOrders;   
+        return $orders;
+
+    }
+
+    public function yesterdayRevenue($outletId,$currencySymbol)
+    { 
+        $fromDate = date('y-m-d',strtotime("-1 days")). ' 00:00:00'; 
+        $toDate   = date('y-m-d',strtotime("-1 days")). ' 23:59:59';
+        $orders = new Dishes();
+        $totalAmount = Orders::where('outletId',$outletId)
+                              ->whereBetween('Orders.deliveredTime',[$fromDate,$toDate])
+                              ->sum('netAmount');
+        $totalOrders = Orders::where('outletId',$outletId)
+                            ->whereBetween('Orders.deliveredTime',[$fromDate,$toDate])
+                            ->count('id');
+         $orders->totalAmount = $currencySymbol. ' ' .$totalAmount;;
+         $orders->totalOrders = $totalOrders;   
+        return $orders;
+
+    }
+
+   public function dishesEnableDisable($arg)
+    {
+
+        DB::beginTransaction();
+
+        try{
+
+            $update= Dishes::where('id',$arg->dishId)->update(['status'=>$arg->status]);
+
+        }catch(\Illuminate\Database\QueryException $ex){
+            $jsonresp=$ex->getMessage();
+            DB::rollBack();
+            return false;
+        }
+        DB::commit();
+        return true;
+    }  
 }
