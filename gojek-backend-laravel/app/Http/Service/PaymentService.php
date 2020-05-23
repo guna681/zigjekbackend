@@ -75,9 +75,25 @@ Class PaymentService
             $data->errorMessage     = __('validation.sucess');
             $data->cardList     = $listCardData;
         } else {
-            $data->error            = Common::error_true;
+            $data->error            = Common::error_false;
             $data->errorMessage     = __('validation.failure');
+            $data->cardList         = [];
         }
         return $data;
     }
+
+    public function deleteCardService($request){
+    $stripeService            = new StripeService();
+    $listCardData                     = $stripeService->deleteCustomerCard($request);
+    $data                         = new DataService();
+       if ($listCardData) {
+        $data->error            = Common::error_false;
+        $data->errorMessage     = __('validation.sucess');
+        $data->cardList     = $listCardData;
+    } else {
+        $data->error            = Common::error_true;
+        $data->errorMessage     = __('validation.failure');
+    }
+    return $data;
+}  
 }
