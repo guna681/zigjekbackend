@@ -19,7 +19,7 @@ use App\Http\Repository\CartRepostitory;
 use App\Http\Repository\CurrencyRepostitory;
 use App\Http\Repository\CustomisationCategoryRepostitory;
 use DB;
-Use Log;
+
 class DishRepostitory extends Dishes
 {
 
@@ -51,9 +51,10 @@ class DishRepostitory extends Dishes
     public function getRecommendedDihses($outletId)
     {
         $data = array();
-        $data = Dishes::select('id as dishId', 'name as dishName', 'categoryId', 'isRecommended', 'price', 'image', 'showFromTime', 'showToTime', 'isVeg')
+        $data = Dishes::select('id as dishId', 'name as dishName', 'categoryId', 'isRecommended', 'price', 'image', 'showFromTime', 'showToTime', 'isVeg','slashedPrice')
                       ->where('isRecommended', 1)
                       ->where('outletId', $outletId)
+                      ->where('status','=', 1)
                       ->whereNull('deleted_at')
                       ->get();
 
@@ -64,8 +65,9 @@ class DishRepostitory extends Dishes
     public function getDish($categoryId)
     {
         $data = array();
-        $data = Dishes::select(DB::raw("id as dishId,name as dishName,categoryId,price,image,showFromTime,showToTime,isVeg,description"))
-                      ->where('categoryId', $categoryId)
+        $data = Dishes::select(DB::raw("id as dishId,name as dishName,categoryId,price,image,showFromTime,showToTime,isVeg,description,slashedPrice"))
+                      ->where(['categoryId'=>$categoryId,'status'=>'1'])
+                      // ->where('status','!=', 1)
                       ->whereNull('deleted_at')
                       ->get();
 
@@ -121,7 +123,7 @@ class DishRepostitory extends Dishes
     public function getDishes($dishId)
     {
         $data = array();
-        $data = Dishes::select('id as dishId', 'name as dishName', 'categoryId', 'slashedPrice', 'price', 'image', 'showFromTime', 'showToTime', 'isVeg', 'description', 'quantity', 'isRecommended', 'status')
+        $data = Dishes::select('id as dishId', 'name as dishName', 'categoryId', 'slashedPrice', 'price', 'image', 'showFromTime', 'showToTime', 'isVeg', 'description', 'quantity', 'isRecommended', 'status', 'slashedPrice')
                         ->where('id', $dishId)
                         ->first();
         return $data;
@@ -151,10 +153,12 @@ class DishRepostitory extends Dishes
 
     public function list($pageNumber, $outletId)
     {
+        $currencyRepostitory = new CurrencyRepostitory();
+        $currency            = $currencyRepostitory->getCurrency();
         $perPage = Constant::PERPAGE;
         $path    = url('/') . '/images/';
         $data    = DB::table('Dishes')
-                        ->select(DB::raw("id,name,price,quantity,isVeg,status,CONCAT('$path',image)as image"))
+                        ->select(DB::raw("id,name,quantity,isVeg,status,CONCAT('$path',image)as image,CONCAT('$currency',Price) AS price"))
                         ->where('outletId', $outletId)
                         ->whereNull('deleted_at')
                         ->paginate($perPage, ['*'], 'page', $pageNumber);
@@ -276,13 +280,11 @@ class DishRepostitory extends Dishes
             $update = Dishes::where(['id'=> $data->dishId, 'outletId' => $outletId])
                              ->update(['name' => $data->name,          'price'     => $data->price, 'quantity'     => $data->quantity,
                               'isRecommended' => $data->isRecommended, 'isVeg'     => $data->isVeg, 'categoryId'   => $data->categoryId,
-                              'showFromTime'  => $data->showFromTime, 'showToTime' => $data->showToTime, 'status'  => $data->status]);
+                              'showFromTime'  => $data->showFromTime, 'showToTime' => $data->showToTime, 'status'  => $data->status,'slashedPrice'=>$data->slashedPrice]);
 
 
         } catch (\Illuminate\Database\QueryException $ex) {
-            $jsonresp = $ex->getMessage();  
-
-Log::debug($jsonresp);
+            $jsonresp = $ex->getMessage();    
             DB::rollBack();
             return false;
         }
@@ -310,9 +312,7 @@ if ($data->isCustomisation == 1) {
               }
 
         }
-
 }
-
 
         DB::Commit();
         return true;
@@ -395,5 +395,66 @@ if ($data->isCustomisation == 1) {
 
 
     }
+
+    public function dishSearch($request,$outletId)
+    {
+        $perPage = Constant::PERPAGE;
+        $currencyRepostitory = new CurrencyRepostitory();
+        $currency            = $currencyRepostitory->getCurrency();
+        $path    = url('/') . '/images/';
+        $data    = DB::table('Dishes')
+                        ->select(DB::raw("id,name,quantity,isVeg,status,CONCAT('$path',image)as image,CONCAT('$currency',price)as price"))
+                        ->where('outletId', $outletId)
+                        ->where('name','LIKE','%'.$request->key.'%')
+                        ->whereNull('deleted_at')
+                        ->paginate($perPage, ['*'], 'page', $request->pageNumber);
+
+        return $data;
+    }
+
+   public function editDishes($data, $outletId)
+    {
+         
+         $image = substr($data->imageUrl, 43);
+        DB::beginTransaction();
+
+
+        // if ($data->image != "null" ) {
+        //     $defaults = new Defaults();
+        //     $images = $defaults->imageUpload($data->image, Constant::DISHIMAGE);
+        //     $updateImage = Dishes::where(['id'=> $data->dishId])->update(['image'=>$images]);
+                
+        // }
+
+        try {
+
+            $update = Dishes::where(['id'=> $data->dishId, 'outletId' => $outletId])
+                             ->update(['name' => $data->name,'price' => $data->price,
+                                     'isVeg'     => $data->isVeg,'image'=> $image]);
+
+
+        } catch (\Illuminate\Database\QueryException $ex) {
+            $jsonresp = $ex->getMessage();    
+            DB::rollBack();
+            return false;
+        }
+        DB::Commit();
+        return true;
+
+    }
+
+
+   public function fileUpload($data, $outletId)
+    {
+
+        // if ($data->image != "null" ) {
+            $defaults = new Defaults();
+            $images = $defaults->imageUpload($data->file, Constant::DISHIMAGE);
+            // $updateImage = Dishes::where(['id'=> $data->dishId])->update(['image'=>$images]);
+            $path    = url('/') . '/images/' . $images;
+        return $path;
+                
+        // }    
+}
 
 }

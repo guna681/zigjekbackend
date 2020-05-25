@@ -73,7 +73,40 @@ Class RestaurantAdminController extends  Controller
         return $responsedata;
     }
 
+    /**
+     *  edit outlet Profile details api
+     * @param oultetId
+     * @return json (outletDetails)
+     * */
+
+    public function editProfile(request $request)
+    {
+        $response  = new Response();
+        $rules     = ['email'   =>'required',
+                      'name'=>'required:min:6',
+                      'mobileNumber'=>'required|max:15|min:7'
+                    ];
+        $validator = Validator::make($request->all(),$rules);
+        if($validator->fails()){
+            $data                   =$validator->messages();
+            $response->error        =Common::error_true;
+            $response->errorMessage =$data->first();
+        }else{
+            $restaurantAdminService = new RestaurantAdminService();
+            $response               = $restaurantAdminService->editProfile($request);
+        }
+        $responsedata =Defaults::encode($response);
+        return $responsedata;
+    }
 
 
+    public function logout(request $request)
+    {
+
+        $restaurantAdminService  = new RestaurantAdminService();
+        $response                = $restaurantAdminService->logout($request);
+        $responsedata            = Defaults::encode($response);
+        return $responsedata;
+    }
 
 }

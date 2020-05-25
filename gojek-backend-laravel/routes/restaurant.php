@@ -27,6 +27,7 @@ Route::Post('changePassword','RestaurantAdmin\RestaurantAdminController@changePa
 
 Route::Post('getOutletProfile','RestaurantAdmin\RestaurantAdminController@getOutletProfile')->middleware('auth:restaurant');
 
+Route::Post('editProfile','RestaurantAdmin\RestaurantAdminController@editProfile')->middleware('auth:restaurant');
 
 
 /*Category module */
@@ -61,11 +62,12 @@ Route::get('deleteCustomisationCategory/{id}','RestaurantAdmin\CustomisationCate
 /** dishes modules */
 
 Route::get('listDishes/{page}','RestaurantAdmin\DishMangementController@listDishes')->middleware('auth:restaurant');
+Route::post('listDishes','RestaurantAdmin\DishMangementController@dishesList')->middleware('auth:restaurant');
 Route::post('addDishes','RestaurantAdmin\DishMangementController@addDishes')->middleware('auth:restaurant');
 Route::get('getDishes/{id}','RestaurantAdmin\DishMangementController@getDishes')->middleware('auth:restaurant');
 Route::get('deleteDish/{id}','RestaurantAdmin\DishMangementController@deleteDish')->middleware('auth:restaurant');
 Route::post('updateDishes','RestaurantAdmin\DishMangementController@updateDishes')->middleware('auth:restaurant');
-
+Route::post('dishSearch','RestaurantAdmin\DishMangementController@dishSearch')->middleware('auth:restaurant');
 
 
 /** Orders Modules*/
@@ -82,9 +84,26 @@ Route::get('updateOrderViewStatus','RestaurantAdmin\OrderManagementController@up
 
 Route::get('listPreviousOrders/{page}','RestaurantAdmin\OrderManagementController@listPreviousOrders')->middleware('auth:restaurant');
 Route::get('listOngoingOrders/{page}','RestaurantAdmin\OrderManagementController@listOngoingOrders')->middleware('auth:restaurant');
+Route::post('listCurrentOrders','RestaurantAdmin\OrderManagementController@newCurrentOrders')->middleware('auth:restaurant');
+Route::post('listPastOrders','RestaurantAdmin\OrderManagementController@listPastOrders')->middleware('auth:restaurant');
 
+Route::post('newOrders','RestaurantAdmin\OrderManagementController@newOrders')->middleware('auth:restaurant');
+Route::post('trackOrders','RestaurantAdmin\OrderManagementController@trackOrders')->middleware('auth:restaurant');
 /* coupon */
 
 Route::get('couponList/{page}','RestaurantAdmin\CouponController@listCoupon')->middleware('auth:restaurant');
 Route::post('addCoupon','RestaurantAdmin\CouponController@addCoupon')->middleware('auth:restaurant');
 Route::post('editCoupon','RestaurantAdmin\CouponController@editCoupon')->middleware('auth:restaurant');
+
+Route::post('markReady','RestaurantAdmin\OrderManagementController@markReady')->middleware('auth:restaurant');
+Route::post('dishesEnableDisable','RestaurantAdmin\OrderManagementController@dishesEnableDisable')->middleware('auth:restaurant');
+Route::get('homePage','RestaurantAdmin\OrderManagementController@homePage')->middleware('auth:restaurant');
+
+Route::post('editDishes','RestaurantAdmin\DishMangementController@editDishes')->middleware('auth:restaurant');
+
+Route::post('getOrders','RestaurantAdmin\OrderManagementController@getRestaurantOrders')->middleware('auth:restaurant');
+
+Route::post('fileUpload','RestaurantAdmin\DishMangementController@fileUpload')->middleware('auth:restaurant');
+
+// logout api 
+Route::get('logout','RestaurantAdmin\RestaurantAdminController@logout')->middleware('auth:restaurant');
