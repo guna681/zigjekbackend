@@ -26,8 +26,9 @@ Class DishMangementService
             $data->list         = $list->flatten();
             $data->totalPage    = $list->lastPage();
         } else {
-            $data->error        = Common::error_true;
+            $data->error        = Common::error_false;
             $data->errorMessage = __('validation.failure');
+            $data->list         = [];
         }
 
         return $data;
@@ -178,7 +179,65 @@ Class DishMangementService
         return $data;
     }
 
+    public function dishSearch($request)
+    {
+        
+        $outletId  = Auth::guard('restaurant')->user()->id;
+        $dishRepostitory  = new DishRepostitory();
+        $list             = $dishRepostitory->dishSearch($request,$outletId);
+        $data             = new DataService();
+        if ($list->isNotEmpty()) {
+            $data->error        = Common::error_false;
+            $data->errorMessage = __('validation.sucess');
+            $data->list         = $list->flatten();
+            $data->totalPage    = $list->lastPage();
+        } else {
+            $data->error        = Common::error_false;
+            $data->errorMessage = __('validation.failure');
+            $data->list         = [];
+        }
 
+        return $data;
 
+    }
+
+    public function editDishes($arg)
+    {
+
+        $outletId  = Auth::guard('restaurant')->user()->id;
+        $dishRepostitory  = new DishRepostitory();
+        $add             = $dishRepostitory->editDishes($arg,$outletId);
+        $data             = new DataService();
+        if ($add) {
+            $data->error        = Common::error_false;
+            $data->errorMessage = __('validation.sucess');
+        } else {
+            $data->error        = Common::error_true;
+            $data->errorMessage = __('validation.failure');
+        }
+
+        return $data;
+
+    }
+ 
+     public function fileUpload($arg)
+    {
+
+        $outletId  = Auth::guard('restaurant')->user()->id;
+        $dishRepostitory  = new DishRepostitory();
+        $add             = $dishRepostitory->fileUpload($arg,$outletId);
+        $data             = new DataService();
+        if ($add) {
+            $data->error        = Common::error_false;
+            $data->errorMessage = __('validation.sucess');
+            $data->imageUrl     = $add;
+        } else {
+            $data->error        = Common::error_true;
+            $data->errorMessage = __('validation.failure');
+        }
+
+        return $data;
+
+    }
 
 }

@@ -27,6 +27,31 @@ Class DishMangementController extends Controller
         return $responsedata;
     }
 
+    /**
+     * Dishes list api with pagination
+     * @param pageNumber
+     * @return json (disheslist)
+     *  */
+
+    public function dishesList(request $request)
+    {   
+
+       $response   = new \stdClass();
+        $rules      = ['pageNumber' => 'required'];
+        $validator  = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $data                   = $validator->messages();
+            $response->error        = Common::error_true;
+            $response->errorMessage = $data->first();
+        } else {
+            $dishMangementService = new DishMangementService();
+            $response             =  $dishMangementService->listDishes($request->pageNumber);
+        }
+        $responsedata = Defaults::encode($response);
+        return $responsedata;
+    }
+
+
     /*
      * Dishes add api
      * @param dishname(char),image(varchar),isveg(int),isRecommended(int),categoryId(int),price(float)
@@ -152,9 +177,84 @@ Class DishMangementController extends Controller
         return $responsedata;
     }
 
+    /**
+     * dish Search api with pagination
+     * @param pageNumber
+     * @return json (disheslist)
+     *  */
 
+    public function dishSearch(request $request)
+    {
+        $response   = new \stdClass();
+        $rules      = ['key' => 'required','pageNumber' => 'required'];
+        $validator  = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $data                   = $validator->messages();
+            $response->error        = Common::error_true;
+            $response->errorMessage = $data->first();
+        } else {
+            $dishMangementService = new DishMangementService();
+            $response             = $dishMangementService->dishSearch($request);
+        }
+        $responsedata = Defaults::encode($response);
+        return $responsedata;
+    }
 
+    /**
+     * edit dishes details  api
+     * @param dissId ,dishName,price
+     * @return boolean
+     */
 
+    public function editDishes(request $request)
+    {
+        $response  = new \stdClass();
+        $rules     = ['dishId'       =>'required',
+                      'name'         => 'required',
+                      'price'        => 'required',
+                      'isVeg'        => 'required'
+                  ];
+        $validator  = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $data                       = $validator->messages();
+            $response->error            = Common::error_true;
+            $response->errorMessage     = $data->first();
 
+        } else {
+
+            $dishMangementService =  new DishMangementService();
+            $response             =  $dishMangementService->editDishes($request);
+
+        }
+        $responsedata = Defaults::encode($response);
+        return $responsedata;
+    }
+
+    /**
+     * upload file  api
+     * @param file
+     * @return boolean
+     */
+
+    public function fileUpload(request $request)
+    {
+        $response  = new \stdClass();
+        $rules     = ['file'       =>'required'
+                  ];
+        $validator  = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $data                       = $validator->messages();
+            $response->error            = Common::error_true;
+            $response->errorMessage     = $data->first();
+
+        } else {
+
+            $dishMangementService =  new DishMangementService();
+            $response             =  $dishMangementService->fileUpload($request);
+
+        }
+        $responsedata = Defaults::encode($response);
+        return $responsedata;
+    }
 
 }

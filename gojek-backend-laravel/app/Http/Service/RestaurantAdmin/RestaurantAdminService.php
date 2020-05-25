@@ -24,6 +24,7 @@ Class  RestaurantAdminService{
         if($restaurants->existLogin == 0){
             $accessToken          = $restaurants->createToken('Token Name')->accessToken;
             if($accessToken){
+                $updateToken           = $outletsRepostitory->updateDevicesToken($arg,$restaurants);
                 $data->error        = Common::error_false;
                 $data->errorMessage = __('validation.sucess');
                 $data->newPassword  = 0;
@@ -120,5 +121,43 @@ Class  RestaurantAdminService{
         return $outlets;
     }
 
+    public function editProfile($arg)
+    {
 
+        $outletId = Auth::guard('restaurant')->user()->id;
+        $outletsRepostitory = new OutletsRepostitory();
+        $results            = $outletsRepostitory->editProfile($arg,$outletId);
+        $data               = new DataService();
+        if ($results) {
+            $data->error            = Common::error_false;
+            $data->errorMessage     = __('validation.sucess');
+            // $data->outlets          = $this->outletTransformers($results);
+        } else {
+            $data->error        = Common::error_true;
+            $data->errorMessage = __('validation.failure');
+        }
+
+        return $data;
+
+    }
+
+    public function logout($arg)
+    {
+
+        $outletId = Auth::guard('restaurant')->user()->id;
+        $outletsRepostitory = new OutletsRepostitory();
+        $results            = $outletsRepostitory->logout($outletId);
+        $data               = new DataService();
+        if ($results) {
+            $data->error            = Common::error_false;
+            $data->errorMessage     = __('validation.sucess');
+            // $data->outlets          = $this->outletTransformers($results);
+        } else {
+            $data->error        = Common::error_true;
+            $data->errorMessage = __('validation.failure');
+        }
+
+        return $data;
+
+    }
 }
