@@ -56,12 +56,12 @@ Class OrderManagementRepostitory
     {
 
         $perPage = Constant::PERPAGE;
-        $data    = Orders::select('Orders.id as orderId','Orders.orderReferenceId','Orders.netAmount','Orders.orderStatus','Orders.orderPlaceTime','Orders.confirmedTime','Users.mobileNumber','Users.email','Orders.updated_at')
-                          ->leftjoin('Users','Orders.userId','=','Users.id')
+        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.orderStatus','Booking.created_at as orderPlaceTime','Booking.confirmedTime','Users.Mobile','Users.Email','Booking.updated_at')
+                          ->leftjoin('Users','Booking.userId','=','Users.Id')
                           // ->where('Orders.orderStatus','=','DELIVERED')
-                          ->whereIN('Orders.orderStatus', ['DELIVERED','Rejected'])
+                          ->whereIN('Booking.orderStatus', ['DELIVERED','Rejected'])
                           ->where('outletId',$outletId)
-                          ->orderby('Orders.id', 'DESC')
+                          ->orderby('Booking.Id', 'DESC')
                           ->paginate($perPage, ['*'], 'page', $pageNumber);
 
         return $data;
@@ -360,10 +360,10 @@ public function updateOrderViewStatus($arg)
         $toDate   = date("Y-m-d", strtotime('sunday this week')). ' 23:59:59';
         $orders = new Dishes();
         $totalAmount = Orders::where('outletId',$outletId)
-                              ->whereBetween('Orders.deliveredTime',[$fromDate,$toDate])
+                              ->whereBetween('Booking.updated_at',[$fromDate,$toDate])
                               ->sum('netAmount');
         $totalOrders = Orders::where('outletId',$outletId)
-                            ->whereBetween('Orders.deliveredTime',[$fromDate,$toDate])
+                            ->whereBetween('Booking.updated_at',[$fromDate,$toDate])
                             ->count('id');
          $orders->totalAmount = $currencySymbol. ' ' .$totalAmount;
          $orders->totalOrders = $totalOrders;   
@@ -377,10 +377,10 @@ public function updateOrderViewStatus($arg)
         $toDate   = date("Y-m-d"). ' 23:59:59';
         $orders = new Dishes();
         $totalAmount = Orders::where('outletId',$outletId)
-                              ->whereBetween('Orders.deliveredTime',[$fromDate,$toDate])
+                              ->whereBetween('Booking.updated_at',[$fromDate,$toDate])
                               ->sum('netAmount');
         $totalOrders = Orders::where('outletId',$outletId)
-                            ->whereBetween('Orders.deliveredTime',[$fromDate,$toDate])
+                            ->whereBetween('Booking.updated_at',[$fromDate,$toDate])
                             ->count('id');
          $orders->totalAmount = $currencySymbol. ' ' .$totalAmount;;
          $orders->totalOrders = $totalOrders;   
@@ -394,10 +394,10 @@ public function updateOrderViewStatus($arg)
         $toDate   = date('y-m-d',strtotime("-1 days")). ' 23:59:59';
         $orders = new Dishes();
         $totalAmount = Orders::where('outletId',$outletId)
-                              ->whereBetween('Orders.deliveredTime',[$fromDate,$toDate])
+                              ->whereBetween('Booking.updated_at',[$fromDate,$toDate])
                               ->sum('netAmount');
         $totalOrders = Orders::where('outletId',$outletId)
-                            ->whereBetween('Orders.deliveredTime',[$fromDate,$toDate])
+                            ->whereBetween('Booking.updated_at',[$fromDate,$toDate])
                             ->count('id');
          $orders->totalAmount = $currencySymbol. ' ' .$totalAmount;;
          $orders->totalOrders = $totalOrders;   

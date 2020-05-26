@@ -417,10 +417,10 @@ module.exports = function () {
         data.IsUserReviewed = 'no'
         var limit = 1
         var bookingInfo = await bookingRepository.fetchBookingUsingState(data, status, limit)
-        if (bookingInfo.error || bookingInfo.data['Type'] !== 'taxi') {
+        if (bookingInfo.error) {
           response.error = true
           response.msg = 'NO_BOOKING'
-        } else {
+        } else if (bookingInfo.result[0]['Type'] === 'taxi') {
           var bookingDetails = bookingInfo.result.map(element => {
             var booking = {}
             booking['id'] = element.Id
@@ -441,6 +441,9 @@ module.exports = function () {
           response.error = false
           response.msg = 'ACTIVE_BOOKING'
           response.data = bookingDetails[0]
+        } else {
+          response.error = true
+          response.msg = 'NO_BOOKING'
         }
         resolve(response)
       } catch (err) {
