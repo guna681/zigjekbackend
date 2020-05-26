@@ -1910,7 +1910,7 @@ module.exports = function (app, validator) {
     const error = validator.validation(req)
     var limit = 10
     var data = JSON.parse(req.params.page)
-    var page = { typename: data.typename, search: data.search, page: data.page, limit: limit }
+    var page = { typename: data.typename, search: data.search, page: data.page, limit: limit, type: data.type, IsDeliveryOpt: data.IsDeliveryOpt }
     if (error.array().length) {
       errorHandler.requestHandler(error.array(), true, lang, (message) => {
         return res.send(message)

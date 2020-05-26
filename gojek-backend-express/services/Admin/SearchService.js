@@ -125,7 +125,7 @@ module.exports = function () {
         }
         break
       case 'providers':
-        var pdata = { table_name: 'Provider', search: datas.search, limit: datas.limit, page: datas.page }
+        var pdata = { table_name: 'Provider', search: datas.search, limit: datas.limit, page: datas.page, type: datas.type, IsDeliveryOpt: datas.IsDeliveryOpt }
         var presresult = []
         try {
           var providersSDCount = await searchRepository.usersSearchDataListCount(pdata)

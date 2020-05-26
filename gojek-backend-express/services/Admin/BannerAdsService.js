@@ -33,7 +33,7 @@ module.exports = function () {
   this.bannerAdsPageViewService = async (callback) => {
     var response = {}
     try {
-      var appsliderPSelectSData = await this.bannerAdsPageView()
+      var appsliderPSelectSData = await bannerAdsRepository.bannerAdsPageView()
       var result = []
       if (appsliderPSelectSData.error === false) {
         if (appsliderPSelectSData.error === false && appsliderPSelectSData.data.length === 0) {

@@ -77,19 +77,29 @@ module.exports = function () {
     var search = data.search
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(tablename).select(knex.raw(`${tablename}.*,CONCAT(FirstName,LastName) as fullname`))
+      var query = knex(tablename).select(knex.raw(`${tablename}.*,CONCAT(FirstName,LastName) as fullname`))
         .having('fullname', 'like', `%${search}%`)
         .orHaving('Mobile', 'like', `%${search}%`)
         .orHaving('Email', 'like', `%${search}%`)
-        .then((result) => {
-          if (result.length) {
-            output.error = false
-            output.data = result
-          } else {
-            output.error = true
-          }
-          resolve(output)
-        })
+      if (data.type == 'taxi') {
+        if (data.IsDeliveryOpt == 0) {
+          query.where('Type', data.type)
+          query.where('IsDeliveryOpt', data.IsDeliveryOpt)
+        } else {
+          query.where('Type', data.type)
+        }
+      } else if (data.type == 'services') {
+        query.where('Type', data.type)
+      }
+      query.then((result) => {
+        if (result.length) {
+          output.error = false
+          output.data = result
+        } else {
+          output.error = true
+        }
+        resolve(output)
+      })
         .catch((err) => {
           err.error = true
           err.data = null
@@ -137,20 +147,30 @@ module.exports = function () {
     var offset = (page - 1) * limit
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(tablename).select(knex.raw(`${tablename}.*,CONCAT(FirstName,LastName) as fullname`))
+      var query = knex(tablename).select(knex.raw(`${tablename}.*,CONCAT(FirstName,LastName) as fullname`))
         .having('fullname', 'like', `%${search}%`)
         .orHaving('Mobile', 'like', `%${search}%`)
         .orHaving('Email', 'like', `%${search}%`)
         .limit(limit).offset(offset)
-        .then((result) => {
-          if (result.length) {
-            output.error = false
-            output.data = result
-          } else {
-            output.error = true
-          }
-          resolve(output)
-        })
+      if (data.type == 'taxi') {
+        if (data.IsDeliveryOpt == 0) {
+          query.where('Type', data.type)
+          query.where('IsDeliveryOpt', data.IsDeliveryOpt)
+        } else {
+          query.where('Type', data.type)
+        }
+      } else if (data.type == 'services') {
+        query.where('Type', data.type)
+      }
+      query.then((result) => {
+        if (result.length) {
+          output.error = false
+          output.data = result
+        } else {
+          output.error = true
+        }
+        resolve(output)
+      })
         .catch((err) => {
           err.error = true
           err.data = null
