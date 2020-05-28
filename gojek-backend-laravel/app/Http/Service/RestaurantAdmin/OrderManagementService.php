@@ -330,7 +330,7 @@ die;
             }
 
 
-             $stamp = strtotime($orders->orderPlaceTime); // get unix timestamp
+             $stamp = strtotime($orders->created_at); // get unix timestamp
             $orderPlaceTime = $stamp*1000;
             $ordersData->orderPlaceTime = $orderPlaceTime;
             $ordersData->orderReferenceId = substr($orders->orderReferenceId, 5);
@@ -994,7 +994,7 @@ die;
                 $orderDetails = new \stdClass;
                 $orderDetails->outletName          = $outlet->name;
                 $orderDetails->deliveryStaffId     = $order->deliveryStaffId;
-                $stamp                             = strtotime($order->orderPlaceTime); // get unix timestamp
+                $stamp                             = strtotime($order->created_at); // get unix timestamp
                 $orderPlaceTime                    = $stamp*1000;
                 $orderDetails->orderPlaceTime      = $orderPlaceTime;
                 $orderDetails->orderReferenceId    = substr($order->orderReferenceId, 5);

@@ -415,7 +415,7 @@ if ($data->isCustomisation == 1) {
    public function editDishes($data, $outletId)
     {
          
-         $image = substr($data->imageUrl, 43);
+         $image = substr($data->imageUrl, 59);
         DB::beginTransaction();
 
 

@@ -37,6 +37,26 @@ Class RestaurantAdminController extends  Controller
         return $responsedata;
     }
 
+/**
+     * @param  Restaurant admin  , devices token
+     * @return array
+     * @throws  \Exception
+     */
+    public function updateDeviceToken(request $request){
+        $response   =new Response();
+        $rules      = ['deviceToken'   =>'required'];
+        $validator  = Validator::make($request->all(),$rules);
+        if($validator->fails()){
+            $data                   =$validator->messages();
+            $response->error        =Common::error_true;
+            $response->errorMessage =$data->first();
+        }else{
+            $restaurantAdminService = new RestaurantAdminService();
+            $response               = $restaurantAdminService->updateDeviceToken($request);
+        }
+        $responsedata=Defaults::encode($response);
+        return $responsedata;
+    }
 
     public function  changePassword(request $request){
 

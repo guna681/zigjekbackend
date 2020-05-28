@@ -271,4 +271,11 @@ class OutletsRepostitory extends Outlets
 
 }
 
+ public function updateDeviceToken($request,$outletId)
+    {
+        $updateToken = Outlets::where(['id'=>$outletId])
+                        ->update(['deviceToken' =>$request->deviceToken]);
+        return $updateToken;
+    }
+
 }

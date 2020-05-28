@@ -340,7 +340,8 @@ module.exports = function () {
             data['startTime'] = common.timeStampFormatter(element.UpdateAt)
             data['currentTime'] = common.timeStampFormatter(new Date())
             data['outletId'] = element.outletId
-            if (status.indexOf(element.Status)) {
+            data['serviceCategoryId'] = element.ServiceCategoryId
+            if (status.includes(element.Status)) {
               data['paymentMode'] = element.PaymentMode
               data['estimation'] = (element.CurrencyType + element.Estimation).toString()
               data['userId'] = element.UserId
@@ -385,7 +386,7 @@ module.exports = function () {
     return new Promise(async function (resolve) {
       try {
         var status = ['assigned', 'unassigned']
-        var type = ['taxi', 'delivery']
+        var type = ['taxi']
         var data = {}
         data.ProviderId = null
         data.Status = 'waiting'
@@ -414,6 +415,7 @@ module.exports = function () {
         var status = ['accepted', 'processing', 'waiting', 'pickedup', 'arrived', 'dropped', 'assigned', 'completed']
         var data = {}
         data.UserId = userId
+        data.Type = 'taxi'
         data.IsUserReviewed = 'no'
         var limit = 1
         var bookingInfo = await bookingRepository.fetchBookingUsingState(data, status, limit)
@@ -802,6 +804,25 @@ module.exports = function () {
     return new Promise(async function (resolve) {
       try {
         var outlet = await bookingRepository.getOutletDetails(outletId)
+        if (outlet.error) {
+          response.error = true
+        } else {
+          response.error = false
+          response.data = outlet.result
+        }
+        resolve(response)
+      } catch (err) {
+        err.response = true
+        resolve(err)
+      }
+    })
+  }
+
+  this.getServiceTypeInfo = (categoryId) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      try {
+        var outlet = await bookingRepository.getServiceDetails(categoryId)
         if (outlet.error) {
           response.error = true
         } else {
