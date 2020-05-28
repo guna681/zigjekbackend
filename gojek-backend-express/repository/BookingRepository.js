@@ -184,14 +184,18 @@ module.exports = function () {
           .whereIn('Type', type)
           .having('CreateAt', '<', knex.fn.now())
           .limit(limit)
+          .orderByRaw('FIELD(Status,"unassigned","waiting") DESC')
           .then(trx.commit)
           .catch((err) => {
+            console.log(err)
             trx.rollback()
             throw err
           })
       })
         .then((result) => {
           if (result.length > 0) {
+            console.log('Booking No: ' + result[0].Id)
+            console.log('Booking No: ' + result[0].Status)
             output.error = false
             output.result = result
           } else {
@@ -200,6 +204,7 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
+          console.log(err)
           err.error = true
           resolve(err)
         })
@@ -548,6 +553,31 @@ module.exports = function () {
       var knex = new Knex(config)
       knex(outlet)
         .where('id', orderId)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result[0]
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.getServiceDetails = (categoryId) => {
+    console.log('getServiceDetails', categoryId)
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceCategory)
+        .where('Id', categoryId)
         .then((result) => {
           if (result.length > 0) {
             output.error = false

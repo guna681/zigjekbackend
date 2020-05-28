@@ -38,7 +38,7 @@ class IntegrationSettingRepository
     {
         $path    = url('/') . '/images/';
         $data = IntegrationSetting::select(DB::raw("id,name,CONCAT('$path',image)as image,status"))
-                              ->where('id',$gatewayId)->first();
+                              ->where('paymentType',$gatewayId)->first();
 
         return $data;
 

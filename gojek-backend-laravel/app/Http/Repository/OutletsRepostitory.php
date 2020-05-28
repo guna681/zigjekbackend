@@ -130,7 +130,7 @@ class OutletsRepostitory extends Outlets
             $s2Cell =$s2cellIdgenerated->getCellId($data->latitude,$data->longitude);
 
             $update_data=['name'=>$data->outletName,'email'=>$data->email,'isPureVeg'=>$data->isPureVeg,'costForTwo'=>$data->costForTwo,'preparationTime'=>$data->preparationTime,'addressLineOne'=>$data->addressLineOne,'addressLineTwo'=>$data->addressLineTwo,'area'=>$data->area,'city'=>$data->city,'contactNumber'=>$data->contactNumber,'latitude'=>$data->latitude,'longitude'=>$data->longitude,
-            's2CellId'=>$s2Cell->id,'s2Key'=>$s2Cell->key,'street'=>$data->street,'restaurantCommission'=>$data->commission,'status'=>$data->status];
+            's2CellId'=>$s2Cell->data->id,'s2Key'=>$s2Cell->data->key,'street'=>$data->street,'restaurantCommission'=>$data->commission,'status'=>$data->status];
 
             if($data->password){$update_data['password']=Hash::make($data->password);}
 
@@ -216,16 +216,16 @@ class OutletsRepostitory extends Outlets
 
     public function lastOutletOrders($outletId)
     {
-        $orders =Orders::select('Orders.id as orderId','Orders.orderReferenceId','Orders.netAmount','Orders.orderStatus','Orders.orderPlaceTime','Orders.confirmedTime','Users.mobileNumber','Users.email','Orders.updated_at')
-            ->leftjoin('Users','Orders.userId','=','Users.id')
-            ->where('Orders.outletId',$outletId)
-            ->orderby('Orders.id', 'DESC')
+        $orders =Orders::select('Booking.Id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.orderStatus','Booking.CreateAt as orderPlaceTime','Users.Mobile','Users.Email','Booking.updated_at')
+            ->leftjoin('Users','Booking.userId','=','Users.Id')
+            ->where('Booking.outletId',$outletId)
+            ->orderby('Booking.Id', 'DESC')
             ->take(10)->get();
 
         return $orders;
     }
 
-
+// Booking.confirmedTime
   public function editProfile($data, $outletId)
     {
         try{
@@ -270,5 +270,12 @@ class OutletsRepostitory extends Outlets
         return true;
 
 }
+
+ public function updateDeviceToken($request,$outletId)
+    {
+        $updateToken = Outlets::where(['id'=>$outletId])
+                        ->update(['deviceToken' =>$request->deviceToken]);
+        return $updateToken;
+    }
 
 }

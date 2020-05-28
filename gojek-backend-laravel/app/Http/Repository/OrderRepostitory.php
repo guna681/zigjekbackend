@@ -360,7 +360,30 @@ public function addRating($data,$userId)
         return $orders;
     }
     
+      public function newCurrentOrders($outletId)
+    {
+        $data = Orders::select('Booking.*','Provider.Id as deliveryStaffId','Provider.FirstName as staffName')
+                        ->where('outletId',$outletId)
+                        ->whereNotIn('Booking.orderStatus', ['DELIVERED','Rejected'])
+                        // ->where('orderStatus','unassigned')
+                        ->leftjoin('Provider', function ($join) {
+                            $join->on('Booking.ProviderId', '=', 'Provider.Id');
+                        })
+                        ->orderby('id', 'DESC')
+                        ->get();
 
+        return $data;
+    }
+      public function newOrders($outletId)
+    {
+        $data = Orders::where('outletId',$outletId)
+                        ->where('orderStatus','unassigned')
+                        ->whereNull('confirmedTime')
+                        ->orderby('id', 'DESC')
+                        ->get();
+
+        return $data;
+    }  
 }
 
 
