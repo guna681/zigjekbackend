@@ -77,4 +77,19 @@ module.exports = function () {
       callback(response)
     })
   }
+
+  this.serviceCategoryListViewCtrl = (data, callback) => {
+    var response = {}
+    servicesService.serviceCategoryService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }  
 }
