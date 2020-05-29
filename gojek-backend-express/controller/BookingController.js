@@ -312,6 +312,7 @@ module.exports = function () {
       const activeProviderStatus = 'active'
       const bookingUnassigned = 'unassigned'
       const type = ['delivery']
+      const limit = 5
       var providerList
       var userDeviceInfo
       var providerId
@@ -335,7 +336,7 @@ module.exports = function () {
           value: -3
         }
       ]
-      var waitingList = await bookingService.getBookingWaitlist(type)
+      var waitingList = await bookingService.getBookingWaitlist(type, limit)
       if (waitingList.error) {
         response.error = true
         response.msg = waitingList.msg
@@ -447,7 +448,7 @@ module.exports = function () {
         var status = bookingInfo.status
         var userId = bookingInfo.userId
         var userInfo = await userService.getUserBookingInfo(userId)
-        if (bookingStatus.indexOf(status) >= 0) {
+        if (bookingStatus.includes(status)) {
           if (userInfo.error) {
             bookingInfo.userInfo = null
           } else {
@@ -461,6 +462,10 @@ module.exports = function () {
               userInfo.data.mobile = outletInfo.error ? userInfo.data.mobile : outletInfo.data.contactNumber
             } else {
               bookingInfo.displayName = userInfo.data.firstName + ' ' + userInfo.data.lastName
+            }
+            if (bookingInfo.type === 'services') {
+              var serviceType = await bookingService.getServiceTypeInfo(bookingInfo.serviceCategoryId)
+              bookingInfo.serviceType = serviceType.error ? null : serviceType.data.Name
             }
             bookingInfo.userInfo = userInfo.data
           }

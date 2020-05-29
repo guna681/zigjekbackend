@@ -301,7 +301,7 @@ die;
         $currencyRepostitory = new CurrencyRepostitory();
         $currency            = $currencyRepostitory->getCurrency();
             $ordersData         = new Orders();
-            $ordersData->orderId          = $orders->id;
+            $ordersData->orderId          = $orders->Id;
             // $ordersData->orderReferenceId = $orders->orderReferenceId;
             $ordersData->netAmount        = $currency.$orders->netAmount;
             $ordersData->orderStatus      = $orders->orderStatus;
@@ -330,11 +330,11 @@ die;
             }
 
 
-             $stamp = strtotime($orders->orderPlaceTime); // get unix timestamp
+             $stamp = strtotime($orders->created_at); // get unix timestamp
             $orderPlaceTime = $stamp*1000;
             $ordersData->orderPlaceTime = $orderPlaceTime;
             $ordersData->orderReferenceId = substr($orders->orderReferenceId, 5);
-            $ordersData->dishes            = $this->getRestaurantOrdersDishes($orders->id);
+            $ordersData->dishes            = $this->getRestaurantOrdersDishes($orders->Id);
 
             $cartService    = new CartService();
             $totalcharges[] = $cartService->getItemTotal($ordersData['dishes']);
@@ -345,7 +345,7 @@ die;
             $ordersData->billTotals = array_collapse($totalcharges);
 
             $paymentGateway             = new IntegrationSettingRepository();
-            $ordersData->paymentDetails = $paymentGateway->getPaymentGatewayDetails($orders->PaymentTypeId);
+            $ordersData->paymentDetails = $paymentGateway->getPaymentGatewayDetails($orders->PaymentMode);
 
             $data->error        = Common::error_false;
             $data->errorMessage = __('validation.sucess');
@@ -783,7 +783,7 @@ die;
 
             foreach ($orders as $order) {
 
-                $carts      = $orderRepostitory->orderDish($order->id);
+                $carts      = $orderRepostitory->orderDish($order->Id);
                 $orderDish  = array();
                 foreach ($carts as $cart) {
 
@@ -836,7 +836,7 @@ die;
                 $orderPlaceTime                    = $stamp*1000;
                 $orderDetails->displaydate      = $orderPlaceTime;
                 $orderDetails->displayDish      = implode(', ', array_column($orderDish, 'dishplayDish'));
-                $orderDetails->orderId          = $order->id;
+                $orderDetails->orderId          = $order->Id;
                 
                 $orderData = new \stdClass();
                 $orderData->displayOrderId      = $order->orderReferenceId;
@@ -950,7 +950,7 @@ die;
 
             foreach ($orders as $order) {
 
-                $carts      = $orderRepostitory->orderDish($order->id);
+                $carts      = $orderRepostitory->orderDish($order->Id);
                 $orderDish  = array();
                 foreach ($carts as $cart) {
 
@@ -994,7 +994,7 @@ die;
                 $orderDetails = new \stdClass;
                 $orderDetails->outletName          = $outlet->name;
                 $orderDetails->deliveryStaffId     = $order->deliveryStaffId;
-                $stamp                             = strtotime($order->orderPlaceTime); // get unix timestamp
+                $stamp                             = strtotime($order->created_at); // get unix timestamp
                 $orderPlaceTime                    = $stamp*1000;
                 $orderDetails->orderPlaceTime      = $orderPlaceTime;
                 $orderDetails->orderReferenceId    = substr($order->orderReferenceId, 5);
@@ -1016,7 +1016,7 @@ die;
                 $orderDetails->buttonName          = isset($order->deliveredTime)  ? __('validation.reorder'): __('validation.trackOrder');
                 $orderDetails->displaydate         = date('F j, g:i a', strtotime($order->created_at));
                 $orderDetails->displayDish         = implode(', ', array_column($orderDish, 'dishplayDish'));
-                $orderDetails->orderId             = $order->id;
+                $orderDetails->orderId             = $order->Id;
                 
                 $orderData = new \stdClass();
                 $orderData->displayOrderId      = $order->orderReferenceId;

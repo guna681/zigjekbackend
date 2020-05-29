@@ -50,7 +50,24 @@ Class  RestaurantAdminService{
         return $data;
     }
 
+    public function updateDeviceToken($request)
+    {
+        $outletId = Auth::guard('restaurant')->user()->id;
+        $outletsRepostitory = new OutletsRepostitory();
+        $results            = $outletsRepostitory->updateDeviceToken($request,$outletId);
+        $data               = new DataService();
+        if ($results) {
+            $data->error            = Common::error_false;
+            $data->errorMessage     = __('validation.sucess');
+        } else {
+            $data->error        = Common::error_true;
+            $data->errorMessage = __('validation.failure');
+        }
 
+        return $data;
+
+    }
+    
     public function changePassword($arg){
         $outletsRepostitory    = new OutletsRepostitory();
         $data                  = new DataService();        
