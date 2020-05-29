@@ -106,7 +106,7 @@ class UserRepository
     }
 
     public  function getUser($data){
-        $data=User::select('id','FirstName as userName','email','Mobile as mobileNumber','ExtCode as countryCode','status','deviceToken','os',
+        $data=User::select('Id as id','FirstName as userName','Email as email','Mobile as mobileNumber','ExtCode as countryCode','Status as status','deviceToken','os',
             'StripeCustomerID', 'latitude', 'longitude', 'CurrentAddressId')->where('id',$data)->first();
         return $data;
     }
@@ -512,7 +512,7 @@ class UserRepository
     public function userLogout($data){
         DB::beginTransaction();
         try{
-            $data=User::where('id',$data)->update(['deviceToken'=>'']);
+            $data=UserDevices::where('UserId',$data)->update(['DeviceId'=>'']);
 
         }catch(\Illuminate\Database\QueryException $ex){
             $jsonresp=$ex->getMessage();

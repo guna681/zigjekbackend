@@ -138,7 +138,7 @@ Class StaffOrderRepostitory
         public function getOrderUsingId($orderId)
     {
 
-        $orders = Orders::where(['id'=>$orderId])
+        $orders = Orders::where(['Id'=>$orderId])
                         ->first();
 
         return $orders;
