@@ -1113,6 +1113,26 @@ module.exports = function () {
     }
   }
 
+  this.logoutCtrl = async (req, callback) => {
+    var response = {}
+    try {
+      var orderList = await providerService.resetProviderInfo(req)
+      if (orderList.error) {
+        response.error = true
+        response.msg = orderList.msg
+      } else {
+        response.error = false
+        response.msg = orderList.msg
+        response.data = orderList.data
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
+
   this.serviceImageUpdateCtrl = async (req, callback) => {
     var response = {}
     try {

@@ -496,7 +496,7 @@ die;
             $userRepostitory = new UserRepository();
             $order=$staffOrderRepostitory->getOrderUsingId($arg->orderId);
             $userRepostitory = new UserRepository();
-            $user =$userRepostitory->getUser($order['userId']);
+            $user =$userRepostitory->getUser($order['UserId']);
             $title              = $order->orderReferenceId;
             $notificationData   = array();
             $notificationData['os']          = $user['os']; 

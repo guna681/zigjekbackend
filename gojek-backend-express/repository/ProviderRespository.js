@@ -1343,4 +1343,39 @@ module.exports = function () {
         })
     })
   }
+
+  this.resetProviderInfo = (providerId) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(provider)
+        .update({
+          GCMId: null,
+          OS: null,
+          OSVersion: null,
+          Latitude: null,
+          Longitude: null,
+          Bearing: null,
+          S2CellID: null
+        })
+        .where('Id', providerId)
+        .then((result) => {
+          if (result) {
+            output.error = false
+            resolve(output)
+          } else {
+            output.error = true
+            resolve(output)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
 }

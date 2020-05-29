@@ -134,9 +134,9 @@ public function updateOrderViewStatus($arg)
         try{
 
             if($arg->orderStatus == 1) {
-                $update= Orders::where('id',$arg->orderId)->update(['confirmedTime'=>NOW()]);
+                $update= Orders::where('Id',$arg->orderId)->update(['confirmedTime'=>NOW()]);
             } else {
-                $update = Orders::where('id',$arg->orderId)->update(['orderStatus'=>'rejected']);
+                $update = Orders::where('Id',$arg->orderId)->update(['orderStatus'=>'rejected']);
 
             }
             
@@ -176,7 +176,7 @@ public function updateOrderViewStatus($arg)
     {
 
         $perPage = Constant::PERPAGE;
-        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.orderStatus','Users.Mobile','Users.Email','Booking.created_at','Booking.updated_at')
+        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.orderStatus','Users.Mobile','Users.Email','Booking.created_at','Booking.updated_at','Booking.confirmedTime')
                           ->leftjoin('Users','Booking.UserId','=','Users.id')
                         //   ->where('Orders.orderStatus','<>','DELIVERED')
                         //   ->whereDate('Orders.created_at', DB::raw('CURDATE()'))

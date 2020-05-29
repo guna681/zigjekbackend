@@ -1802,4 +1802,20 @@ module.exports = function () {
       resolve(response)
     })
   }
+
+  this.resetProviderInfo = (data) => {
+    var response = {}
+    var providerId = data.auth.Id
+    return new Promise(async function (resolve) {
+      var getDeviceToken = await providerRespository.resetProviderInfo(providerId)
+      if (getDeviceToken.error) {
+        response.error = true
+        response.msg = 'OOPS'
+      } else {
+        response.error = false
+        response.msg = 'VALID'
+      }
+      resolve(response)
+    })
+  }
 }
