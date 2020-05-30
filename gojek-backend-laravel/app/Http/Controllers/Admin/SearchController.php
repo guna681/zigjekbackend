@@ -118,4 +118,31 @@ Class SearchController extends Controller
         return $responsedata;
 
     }
+
+             /**
+     * List the Search outlet
+     * @param pageNumber
+     * @param key
+     * return the perpage 10 outletSearch
+     * @return json
+     */
+    public function outletSearch(request $request)
+    {
+        
+        $response       = new Response();
+        $rules          = ['key' => 'required','pageNumber' => 'required'];
+        $validator      = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $data                   = $validator->messages();
+            $response->error        = Common::error_true;
+            $response->errorMessage = $data->first();
+        } else {
+            $searchService            = new SearchService();
+            $response               = $searchService->outletSearch($request);
+        }
+        $responsedata   = Defaults::encode($response);
+        return $responsedata;
+
+    }
+      
 }

@@ -403,6 +403,12 @@ module.exports = {
       'ar': 'غير قادر على إنشاء طلب سحب في الوقت الحالي',
       'es': 'No se puede crear una solicitud de retiro en este momento',
       'pt': 'Não é possível criar solicitação de retirada no momento'
+    },
+    'NOT_APPROVED': {
+      'default': 'You account has been been approved. Please contact admin',
+      'ar': 'تم إنشاء طلب السحب بنجاح',
+      'es': 'La solicitud de retiro se ha creado con éxito',
+      'pt': 'O pedido de retirada foi criado com sucesso'
     }
   },
   SUCCESS: {

@@ -173,6 +173,7 @@ module.exports = function () {
   }
 
   this.fetchBookingUsingStateType = (data, status, limit, type) => {
+    console.log(data, status, limit, type)
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
@@ -187,15 +188,12 @@ module.exports = function () {
           .orderByRaw('FIELD(Status,"unassigned","waiting") DESC')
           .then(trx.commit)
           .catch((err) => {
-            console.log(err)
             trx.rollback()
             throw err
           })
       })
         .then((result) => {
           if (result.length > 0) {
-            console.log('Booking No: ' + result[0].Id)
-            console.log('Booking No: ' + result[0].Status)
             output.error = false
             output.result = result
           } else {
@@ -204,7 +202,6 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
-          console.log(err)
           err.error = true
           resolve(err)
         })
@@ -285,7 +282,7 @@ module.exports = function () {
       var knex = new Knex(config)
       knex(booking)
         .where(conditon)
-        .update({ AssignedProviderIds: knex.raw(`JSON_MERGE(AssignedProviderIds, '${data.ProviderId}')`) })
+        .update({ AssignedProviderIds: knex.raw('JSON_MERGE(AssignedProviderIds, ?)', [data.ProviderId.toString()]) })
         .update(data)
         .then((result) => {
           if (result > 0) {
@@ -396,7 +393,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(booking)
-        .update({ ProviderRejectedIds: knex.raw(`JSON_MERGE(ProviderRejectedIds, '${providerId}')`) })
+        .update({ ProviderRejectedIds: knex.raw('JSON_MERGE(ProviderRejectedIds, "?")', [providerId.toSting()]) })
         .where('Id', bookingId)
         .then((result) => {
           if (result[0] > 0) {
@@ -572,7 +569,6 @@ module.exports = function () {
   }
 
   this.getServiceDetails = (categoryId) => {
-    console.log('getServiceDetails', categoryId)
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)

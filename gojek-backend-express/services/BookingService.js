@@ -118,12 +118,11 @@ module.exports = function () {
     }
   }
 
-  this.getBookingWaitlist = (type) => {
+  this.getBookingWaitlist = (type, status) => {
     var response = {}
     return new Promise(async function (resolve) {
       try {
         var condition = {}
-        var status = ['waiting']
         condition.ProviderId = null
         var limit = 1
         var waitingList = await bookingRepository.fetchBookingUsingStateType(condition, status, limit, type)
