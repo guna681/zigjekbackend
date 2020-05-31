@@ -91,4 +91,23 @@ Class SearchService
 
         return $data;
     }
+    
+     public function outletSearch($request)
+    {
+        $searchRepostitory       = new SearchRepostitory();
+        $searchOrderData          = $searchRepostitory->searchOutlet($request);
+        $data                    = new DataService();
+        if ($searchOrderData) {
+            $data->error         = Common::error_false;
+            $data->errorMessage  = __('validation.sucess');
+            $data->totalPage    = $searchOrderData->lastPage();
+            $data->outlets         = $searchOrderData->flatten();
+        } else {
+            $data->error         = Common::error_true;
+            $data->errorMessage  = __('validation.failure');
+            $data->users         = $searchOrderData;
+        }
+
+        return $data;
+    }   
 }

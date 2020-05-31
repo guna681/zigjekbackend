@@ -205,5 +205,21 @@ class SearchRepostitory{
 
         return $data;     
     
-    }       
+    }    
+
+     /*admin module*/
+
+    public function searchOutlet($request)
+    {
+        $perPage = Constant::PERPAGE;
+        $path    = url('/').'/images/';
+        $data    = Outlets::select(DB::raw("id as outletId,name as outletName,CONCAT('$path',image)as outletImage,email,isPureVeg,contactNumber,status"))
+                          ->where('name','LIKE','%'.$request->key.'%')
+                          ->orwhere('contactNumber','LIKE','%'.$request->key.'%')
+                          ->orwhere('email','LIKE','%'.$request->key.'%')
+                          ->paginate($perPage, ['*'], 'page', $request->pageNumber);
+
+        return $data;
+    }
+          
 }

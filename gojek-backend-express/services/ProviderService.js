@@ -178,7 +178,7 @@ module.exports = function () {
       providerData.Email = data.email
       providerData.DeviceId = data.uuid
       providerData.CountryId = data.countryId
-      providerData.Status = 'verified'
+      providerData.Status = 'pending'
       providerData.IsMobileVerified = '1'
       providerData.IsEmailVerified = '0'
       providerData.IsActive = 'no'
@@ -1811,6 +1811,24 @@ module.exports = function () {
       if (getDeviceToken.error) {
         response.error = true
         response.msg = 'OOPS'
+      } else {
+        response.error = false
+        response.msg = 'VALID'
+      }
+      resolve(response)
+    })
+  }
+
+  this.getProviderApprovalStatus = (providerId) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      var data = {}
+      data.Id = providerId
+      data.Status = 'verified'
+      var getDeviceToken = await providerRespository.fetchProvider(data)
+      if (getDeviceToken.error) {
+        response.error = true
+        response.msg = 'NOT_APPROVED'
       } else {
         response.error = false
         response.msg = 'VALID'

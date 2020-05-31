@@ -1369,7 +1369,6 @@ module.exports = function () {
           }
         })
         .catch((err) => {
-          console.log(err)
           err.error = true
           resolve(err)
         })

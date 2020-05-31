@@ -306,10 +306,11 @@ module.exports = function () {
     var response = {}
     var data = req
     var providerId = req.auth.Id
-    var activeVehicle = await providerVehicleService.getProivderActiveVehicleDetails(providerId)
+    var providerStatus = await providerService.getProviderApprovalStatus(providerId)
+    var activeVehicle = providerStatus.error ? providerStatus : await providerVehicleService.getProivderActiveVehicleDetails(providerId)
     if (activeVehicle.error) {
       response.error = true
-      response.msg = 'NO_VEHICLE'
+      response.msg = activeVehicle.msg
       callback(response)
     } else {
       var rideSharingStatus = activeVehicle.error === false ? await bookingService.isRideSharingEnabled(activeVehicle.data.serviceIds) : { error: true }
