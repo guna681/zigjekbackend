@@ -73,8 +73,8 @@ Class  RestaurantMangementService{
         if ($restaurants) {
             $data->error        = Common::error_false;
             $data->errorMessage = trans('validation.sucess');
-            $mailService        = new MailService();
-            $mailService->adminMail($arg);
+            // $mailService        = new MailService();
+            // $mailService->adminMail($arg);
         } else {
             $data->error        = Common::error_true;
             $data->errorMessage = __('validation.failure');

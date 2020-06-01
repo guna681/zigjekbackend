@@ -173,7 +173,6 @@ module.exports = function () {
   }
 
   this.fetchBookingUsingStateType = (data, status, limit, type) => {
-    console.log(data, status, limit, type)
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)

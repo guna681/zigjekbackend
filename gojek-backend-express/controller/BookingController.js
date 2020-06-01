@@ -253,7 +253,6 @@ module.exports = function () {
         } else {
           providerId = providerList.data[0].ProviderId
           providerInfo = await providerService.getProviderInfo(providerId)
-          console.log(providerInfo)
           if (!providerInfo.error) {
             providerDetails = providerInfo.data
           }
