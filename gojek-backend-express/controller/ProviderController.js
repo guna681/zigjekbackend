@@ -1043,8 +1043,7 @@ module.exports = function () {
           var addonsList = await bookingService.getAddonsInfo(bookingInfo.ServiceAddons)
           data['serviceAddonsList'] = addonsList.error ? [] : addonsList.data
           receipt.push({ fieldName: 'Tax', value: bookingInfo.Tax })
-          receipt.push({ fieldName: 'Fare', value: String(bookingInfo.Estimation) })
-          receipt.push({ fieldName: 'Sub Total', value: String(Number(bookingInfo.Estimation) + Number(bookingInfo.Tax)) })
+          receipt.push({ fieldName: 'Fare', value: String(bookingInfo.TotalAmount) })
           receipt.push({ fieldName: 'Total Amount', value: bookingInfo.CurrencyType + ' ' + bookingInfo.TotalAmount })
         }
         data['receipt'] = receipt

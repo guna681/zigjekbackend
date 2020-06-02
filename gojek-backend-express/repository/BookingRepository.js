@@ -340,6 +340,7 @@ module.exports = function () {
         .where('ProviderId', providerId)
         .where('Status', 'completed')
         .then((result) => {
+          console.log(result)
           if (result.length) {
             output.error = false
             output.result = result[0]
@@ -625,6 +626,7 @@ module.exports = function () {
       knex(booking)
         .where(data)
         .limit(limit)
+        .orderBy('CreateAt', 'desc')
         .offset(offset)
         .then((result) => {
           if (result.length > 0) {
@@ -658,6 +660,7 @@ module.exports = function () {
         .join(users, 'Booking.UserId', 'Users.Id')
         .where(data)
         .limit(limit)
+        .orderBy('CreateAt', 'desc')
         .offset(offset)
         .then((result) => {
           if (result.length > 0) {
@@ -715,6 +718,7 @@ module.exports = function () {
         .leftJoin(serviceCategory, 'Booking.ServiceCategoryId', 'ServiceCategory.Id')
         .where(data)
         .where('Booking.Type', 'services')
+        .orderBy('CreateAt', 'desc')
         .limit(limit)
         .offset(offset)
         .then((result) => {
@@ -842,7 +846,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(service)
-        .select('id', 'name', 'price', 'currencyType')
+        .select('id', 'name', 'price', 'currencyType', 'commission')
         .whereIn('Id', serviceIds)
         .then((result) => {
           if (result.length > 0) {

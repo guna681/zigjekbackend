@@ -1395,7 +1395,7 @@ module.exports = function () {
 
         if (updateInfo.error) {
           response.error = true
-          response.msg = 'OOPS'
+          response.msg = 'FAILED: $[1],Financial details'
         } else {
           response.error = false
           response.msg = 'VALID'
@@ -1713,7 +1713,7 @@ module.exports = function () {
       } else if (type === 'services') {
         var availabilityInfo = await providerRespository.fetchProviderAvailability(provider)
         info.push({ info: 'Availability', key: 'AVAILABILITY', isPending: availabilityInfo.error })
-        var serviceInfo = await providerRespository.fetchProviderAddressInfo(provider)
+        var serviceInfo = await providerRespository.fetchProviderServiceInfo(provider)
         info.push({ info: 'Service', key: 'SERVICE', isPending: serviceInfo.error })
       }
       response.error = false
