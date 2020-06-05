@@ -306,10 +306,11 @@ module.exports = function () {
     var response = {}
     var data = req
     var providerId = req.auth.Id
-    var activeVehicle = await providerVehicleService.getProivderActiveVehicleDetails(providerId)
+    var providerStatus = await providerService.getProviderApprovalStatus(providerId)
+    var activeVehicle = providerStatus.error ? providerStatus : await providerVehicleService.getProivderActiveVehicleDetails(providerId)
     if (activeVehicle.error) {
       response.error = true
-      response.msg = 'NO_VEHICLE'
+      response.msg = activeVehicle.msg
       callback(response)
     } else {
       var rideSharingStatus = activeVehicle.error === false ? await bookingService.isRideSharingEnabled(activeVehicle.data.serviceIds) : { error: true }
@@ -1042,8 +1043,7 @@ module.exports = function () {
           var addonsList = await bookingService.getAddonsInfo(bookingInfo.ServiceAddons)
           data['serviceAddonsList'] = addonsList.error ? [] : addonsList.data
           receipt.push({ fieldName: 'Tax', value: bookingInfo.Tax })
-          receipt.push({ fieldName: 'Fare', value: String(bookingInfo.Estimation) })
-          receipt.push({ fieldName: 'Sub Total', value: String(Number(bookingInfo.Estimation) + Number(bookingInfo.Tax)) })
+          receipt.push({ fieldName: 'Fare', value: String(bookingInfo.TotalAmount) })
           receipt.push({ fieldName: 'Total Amount', value: bookingInfo.CurrencyType + ' ' + bookingInfo.TotalAmount })
         }
         data['receipt'] = receipt
@@ -1097,6 +1097,26 @@ module.exports = function () {
     try {
       req.userType = 'provider'
       var orderList = await bookingService.getOrderListingService(req)
+      if (orderList.error) {
+        response.error = true
+        response.msg = orderList.msg
+      } else {
+        response.error = false
+        response.msg = orderList.msg
+        response.data = orderList.data
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
+
+  this.logoutCtrl = async (req, callback) => {
+    var response = {}
+    try {
+      var orderList = await providerService.resetProviderInfo(req)
       if (orderList.error) {
         response.error = true
         response.msg = orderList.msg

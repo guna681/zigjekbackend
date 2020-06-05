@@ -118,12 +118,11 @@ module.exports = function () {
     }
   }
 
-  this.getBookingWaitlist = (type) => {
+  this.getBookingWaitlist = (type, status) => {
     var response = {}
     return new Promise(async function (resolve) {
       try {
         var condition = {}
-        var status = ['waiting']
         condition.ProviderId = null
         var limit = 1
         var waitingList = await bookingRepository.fetchBookingUsingStateType(condition, status, limit, type)
@@ -933,7 +932,13 @@ module.exports = function () {
     var response = {}
     return new Promise(async function (resolve) {
       try {
+        var serviceList = JSON.parse(data.serviceData)
+        var serviceArr = serviceList.map(element => { return element.serviceId })
+        var serviceData = await bookingRepository.fetchServiceInfo(serviceArr)
         var service = {}
+        var total = 0
+        var providerEarning = 0
+        var currency
         service.UserId = data.auth.Id
         service.ProviderId = data.providerId
         service.ServiceCategoryId = data.categoryId
@@ -945,7 +950,19 @@ module.exports = function () {
         service.DestinyLat = data.latitude
         service.DestinyLong = data.longitude
         service.PaymentMode = data.paymentMode
-        service.ServiceIds = data.serviceData
+        var serviceCollection = serviceList.map((element) => {
+          var pricing = serviceData.result.filter((services) => services.id === element.serviceId)
+          element.price = element.qty * pricing[0].price
+          total += element.price
+          providerEarning += element.price - element.price * (pricing[0].commission / 100)
+          currency = pricing[0].currencyType
+          return element
+        })
+        service.TotalEarning = total
+        service.ProviderEarning = providerEarning
+        service.CurrencyType = currency
+        service.TotalAmount = total
+        service.ServiceIds = JSON.stringify(serviceCollection)
         service.ServiceAddons = data.addons === undefined ? '[]' : data.addons
         service.Status = 'assigned'
         service.Type = 'services'
@@ -961,6 +978,7 @@ module.exports = function () {
         }
         resolve(response)
       } catch (err) {
+        console.log(err)
         err.response = true
         resolve(err)
       }

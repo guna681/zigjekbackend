@@ -137,9 +137,11 @@ public function dishes($subCategory){
 			if ($item->slashedPrice != 0) {
 			$dishes->displayPrice	=$currency.$item->slashedPrice;
 			$dishes->slashedPrice           = $item->price;
+			$dishes->isSlashedPrice           = Common::error_true;
 			} else {
 			$dishes->slashedPrice	=0;
 			$dishes->displayPrice	=$currency.$price;
+			$dishes->isSlashedPrice           = Common::error_false;
 			}
 			$dishes->isVeg			=$item->isVeg;
 			$availableFrom          =strtotime($item->showFromTime);
@@ -181,10 +183,12 @@ public function dishes($subCategory){
 			$dishes->price    		=(double)$item->slashedPrice;	
 			$dishes->displayPrice	=$currency.$item->slashedPrice;
 			$dishes->slashedPrice           = $item->price;
+			$dishes->isSlashedPrice           = Common::error_true;
 			} else {
 			$dishes->price    		=(double)$item->price;
 			$dishes->slashedPrice           = 0;
 			$dishes->displayPrice	=$currency.$price;
+			$dishes->isSlashedPrice           = Common::error_false;
 			}
 			$dishes->dishImage		=url('/').'/images/'.$item->image;
 			$dishes->isVeg			=$item->isVeg;

@@ -187,15 +187,12 @@ module.exports = function () {
           .orderByRaw('FIELD(Status,"unassigned","waiting") DESC')
           .then(trx.commit)
           .catch((err) => {
-            console.log(err)
             trx.rollback()
             throw err
           })
       })
         .then((result) => {
           if (result.length > 0) {
-            console.log('Booking No: ' + result[0].Id)
-            console.log('Booking No: ' + result[0].Status)
             output.error = false
             output.result = result
           } else {
@@ -204,7 +201,6 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
-          console.log(err)
           err.error = true
           resolve(err)
         })
@@ -285,7 +281,7 @@ module.exports = function () {
       var knex = new Knex(config)
       knex(booking)
         .where(conditon)
-        .update({ AssignedProviderIds: knex.raw(`JSON_MERGE(AssignedProviderIds, '${data.ProviderId}')`) })
+        .update({ AssignedProviderIds: knex.raw('JSON_MERGE(AssignedProviderIds, ?)', [data.ProviderId.toString()]) })
         .update(data)
         .then((result) => {
           if (result > 0) {
@@ -344,6 +340,7 @@ module.exports = function () {
         .where('ProviderId', providerId)
         .where('Status', 'completed')
         .then((result) => {
+          console.log(result)
           if (result.length) {
             output.error = false
             output.result = result[0]
@@ -396,7 +393,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(booking)
-        .update({ ProviderRejectedIds: knex.raw(`JSON_MERGE(ProviderRejectedIds, '${providerId}')`) })
+        .update({ ProviderRejectedIds: knex.raw('JSON_MERGE(ProviderRejectedIds, "?")', [providerId.toSting()]) })
         .where('Id', bookingId)
         .then((result) => {
           if (result[0] > 0) {
@@ -572,7 +569,6 @@ module.exports = function () {
   }
 
   this.getServiceDetails = (categoryId) => {
-    console.log('getServiceDetails', categoryId)
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
@@ -630,6 +626,7 @@ module.exports = function () {
       knex(booking)
         .where(data)
         .limit(limit)
+        .orderBy('CreateAt', 'desc')
         .offset(offset)
         .then((result) => {
           if (result.length > 0) {
@@ -663,6 +660,7 @@ module.exports = function () {
         .join(users, 'Booking.UserId', 'Users.Id')
         .where(data)
         .limit(limit)
+        .orderBy('CreateAt', 'desc')
         .offset(offset)
         .then((result) => {
           if (result.length > 0) {
@@ -720,6 +718,7 @@ module.exports = function () {
         .leftJoin(serviceCategory, 'Booking.ServiceCategoryId', 'ServiceCategory.Id')
         .where(data)
         .where('Booking.Type', 'services')
+        .orderBy('CreateAt', 'desc')
         .limit(limit)
         .offset(offset)
         .then((result) => {
@@ -847,7 +846,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(service)
-        .select('id', 'name', 'price', 'currencyType')
+        .select('id', 'name', 'price', 'currencyType', 'commission')
         .whereIn('Id', serviceIds)
         .then((result) => {
           if (result.length > 0) {

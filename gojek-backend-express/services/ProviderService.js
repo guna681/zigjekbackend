@@ -178,7 +178,7 @@ module.exports = function () {
       providerData.Email = data.email
       providerData.DeviceId = data.uuid
       providerData.CountryId = data.countryId
-      providerData.Status = 'verified'
+      providerData.Status = 'pending'
       providerData.IsMobileVerified = '1'
       providerData.IsEmailVerified = '0'
       providerData.IsActive = 'no'
@@ -1395,7 +1395,7 @@ module.exports = function () {
 
         if (updateInfo.error) {
           response.error = true
-          response.msg = 'OOPS'
+          response.msg = 'FAILED: $[1],Financial details'
         } else {
           response.error = false
           response.msg = 'VALID'
@@ -1713,7 +1713,7 @@ module.exports = function () {
       } else if (type === 'services') {
         var availabilityInfo = await providerRespository.fetchProviderAvailability(provider)
         info.push({ info: 'Availability', key: 'AVAILABILITY', isPending: availabilityInfo.error })
-        var serviceInfo = await providerRespository.fetchProviderAddressInfo(provider)
+        var serviceInfo = await providerRespository.fetchProviderServiceInfo(provider)
         info.push({ info: 'Service', key: 'SERVICE', isPending: serviceInfo.error })
       }
       response.error = false
@@ -1798,6 +1798,40 @@ module.exports = function () {
       } else {
         response.error = false
         response.data = getDeviceToken.result
+      }
+      resolve(response)
+    })
+  }
+
+  this.resetProviderInfo = (data) => {
+    var response = {}
+    var providerId = data.auth.Id
+    return new Promise(async function (resolve) {
+      var getDeviceToken = await providerRespository.resetProviderInfo(providerId)
+      if (getDeviceToken.error) {
+        response.error = true
+        response.msg = 'OOPS'
+      } else {
+        response.error = false
+        response.msg = 'VALID'
+      }
+      resolve(response)
+    })
+  }
+
+  this.getProviderApprovalStatus = (providerId) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      var data = {}
+      data.Id = providerId
+      data.Status = 'verified'
+      var getDeviceToken = await providerRespository.fetchProvider(data)
+      if (getDeviceToken.error) {
+        response.error = true
+        response.msg = 'NOT_APPROVED'
+      } else {
+        response.error = false
+        response.msg = 'VALID'
       }
       resolve(response)
     })

@@ -1218,4 +1218,22 @@ module.exports = function (server, validator) {
       })
     }
   })
+
+  server.get(basePath + 'logout', server.auth, (request, response) => {
+    const error = validator.validation(request)
+    const lang = request.headers.lang
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return response.send(message)
+      })
+    } else {
+      var body = request.params
+      body.auth = request.params.auth
+      providerController.logoutCtrl(body, (result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
+  })
 }
