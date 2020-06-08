@@ -311,9 +311,9 @@ die;
             $ordersData->confirmedTime    = $orders->confirmedTime;
             $ordersData->deliveredTime    = $orders->deliveredTime;
             $ordersData->userId           = $orders->userId;
-            $ordersData->userName         = $orders->userName;
-            $ordersData->userMobileNumber = $orders->mobileNumber;
-            $ordersData->userEmail        = $orders->email;
+            $ordersData->userName         = $orders->FirstName;
+            $ordersData->userMobileNumber = $orders->Mobile;
+            $ordersData->userEmail        = $orders->Email;
             $ordersData->deliveryAddress  = $orders->deliveryAddress;
             $ordersData->deliveryAddressType = $orders->deliveryAddressType;
 
@@ -321,7 +321,7 @@ die;
             $ordersData->staffMobileNumber = $orders->staffMobileNumber;
             $ordersData->staffeEmail       = $orders->staffeEmail;
             $ordersData->tripStatus        = $orders->tripStatus;
-            $ordersData->orderSuggestions  = $orders->orderSuggestions;
+            $ordersData->orderSuggestions  = $orders->Description;
             $ordersData->markReady  = $orders->markReady;
             if ($orders->confirmedTime == NULL) {
             $ordersData->isConfirmed  = 0;

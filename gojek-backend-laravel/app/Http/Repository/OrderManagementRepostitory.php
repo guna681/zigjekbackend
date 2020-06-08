@@ -86,7 +86,7 @@ Class OrderManagementRepostitory
 
     public function getOrder($orderId, $outletId)
     {
-        $orders =Orders::select(DB::raw("Booking.*,Users.FirstName,Users.Mobile,Users.Email,Users.ExtCode,Provider.FirstName as staffName,Provider.Mobile as staffMobileNumber,Provider.Email as staffeEmail"))
+        $orders =Orders::select(DB::raw("Booking.*,Users.Id as userId,Users.FirstName,Users.Mobile,Users.Email,Users.ExtCode,Provider.FirstName as staffName,Provider.Mobile as staffMobileNumber,Provider.Email as staffeEmail"))
                         ->leftjoin('Users','Booking.UserId','=','Users.Id')
                         ->leftjoin('Provider', function ($join) {
                             $join->on('Booking.ProviderId', '=', 'Provider.Id');

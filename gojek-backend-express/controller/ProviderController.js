@@ -1026,6 +1026,7 @@ module.exports = function () {
           data['description'] = bookingInfo.Description
           data['orderId'] = bookingInfo.Id
           data['outletName'] = bookingInfo.OutletName
+          data['mobileNumber'] = bookingInfo.ContactNo
           var dishList = await bookingService.getBookingDishes(req.bookingNo)
           data['dishes'] = dishList.error ? [] : dishList.data.map(element => { element.displayPrice = bookingInfo.CurrencyType + element.dishTotal; return element })
           receipt.push({ fieldName: 'Tax', value: bookingInfo.Tax })
