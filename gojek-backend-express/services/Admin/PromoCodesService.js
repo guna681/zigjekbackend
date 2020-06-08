@@ -100,7 +100,7 @@ module.exports = function () {
         Status: data.Status
       }
       result.where = { Id: data.Id }
-      var promocodesUData = await this.promoCodesEdit(result)
+      var promocodesUData = await promoCodesRepository.promoCodesEdit(result)
       if (promocodesUData.error === false) {
         response.error = false
         response.data = promocodesUData.data
