@@ -17,6 +17,9 @@ module.exports = function () {
     var month = 'month'
     var year = 'year'
     var week = 'week'
+    var completed = 'completed'
+    var cancelled = 'cancelled'
+    var accepted  = 'accepted'
     try {
       var userscount = await dashboardRepository.dashboardListView(users)
       var providerscount = await dashboardRepository.dashboardListView(providers)
@@ -24,8 +27,12 @@ module.exports = function () {
       var ridevehicletypecount = await dashboardRepository.dashboardListView(ridevehicletype)
       var dayearning = await dashboardRepository.dashboardBookingEarningsView(day)
       var monthearning = await dashboardRepository.dashboardBookingEarningsView(month)
-      var weekearning = await dashboardRepository.dashboardBookingEarningsView(week)
+      var weekearning = await dashboardRepository.dashboardBookingView(week)
       var yearearning = await dashboardRepository.dashboardBookingEarningsView(year)
+      var completedBooking = await dashboardRepository.dashboardBookingCountView(completed)
+      var cancelledBooking = await dashboardRepository.dashboardBookingCountView(cancelled)
+      var activeBooking = await dashboardRepository.dashboardBookingCountView(accepted)
+
       dashboard.push({
         userscount: userscount.data['count'],
         providerscount: providerscount.data['count'],
@@ -34,10 +41,13 @@ module.exports = function () {
         dayearning: dayearning.data['Total'],
         monthearning: monthearning.data['Total'],
         weekearning: weekearning.data['Total'],
-        yearearning: yearearning.data['Total']
+        yearearning: yearearning.data['Total'],
+        completedBookingCount: completedBooking.data['count'],
+        cancelledBookingCount: cancelledBooking.data['count'],
+        activeBookingCount: activeBooking.data['count']
       })
       if (userscount.error === false && providerscount.error === false && bookingscount.error === false && ridevehicletypecount.error === false &&
-            dayearning.error === false && monthearning.error === false && weekearning.error === false && yearearning.error === false) {
+            dayearning.error === false && monthearning.error === false && weekearning.error === false && yearearning.error === false && completedBooking.error === false && cancelledBooking.error === false && activeBooking.error === false) {
         response.error = false
         response.data = dashboard
         response.msg = 'VALID'

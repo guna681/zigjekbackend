@@ -978,7 +978,6 @@ module.exports = function () {
         }
         resolve(response)
       } catch (err) {
-        console.log(err)
         err.response = true
         resolve(err)
       }

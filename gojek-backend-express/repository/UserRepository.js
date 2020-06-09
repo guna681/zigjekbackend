@@ -236,7 +236,7 @@ module.exports = function () {
     })
   }
 
-  this.addUserDevice = (data, knex) => {
+  this.addUserDevice = (data) => {
     var response = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
@@ -261,7 +261,7 @@ module.exports = function () {
     })
   }
 
-  this.updateUserDevice = (data, knex) => {
+  this.updateUserDevice = (data) => {
     var response = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
@@ -411,6 +411,7 @@ module.exports = function () {
   }
 
   this.updateUserFCMToken = (data, userDeviceInfo) => {
+    console.log(data, userDeviceInfo)
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
