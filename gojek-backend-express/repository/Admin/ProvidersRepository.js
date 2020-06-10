@@ -38,7 +38,7 @@ module.exports = function () {
         if (data.IsDeliveryOpt == 0) {
           query.where('Type', data.type)
           query.whereIn('Status', data.Status)
-          query.where('IsDeliveryOpt', data.IsDeliveryOpt)
+          query.where('IsDeliveryOpt', '1')
         } else {
           query.whereIn('Status', data.Status)
           query.where('Type', data.type)
@@ -84,7 +84,7 @@ module.exports = function () {
         if (data.IsDeliveryOpt == 0) {
           query.where('Type', data.type)
           query.whereIn('Status', data.Status)
-          query.where('IsDeliveryOpt', data.IsDeliveryOpt)
+          query.where('IsDeliveryOpt', '1')
         } else {
           query.whereIn('Status', data.Status)
           query.where('Type', data.type)

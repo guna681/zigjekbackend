@@ -934,7 +934,11 @@ module.exports = function (server, validator) {
   })
   server.post(basePath + 'providerList/:page', [
     validator.check('subCategoryId')
-      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1], SubCategory Id'),
+      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1], SubCategory Id')
+      .optional(),
+    validator.check('categoryId')
+      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1], SubCategory Id')
+      .optional(),
     validator.check('page')
       .isNumeric().withMessage('INVALID: $[1],Page No.')
   ], server.auth, function (request, response) {

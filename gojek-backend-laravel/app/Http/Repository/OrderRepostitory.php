@@ -379,7 +379,7 @@ public function addRating($data,$userId)
     {
         $data = Orders::select('Booking.*','Provider.Id as deliveryStaffId','Provider.FirstName as staffName')
                         ->where('outletId',$outletId)
-                        ->whereNotIn('Booking.orderStatus', ['DELIVERED','Rejected'])
+                        ->whereNotIn('Booking.Status', ['completed','cancelled'])
                         // ->where('orderStatus','unassigned')
                         ->leftjoin('Provider', function ($join) {
                             $join->on('Booking.ProviderId', '=', 'Provider.Id');

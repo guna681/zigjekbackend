@@ -512,7 +512,7 @@ class UserRepository
     public function userLogout($data){
         DB::beginTransaction();
         try{
-            $data=UserDevices::where('UserId',$data)->update(['DeviceId'=>'']);
+            $data=UserDevices::where('UserId',$data)->update(['GCMId'=>'']);
 
         }catch(\Illuminate\Database\QueryException $ex){
             $jsonresp=$ex->getMessage();

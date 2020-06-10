@@ -27,12 +27,12 @@ module.exports = function () {
       var ridevehicletypecount = await dashboardRepository.dashboardListView(ridevehicletype)
       var dayearning = await dashboardRepository.dashboardBookingEarningsView(day)
       var monthearning = await dashboardRepository.dashboardBookingEarningsView(month)
-      var weekearning = await dashboardRepository.dashboardBookingView(week)
+      var weekearning = await dashboardRepository.dashboardBookingEarningsView(week)
       var yearearning = await dashboardRepository.dashboardBookingEarningsView(year)
       var completedBooking = await dashboardRepository.dashboardBookingCountView(completed)
       var cancelledBooking = await dashboardRepository.dashboardBookingCountView(cancelled)
       var activeBooking = await dashboardRepository.dashboardBookingCountView(accepted)
-
+      
       dashboard.push({
         userscount: userscount.data['count'],
         providerscount: providerscount.data['count'],

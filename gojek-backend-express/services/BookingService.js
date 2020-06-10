@@ -158,6 +158,7 @@ module.exports = function () {
   }
 
   this.updateProviderInBooking = async (bookingId, providerId, providerDetails) => {
+    console.log(bookingId, providerId, providerDetails)
     var response = {}
     return new Promise(async function (resolve) {
       try {

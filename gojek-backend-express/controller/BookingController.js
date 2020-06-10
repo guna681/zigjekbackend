@@ -198,7 +198,6 @@ module.exports = function () {
       var status = ['waiting']
       var providerList
       var userDeviceInfo
-      var providerId
       var providerInfo
       var providerDetails = null
       const weights = [
@@ -239,7 +238,6 @@ module.exports = function () {
         bookingService.changeBookingStatus(bookingId, bookingProcess)
 
         providerList = await providerService.getActiveProviderByCellId(source, neighbouringCellID, rideType, activeProviderStatus, weights, providerBlockList(mergeProviderBlockList))
-
         if (providerList.error) {
           content.data = 'booking_cancelled'
           content.title = 'Booking Cancelled'
@@ -251,7 +249,7 @@ module.exports = function () {
           response.error = true
           response.msg = providerList.msg
         } else {
-          providerId = providerList.data[0].ProviderId
+          var providerId = providerList.data[0].ProviderId
           providerInfo = await providerService.getProviderInfo(providerId)
           if (!providerInfo.error) {
             providerDetails = providerInfo.data

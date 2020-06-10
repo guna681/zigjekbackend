@@ -42,7 +42,7 @@ Class OrderManagementRepostitory
     {
 
         $perPage = Constant::PERPAGE;
-        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.orderStatus','Booking.created_at','Users.Mobile','Users.Email','Booking.updated_at')
+        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.Status as orderStatus','Booking.created_at','Users.Mobile','Users.Email','Booking.updated_at')
                           ->leftjoin('Users','Booking.userId','=','Users.id')
                           // ->where('Orders.orderStatus','<>','DELIVERED')
                           ->where('outletId',$outletId)
@@ -56,10 +56,10 @@ Class OrderManagementRepostitory
     {
 
         $perPage = Constant::PERPAGE;
-        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.orderStatus','Booking.created_at as orderPlaceTime','Booking.confirmedTime','Users.Mobile','Users.Email','Booking.updated_at')
+        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.Status as orderStatus','Booking.created_at as orderPlaceTime','Booking.confirmedTime','Users.Mobile','Users.Email','Booking.updated_at')
                           ->leftjoin('Users','Booking.userId','=','Users.Id')
                           // ->where('Orders.orderStatus','=','DELIVERED')
-                          ->whereIN('Booking.orderStatus', ['DELIVERED','Rejected'])
+                          ->whereIN('Booking.Status', ['completed','cancelled'])
                           ->where('outletId',$outletId)
                           ->orderby('Booking.Id', 'DESC')
                           ->paginate($perPage, ['*'], 'page', $pageNumber);
@@ -71,9 +71,9 @@ Class OrderManagementRepostitory
     {
 
         $perPage = Constant::PERPAGE;
-        $data    = Orders::select('Orders.id as orderId','Orders.orderReferenceId','Orders.netAmount','Orders.orderStatus','Orders.orderPlaceTime','Orders.confirmedTime','Users.mobileNumber','Users.email','Orders.updated_at','Orders.markReady','DeliveryStaff.name as staffName','Orders.restaurantEta')
+        $data    = Orders::select('Orders.id as orderId','Orders.orderReferenceId','Orders.netAmount','Orders.Status as orderStatus','Orders.orderPlaceTime','Orders.confirmedTime','Users.mobileNumber','Users.email','Orders.updated_at','Orders.markReady','DeliveryStaff.name as staffName','Orders.restaurantEta')
                           ->leftjoin('Users','Orders.userId','=','Users.id')
-                          ->whereNotIn('Orders.orderStatus', ['DELIVERED','Rejected'])
+                          ->whereNotIn('Orders.orderStatus', ['completed','cancelled'])
                           ->leftjoin('DeliveryStaff', function ($join) {
                             $join->on('Orders.deliveryStaffId', '=', 'DeliveryStaff.id');
                         })

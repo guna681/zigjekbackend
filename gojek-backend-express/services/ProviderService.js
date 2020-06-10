@@ -1746,6 +1746,7 @@ module.exports = function () {
           details.firstName = element.FirstName
           details.lastName = element.LastName
           details.rating = element.Rating
+          details.image = element.Image
           details.latitude = element.Latitude === null ? '0' : element.Latitude
           details.longitude = element.Longitude === null ? '0' : element.Longitude
           return details

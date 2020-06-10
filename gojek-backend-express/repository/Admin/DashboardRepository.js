@@ -71,17 +71,13 @@ module.exports = function () {
     })
   }
 
-  // Dashboard booking count
-  this.dashboardBookingCountView = (data) => {
-  	console.log(data)
+   // Dashboard booking count
+   this.dashboardBookingCountView = (data) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(booking).where(`Status`, data).count(`Id as count`)
-     // var query = knex(booking).count(`Id as count`)
-        // query.where(`Status`, data)
         .then((result) => {
-        	console.log(result)
           if (result.length) {
             output.error = false
             output.data = result[0]
@@ -99,5 +95,5 @@ module.exports = function () {
           knex.destroy()
         })
     })
-  }  
+  } 
 }

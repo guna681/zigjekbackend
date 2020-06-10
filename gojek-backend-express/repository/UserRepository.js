@@ -411,7 +411,6 @@ module.exports = function () {
   }
 
   this.updateUserFCMToken = (data, userDeviceInfo) => {
-    console.log(data, userDeviceInfo)
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
