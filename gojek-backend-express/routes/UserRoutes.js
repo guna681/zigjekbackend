@@ -937,7 +937,7 @@ module.exports = function (server, validator) {
       .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1], SubCategory Id')
       .optional(),
     validator.check('categoryId')
-      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1], SubCategory Id')
+      .isLength({ min: 1, max: 20 }).withMessage('INVALID: $[1], CategoryId')
       .optional(),
     validator.check('page')
       .isNumeric().withMessage('INVALID: $[1],Page No.')
@@ -953,6 +953,27 @@ module.exports = function (server, validator) {
       })
     } else {
       userController.getProviderListByServiceCtrl(body, (result) => {
+        errorController.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
+  })
+
+  server.post(basePath + 'providerProfile/', [
+    validator.check('providerId')
+      .isNumeric().withMessage('INVALID: $[1],ProviderId')
+  ], server.auth, function (request, response) {
+    var body = request.body
+    body.auth = request.params.auth
+    const lang = request.headers.lang || 'default'
+    const error = validator.validation(request)
+    if (error.array().length) {
+      errorController.requestHandler(error.array(), true, lang, (message) => {
+        return response.send(message)
+      })
+    } else {
+      userController.getProviderProfileViewCtrl(body, (result) => {
         errorController.ctrlHandler([result], result.error, lang, (message) => {
           return response.send(message)
         })

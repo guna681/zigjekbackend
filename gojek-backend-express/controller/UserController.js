@@ -957,7 +957,12 @@ module.exports = function () {
   this.getProviderListByServiceCtrl = async (req, callback) => {
     var response = {}
     try {
-      var data = { SubCategoryId: req.subCategoryId }
+      var data
+      if (req.CategoryId) {
+        data = { SubCategoryId: req.subCategoryId }
+      } else {
+        data = { categoryId: req.categoryId }
+      }
       var page = req.page
       providerService.getProviderListByService(data, page, (result) => {
         if (result.error) {
@@ -967,6 +972,29 @@ module.exports = function () {
           response.error = false
           response.msg = result.msg
           response.data = result.data
+        }
+        callback(response)
+      })
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
+
+  this.getProviderProfileViewCtrl = async (req, callback) => {
+    var response = {}
+    try {
+      var providerId = req.providerId
+      providerService.getProviderProfileViewService(providerId, (result) => {
+        if (result.error) {
+          response.error = true
+          response.msg = result.msg
+        } else {
+          response.error = false
+          response.msg = result.msg
+          response.data = {}
+          response.data = { providerInfo: result.data, review: [] }
         }
         callback(response)
       })

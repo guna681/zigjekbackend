@@ -80,7 +80,7 @@ Class OrderManagementService
             $Item->orderPlaceTime = $orderPlaceTime;	
             $Item->orderReferenceId = substr($Item->orderReferenceId, 5);
             if ($Item->orderStatus = 'completed') {
-            $Item->orderStatus = 'Delivered';    
+            $Item->orderStatus = 'delivered';    
             } else {
             $Item->orderStatus = 'cancelled';      
             }
