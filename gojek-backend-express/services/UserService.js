@@ -188,7 +188,7 @@ module.exports = function () {
 
             var deviceDetails = {}
             deviceDetails.UserId = userInfo.result[0].Id
-            // deviceDetails.DeviceId = deviceId
+            deviceDetails.DeviceId = deviceId
             var updateLangName = {}
             var UserId = userInfo.result[0].Id
             updateLangName.Language = data.languageName

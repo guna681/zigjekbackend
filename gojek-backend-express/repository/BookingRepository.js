@@ -340,7 +340,6 @@ module.exports = function () {
         .where('ProviderId', providerId)
         .where('Status', 'completed')
         .then((result) => {
-          console.log(result)
           if (result.length) {
             output.error = false
             output.result = result[0]
@@ -656,7 +655,7 @@ module.exports = function () {
       knex(booking)
         .select(knex.raw(`Booking.Id, CONCAT(Users.FirstName,' ',Users.LastName) as UserName, 
         Booking.OutletName, Booking.FromLocation, Booking.ToLocation, 
-        Booking.TotalAmount, Booking.CurrencyType, Booking.CreateAt, Booking.PaymentMode, Booking.Type`))
+        Booking.TotalAmount, Booking.CurrencyType, Booking.CreateAt, Booking.PaymentMode, Booking.Type, Booking.Status`))
         .join(users, 'Booking.UserId', 'Users.Id')
         .where(data)
         .limit(limit)

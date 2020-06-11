@@ -29,14 +29,22 @@ module.exports = function () {
     var query = knex(provider).count(`Id as count`)
       // .where(`Type`, 'taxi')
       // .where(`IsDeliveryOpt`, IsDeliveryOpt)
+      if (data.Status == 'pending') {
+       data.Status = ['pending']
+      } else {
+       data.Status = ['approved', 'verified', 'reject'] 
+      }
       if (data.type == 'taxi') {
         if (data.IsDeliveryOpt == 0) {
           query.where('Type', data.type)
-          query.where('IsDeliveryOpt', data.IsDeliveryOpt)
+          query.whereIn('Status', data.Status)
+          query.where('IsDeliveryOpt', '1')
         } else {
+          query.whereIn('Status', data.Status)
           query.where('Type', data.type)
         }
       } else {
+        query.whereIn('Status', data.Status)
         query.where('Type', data.type)
       }
       query.then((result) => {
@@ -63,6 +71,11 @@ module.exports = function () {
     var limit = 10
     var page = data.page
     var offset = (page - 1) * limit
+    if (data.Status == 'pending') {
+       data.Status = ['pending']
+      } else {
+       data.Status = ['approved', 'verified', 'reject'] 
+      }
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       var query = knex(provider).select()
@@ -70,12 +83,15 @@ module.exports = function () {
       if (data.type == 'taxi') {
         if (data.IsDeliveryOpt == 0) {
           query.where('Type', data.type)
-          query.where('IsDeliveryOpt', data.IsDeliveryOpt)
+          query.whereIn('Status', data.Status)
+          query.where('IsDeliveryOpt', '1')
         } else {
+          query.whereIn('Status', data.Status)
           query.where('Type', data.type)
         }
       } else {
-        query.where('Type', data.type)
+          query.where('Type', data.type)
+          query.whereIn('Status', data.Status)
       }
       query.then((result) => {
         if (result.length) {

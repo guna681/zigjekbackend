@@ -106,10 +106,12 @@ module.exports = function () {
       Users.LastName as uLastName,Users.Image as uImage,Users.Email as uEmail,CONCAT(Users.ExtCode, Users.Mobile) as uMobile,
       Provider.FirstName as pFirstName,Provider.LastName as pLastName,Provider.Image as pImage,
       Provider.Email as pEmail,CONCAT(Provider.ExtCode, Provider.Mobile) as pMobile,RideVehicleType.Name,
-      Country.CountryName`))
+      Country.CountryName,ServiceCategory.Name as ServiceCategoryName,ServiceSubCategory.Name as ServiceSubCategoryName`))
         .leftJoin('Users', 'Users.Id', `${booking}.UserId`)
         .leftJoin('Provider', 'Provider.Id', `${booking}.ProviderId`)
         .leftJoin('RideVehicleType', 'RideVehicleType.Id', `${booking}.RideTypeId`)
+        .leftJoin('ServiceCategory', 'ServiceCategory.Id', `${booking}.ServiceCategoryId`)
+        .leftJoin('ServiceSubCategory', 'ServiceSubCategory.Id', `${booking}.ServiceSubCategoryId`)
         .leftJoin('Country', 'Country.Id', `${booking}.CountryId`)
         .where(`${booking}.Id`, id)
         .then((result) => {

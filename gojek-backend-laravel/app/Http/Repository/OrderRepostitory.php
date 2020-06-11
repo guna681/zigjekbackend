@@ -298,7 +298,7 @@ public function updateOrderDetail($data)
 public function updateLastMile($lastMileData)
     {
         $orders = Orders::where(['id'=>$lastMileData->orderId])
-                        ->update(['lastMile' =>$lastMileData->outletToRestaurantDistance,'eta'=>$lastMileData->etaInTimestamp,'SourceLat'=>$lastMileData->SourceLat,'SourceLong'=>$lastMileData->SourceLong,'s2CellId'=>$lastMileData->s2CellId,'FromLocation'=>$lastMileData->outletAddress,'Distance'=>$lastMileData->outletToRestaurantDistance,'OutletName'=>$lastMileData->outletName,'serviceCommission'=>$lastMileData->serviceCommission]);
+                        ->update(['lastMile' =>$lastMileData->outletToRestaurantDistance,'eta'=>$lastMileData->etaInTimestamp,'SourceLat'=>$lastMileData->SourceLat,'SourceLong'=>$lastMileData->SourceLong,'s2CellId'=>$lastMileData->s2CellId,'FromLocation'=>$lastMileData->outletAddress,'Distance'=>$lastMileData->outletToRestaurantDistance,'OutletName'=>$lastMileData->outletName,'serviceCommission'=>$lastMileData->serviceCommission,'ContactNo'=>$lastMileData->contactNumber]);
         return $orders;
     }
 
@@ -309,13 +309,28 @@ public function updateFirstMile($orderId,$distance,$etaInMinutes)
         return $orders;
     }
 
- public function findRatingStatus($userId)
-    {
+ // public function findRatingStatus($userId)
+ //    {
 
-        $data = Orders::select('Orders.id as orderId','Orders.outletId as outletId','Orders.deliveryStaffId','Outlets.name as outletName','DeliveryStaff.name as deliverystaffName','Orders.deliveredTime as deliveredTime')
-                        ->leftjoin('Outlets','Outlets.id','=','Orders.outletId')
-                        ->leftjoin('DeliveryStaff','DeliveryStaff.id','=','Orders.deliveryStaffId')
-                        ->where(['Orders.userId'=>$userId,'Orders.isRated'=>'NOTRATED'])
+ //        $data = Orders::select('Orders.id as orderId','Orders.outletId as outletId','Orders.deliveryStaffId','Outlets.name as outletName','DeliveryStaff.name as deliverystaffName','Orders.deliveredTime as deliveredTime')
+ //                        ->leftjoin('Outlets','Outlets.id','=','Orders.outletId')
+ //                        ->leftjoin('DeliveryStaff','DeliveryStaff.id','=','Orders.deliveryStaffId')
+ //                        ->where(['Orders.userId'=>$userId,'Orders.isRated'=>'NOTRATED'])
+ //                        ->first();
+ //        return $data;
+ //    }
+
+    public function findRatingStatus($userId)
+    {
+        // if (!$type){
+        //     $type = 'Food';
+        //  } else {
+        //     $data = $type;
+        //  }
+        $data = Orders::select('Booking.Id as orderId','Booking.outletId as outletId','Booking.ProviderId as deliveryStaffId','Outlets.name as outletName','Provider.FirstName as deliverystaffName','Booking.updated_at as deliveredTime','Booking.orderReferenceId')
+                        ->leftjoin('Outlets','Outlets.id','=','Booking.outletId')
+                        ->leftjoin('Provider','Provider.Id','=','Booking.ProviderId')
+                        ->where(['Booking.UserId'=>$userId,'Booking.isRated'=>'NOTRATED','Booking.orderStatus'=>'delivered'])
                         ->first();
         return $data;
     }
@@ -364,7 +379,7 @@ public function addRating($data,$userId)
     {
         $data = Orders::select('Booking.*','Provider.Id as deliveryStaffId','Provider.FirstName as staffName')
                         ->where('outletId',$outletId)
-                        ->whereNotIn('Booking.orderStatus', ['DELIVERED','Rejected'])
+                        ->whereNotIn('Booking.Status', ['completed','cancelled'])
                         // ->where('orderStatus','unassigned')
                         ->leftjoin('Provider', function ($join) {
                             $join->on('Booking.ProviderId', '=', 'Provider.Id');

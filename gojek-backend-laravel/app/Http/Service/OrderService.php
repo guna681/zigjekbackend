@@ -102,6 +102,7 @@ Class  OrderService
               $lastMileData->s2CellId   = $orderdata->s2CellId;
               $lastMileData->outletAddress = $orderdata->outletAddress;
               $lastMileData->outletName   = $orderdata->outletName;
+              $lastMileData->contactNumber   = $orderdata->contactNumber;
               $lastMileData->serviceCommission   = $orderdata->serviceCommission;
             $updateLastMile                = $orderRepostitory->updateLastMile($lastMileData);
             // if($distanceData->error === false) {     
@@ -189,6 +190,25 @@ Class  OrderService
                         $data->errorMessage = $notificationResp;
 
             }
+            if ($orderdata->restaurantDeviceToken){
+            Log::debug($orderdata->restaurantDeviceToken);
+                                   //notification
+            $title              = 'New Order';
+            $notificationData   = array();
+            $notificationData['message']     = 'New Incoming Order';
+            $notificationData['os']          = $orderdata->os;
+            $notificationData['body']        =  'New Incoming Order';
+            $notificationData['notifyType']        =  'new Order';
+            $notificationData['deviceToken'] = $orderdata->restaurantDeviceToken;
+            $notificationData['orderId'] = $orderId;
+            $notificationData['orderReferenceId'] = $orders->orderRefferenceId;
+            $pushNotification = new FCMPushNotificationServiceProvider();
+            $pushNotification->setTitle($title);
+            $notificationResp = $pushNotification->sendPushNotification($notificationData);
+            Log::debug($notificationResp);
+
+                        $data->errorMessage = $notificationResp; 
+        }
             // $title= __('validation.invoiceTitle');
             // $mailService->setTitle($title);
             // $mailService->setReceiver($userDetails->email);
@@ -706,6 +726,7 @@ $orderCustomisationItems = $orderRepostitory->orderCustomisationItems($cart['id'
             $orderdata->displayTotalItems    = count($orderDish) . __('validation.item');
             $orderdata->outletId             = $outlet->id;
             $orderdata->outletName           = $outlet->name;
+            $orderdata->contactNumber        = $outlet->contactNumber;
             $orderdata->latitude           = $outlet->latitude;
             $orderdata->longitude           = $outlet->longitude;
             $orderdata->s2CellId           = $outlet->s2CellId;
@@ -720,6 +741,8 @@ $orderCustomisationItems = $orderRepostitory->orderCustomisationItems($cart['id'
 
             /** charges calculation  for orders */
             $orderdata->dishes      = $orderDish;
+            $orderdata->restaurantDeviceToken      = $outlet->deviceToken;
+            $orderdata->os      = $outlet->os;
             $orderdata->charges     = $this->getCharges($outlet->id, array_flatten($orderDish), $order->couponName, $orderdata->paymentMethod,$order->discount);
 
             $data->error        = Common::error_false;

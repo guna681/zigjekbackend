@@ -27,7 +27,7 @@ class DishRepostitory extends Dishes
     {
         $data = array();
         $data = OutletMenuCategories::select('id as categoryId', 'name as categoryName')
-                                  ->where(['outletId' => $outletId, 'parentId' => '0'])
+                                  ->where(['outletId' => $outletId, 'parentId' => '0','status'=>'1'])
                                   ->get();
 
         return $data->toarray();

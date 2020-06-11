@@ -42,6 +42,7 @@ class OutletsRepostitory extends Outlets
         $outlets->balanceAmount = $query->balanceAmount;
         $outlets->status = $query->status;
         $outlets->image  = $query->image;
+        $outlets->contactNumber = $query->contactNumber;
         return $outlets;
 
     }
@@ -130,7 +131,7 @@ class OutletsRepostitory extends Outlets
             $s2Cell =$s2cellIdgenerated->getCellId($data->latitude,$data->longitude);
 
             $update_data=['name'=>$data->outletName,'email'=>$data->email,'isPureVeg'=>$data->isPureVeg,'costForTwo'=>$data->costForTwo,'preparationTime'=>$data->preparationTime,'addressLineOne'=>$data->addressLineOne,'addressLineTwo'=>$data->addressLineTwo,'area'=>$data->area,'city'=>$data->city,'contactNumber'=>$data->contactNumber,'latitude'=>$data->latitude,'longitude'=>$data->longitude,
-            's2CellId'=>$s2Cell->data->id,'s2Key'=>$s2Cell->data->key,'street'=>$data->street,'restaurantCommission'=>$data->commission,'status'=>$data->status];
+            's2CellId'=>$s2Cell->data->id,'s2Key'=>$s2Cell->data->key,'street'=>$data->street,'restaurantCommission'=>$data->commission,'status'=>$data->status,'restaurantId'=>$data->restaurantId];
 
             if($data->password){$update_data['password']=Hash::make($data->password);}
 

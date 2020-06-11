@@ -78,7 +78,12 @@ Class OrderManagementService
             $orderPlaceTime = $stamp*1000;	
             $Item->netAmount = $currency.number_format($Item->netAmount,2);	
             $Item->orderPlaceTime = $orderPlaceTime;	
-            $Item->orderReferenceId = substr($Item->orderReferenceId, 5);	
+            $Item->orderReferenceId = substr($Item->orderReferenceId, 5);
+            if ($Item->orderStatus = 'completed') {
+            $Item->orderStatus = 'Delivered';    
+            } else {
+            $Item->orderStatus = 'cancelled';      
+            }
         }	
         $data = new DataService();	
         if($orders){	
@@ -240,7 +245,28 @@ die;
             $ordersData->orderId          = $orders->Id;
             $ordersData->orderReferenceId = $orders->orderReferenceId;
             $ordersData->netAmount        = $orders->netAmount;
-            $ordersData->orderStatus      = $orders->orderStatus;
+            switch ($order->Status) {
+                    case "accepted":
+                    $orderDetails->orderStatus = "accepted";
+                    break;
+                    case "arrived":
+                    $orderDetails->orderStatus = "reachoutlet";
+                    break;
+                    case "pickedup":
+                    $orderDetails->orderStatus = "pickedup";
+                    break;
+                    case "dropped":
+                    $orderDetails->orderStatus = "reachuserlocation";
+                    break;
+                    case "completed":
+                    $orderDetails->orderStatus = "delivered";
+                    break;
+                    case "rejected":
+                    $orderDetails->orderStatus = "rejected";
+                    break;
+                    case "unassigned":
+                    $orderDetails->orderStatus = "unassigned";
+                    }
             $ordersData->acceptedTime     = $orders->acceptedTime;
             $ordersData->rejectedTime     = $orders->rejectedTime;
             $ordersData->pickedupTime     = $orders->pickedupTime;
@@ -304,16 +330,38 @@ die;
             $ordersData->orderId          = $orders->Id;
             // $ordersData->orderReferenceId = $orders->orderReferenceId;
             $ordersData->netAmount        = $currency.$orders->netAmount;
-            $ordersData->orderStatus      = $orders->orderStatus;
+            // $ordersData->orderStatus      = $orders->Status;
+            switch ($orders->Status) {
+                    case "accepted":
+                    $ordersData->orderStatus = "accepted";
+                    break;
+                    case "arrived":
+                    $ordersData->orderStatus = "reachoutlet";
+                    break;
+                    case "pickedup":
+                    $ordersData->orderStatus = "pickedup";
+                    break;
+                    case "dropped":
+                    $ordersData->orderStatus = "reachuserlocation";
+                    break;
+                    case "completed":
+                    $ordersData->orderStatus = "delivered";
+                    break;
+                    case "rejected":
+                    $ordersData->orderStatus = "rejected";
+                    break;
+                    case "unassigned":
+                    $ordersData->orderStatus = "unassigned";
+                    }
             $ordersData->acceptedTime     = $orders->acceptedTime;
             $ordersData->rejectedTime     = $orders->rejectedTime;
             $ordersData->pickedupTime     = $orders->pickedupTime;
             $ordersData->confirmedTime    = $orders->confirmedTime;
             $ordersData->deliveredTime    = $orders->deliveredTime;
             $ordersData->userId           = $orders->userId;
-            $ordersData->userName         = $orders->userName;
-            $ordersData->userMobileNumber = $orders->mobileNumber;
-            $ordersData->userEmail        = $orders->email;
+            $ordersData->userName         = $orders->FirstName;
+            $ordersData->userMobileNumber = $orders->Mobile;
+            $ordersData->userEmail        = $orders->Email;
             $ordersData->deliveryAddress  = $orders->deliveryAddress;
             $ordersData->deliveryAddressType = $orders->deliveryAddressType;
 
@@ -321,7 +369,7 @@ die;
             $ordersData->staffMobileNumber = $orders->staffMobileNumber;
             $ordersData->staffeEmail       = $orders->staffeEmail;
             $ordersData->tripStatus        = $orders->tripStatus;
-            $ordersData->orderSuggestions  = $orders->orderSuggestions;
+            $ordersData->orderSuggestions  = $orders->Description;
             $ordersData->markReady  = $orders->markReady;
             if ($orders->confirmedTime == NULL) {
             $ordersData->isConfirmed  = 0;
@@ -999,7 +1047,28 @@ die;
                 $orderDetails->orderPlaceTime      = $orderPlaceTime;
                 $orderDetails->orderReferenceId    = substr($order->orderReferenceId, 5);
                 $orderDetails->outletLocation      = $outlet->area;
-                $orderDetails->orderStatus         = $order->orderStatus;
+                    switch ($order->Status) {
+                    case "accepted":
+                    $orderDetails->orderStatus = "accepted";
+                    break;
+                    case "arrived":
+                    $orderDetails->orderStatus = "reachoutlet";
+                    break;
+                    case "pickedup":
+                    $orderDetails->orderStatus = "pickedup";
+                    break;
+                    case "dropped":
+                    $orderDetails->orderStatus = "reachuserlocation";
+                    break;
+                    case "completed":
+                    $orderDetails->orderStatus = "delivered";
+                    break;
+                    case "rejected":
+                    $orderDetails->orderStatus = "rejected";
+                    break;
+                    case "unassigned":
+                    $orderDetails->orderStatus = "unassigned";
+                    }
                 $orderDetails->confirmedTime       = $order->confirmedTime;
                 $orderDetails->markReady           = $order->markReady;
                 if ($order->confirmedTime == NULL) {

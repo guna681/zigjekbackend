@@ -73,7 +73,9 @@ class DashboardRepostitory
 
     public function getOrderCount($outletId)
     {
-        $orders = Orders::where('outletId',$outletId)->count();
+        $orders = Orders::where('outletId',$outletId)
+                  ->where('Status','completed')
+                  ->count();
 
         return $orders;
     }
@@ -82,7 +84,9 @@ class DashboardRepostitory
     public function gettotalIncome($outletId)
     {
 
-        $orders = Outlets::where('id',$outletId)->sum('totalAmount');
+        $orders = Orders::where('outletId',$outletId)
+                  ->where('Status','completed')
+                  ->sum('Estimation');
 
         return $orders;
 
@@ -91,7 +95,9 @@ class DashboardRepostitory
     public function getbalanceIncome($outletId)
     {
 
-        $orders = Outlets::where('id',$outletId)->sum('balanceAmount');
+        $orders = Orders::where('outletId',$outletId)
+                  ->where('Status','completed')
+                  ->sum('Estimation');
 
         return $orders;
 
@@ -99,7 +105,8 @@ class DashboardRepostitory
 
 
     public function getRejectedOrders($outletId){
-        $orders = Orders::where(['outletId'=>$outletId,'orderStatus'=>Constant::REJECTED])->count();
+        // $orders = Orders::where(['outletId'=>$outletId,'orderStatus'=>Constant::REJECTED])->count();
+        $orders = Orders::where(['outletId'=>$outletId,'Status'=>'cancelled'])->count();
 
         return $orders;
 

@@ -22,8 +22,11 @@ module.exports = function () {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(data).select(knex.count('Id').as('count'))
-        .then((result) => {
+     var query = knex(data).count(`Id as count`)
+     if (data == 'Booking') {
+        query.where(`Status`, 'completed')
+     }
+        query.then((result) => {
           if (result.length) {
             output.error = false
             output.data = result[0]
@@ -48,6 +51,7 @@ module.exports = function () {
       var knex = new Knex(config)
       knex(booking).select().sum('TotalAmount as Total')
         .whereRaw(`${name}(CreateAt) = ?`, [knex.raw(`${name}(now())`)])
+        .where(`Status`, 'completed')
         .then((result) => {
           if (result.length) {
             output.error = false
@@ -66,4 +70,30 @@ module.exports = function () {
         })
     })
   }
+
+   // Dashboard booking count
+   this.dashboardBookingCountView = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(booking).where(`Status`, data).count(`Id as count`)
+        .then((result) => {
+          if (result.length) {
+            output.error = false
+            output.data = result[0]
+          } else {
+            output.error = true
+          }
+          console.log(result)
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  } 
 }

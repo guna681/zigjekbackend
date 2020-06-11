@@ -534,7 +534,7 @@ module.exports = function () {
         var data = {}
         var receipt = []
         data['id'] = bookingInfo.Id
-        data['orderRefferenceID'] = 'ORDER No. #' + bookingInfo.Id
+        data['orderRefferenceID'] = bookingInfo.Type !== 'delivery' ? 'ORDER No. #' + bookingInfo.Id : bookingInfo.orderReferenceId
         data['createdTime'] = bookingInfo.CreateAt
         data['fromLocation'] = bookingInfo.FromLocation
         data['toLocation'] = bookingInfo.ToLocation
