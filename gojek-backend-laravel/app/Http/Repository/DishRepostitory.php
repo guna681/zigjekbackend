@@ -39,7 +39,7 @@ class DishRepostitory extends Dishes
         $data = array();
 
         $data = OutletMenuCategories::select('id as categoryId', 'parentId', 'name as categoryName')
-                                 ->where('outletId', $outletId)
+                                 ->where(['outletId'=> $outletId,'status'=>'1'])
                                  ->where('parentId', '!=', '0')
                                  ->get();
 
@@ -51,11 +51,13 @@ class DishRepostitory extends Dishes
     public function getRecommendedDihses($outletId)
     {
         $data = array();
-        $data = Dishes::select('id as dishId', 'name as dishName', 'categoryId', 'isRecommended', 'price', 'image', 'showFromTime', 'showToTime', 'isVeg','slashedPrice')
-                      ->where('isRecommended', 1)
-                      ->where('outletId', $outletId)
-                      ->where('status','=', 1)
-                      ->whereNull('deleted_at')
+        $data = Dishes::select('Dishes.id as dishId', 'Dishes.name as dishName', 'categoryId', 'isRecommended', 'price', 'image', 'showFromTime', 'showToTime', 'isVeg','slashedPrice')
+                      ->where('Dishes.isRecommended', 1)
+                      ->where('Dishes.outletId', $outletId)
+                      ->where('Dishes.status','=', 1)
+                      ->join('Outlet_MenuCategories','Dishes.categoryId','=','Outlet_MenuCategories.id')
+                      ->where(['Outlet_MenuCategories.status'=>'1'])
+                      ->whereNull('Dishes.deleted_at')
                       ->get();
 
         return $data;

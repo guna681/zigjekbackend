@@ -20,6 +20,9 @@ module.exports = function () {
     var completed = 'completed'
     var cancelled = 'cancelled'
     var accepted  = 'accepted'
+    var taxi = 'taxi';
+    var delivery = 'delivery';
+    var services = 'services';
     try {
       var userscount = await dashboardRepository.dashboardListView(users)
       var providerscount = await dashboardRepository.dashboardListView(providers)
@@ -32,6 +35,10 @@ module.exports = function () {
       var completedBooking = await dashboardRepository.dashboardBookingCountView(completed)
       var cancelledBooking = await dashboardRepository.dashboardBookingCountView(cancelled)
       var activeBooking = await dashboardRepository.dashboardBookingCountView(accepted)
+      var taxiBookingCount = await dashboardRepository.bookingCountView(taxi)
+      var deliveryBookingCount = await dashboardRepository.bookingCountView(delivery)
+      var servicesBookingCount = await dashboardRepository.bookingCountView(services)
+
       
       dashboard.push({
         userscount: userscount.data['count'],
@@ -44,10 +51,14 @@ module.exports = function () {
         yearearning: yearearning.data['Total'],
         completedBookingCount: completedBooking.data['count'],
         cancelledBookingCount: cancelledBooking.data['count'],
-        activeBookingCount: activeBooking.data['count']
+        activeBookingCount: activeBooking.data['count'],
+        taxiBookingCount: taxiBookingCount.data['count'],
+        deliveryBookingCount: deliveryBookingCount.data['count'],
+        servicesBookingCount: servicesBookingCount.data['count']
       })
       if (userscount.error === false && providerscount.error === false && bookingscount.error === false && ridevehicletypecount.error === false &&
-            dayearning.error === false && monthearning.error === false && weekearning.error === false && yearearning.error === false && completedBooking.error === false && cancelledBooking.error === false && activeBooking.error === false) {
+            dayearning.error === false && monthearning.error === false && weekearning.error === false && yearearning.error === false && completedBooking.error === false && cancelledBooking.error === false && activeBooking.error === false
+           && taxiBookingCount.error === false && deliveryBookingCount.error === false && servicesBookingCount.error === false) {
         response.error = false
         response.data = dashboard
         response.msg = 'VALID'

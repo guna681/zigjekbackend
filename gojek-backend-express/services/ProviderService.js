@@ -1781,6 +1781,7 @@ module.exports = function () {
           data.mobile = element.Mobile
           data.countryCode = element.ExtCode
           data.rating = element.Rating
+          data.about = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam in lorem iaculis, ullamcorper ligula eu, vestibulum neque. Fusce neque augue, suscipit sed arcu non, accumsan hendrerit purus. Nunc nec nulla sodales, tincidunt urna vel, gravida leo.'
           return data
         })
         response.error = false

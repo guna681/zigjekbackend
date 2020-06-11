@@ -960,7 +960,7 @@ module.exports = function (server, validator) {
     }
   })
 
-  server.post(basePath + 'providerProfile/', [
+  server.post(basePath + 'providerProfile', [
     validator.check('providerId')
       .isNumeric().withMessage('INVALID: $[1],ProviderId')
   ], server.auth, function (request, response) {

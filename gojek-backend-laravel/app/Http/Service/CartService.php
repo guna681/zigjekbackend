@@ -76,7 +76,8 @@ Class  CartService{
             $data->errorMessage= __('validation.isCart');
             $billsdata = $this->getDishes($cart);
             $data->dishes      = $billsdata;
-            if ($billsdata->billTotals[0]->itemTotal >= 100) {
+            // print_r($billsdata);
+            if ($billsdata->billTotals[0]->itemTotal > 100) {
             $data->couponName  = $billsdata->billTotals[4]->couponCode;
             $data->couponStatus= true;
             } else {
