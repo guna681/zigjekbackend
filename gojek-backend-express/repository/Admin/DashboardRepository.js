@@ -96,4 +96,30 @@ module.exports = function () {
         })
     })
   } 
+
+  //  booking count
+   this.bookingCountView = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(booking).where(`Status`, 'completed').where('Type',data).count(`Id as count`)
+        .then((result) => {
+          if (result.length) {
+            output.error = false
+            output.data = result[0]
+          } else {
+            output.error = true
+          }
+          console.log(result)
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  } 
 }

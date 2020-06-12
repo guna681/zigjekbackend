@@ -20,7 +20,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/', function (request, response, next) {
   request.headers.lang = request.headers.lang || 'default'
-  // console.log(`IP: ${request.connection.remoteAddress} Method: ${request.method} Route: ${request.originalUrl} Body: ` + JSON.stringify(request.body))
+  console.log(`IP: ${request.connection.remoteAddress} Method: ${request.method} Route: ${request.originalUrl} Body: ` + JSON.stringify(request.body))
   next()
 })
 
@@ -91,6 +91,11 @@ require('./routes/BookingRoutes')(app, validator)
 require('./routes/InvoiceRoutes')(app)
 
 require('./routes/AdminRoutes')(app, validator)
+
+app.use(function (req, res, next) {
+  res.status(404)
+  res.send('404: File Not Found')
+})
 
 http.listen(process.env.PORT, function () {
   console.log('Server is running on ' + process.env.PORT + '!')

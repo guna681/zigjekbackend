@@ -1763,6 +1763,39 @@ module.exports = function () {
     }
   }
 
+  this.getProviderProfileViewService = async (providerId, callback) => {
+    var response = {}
+    try {
+      var providerProfile = await providerRespository.fetchProviderDetailsById(providerId)
+      if (providerProfile.error) {
+        response.error = true
+        response.msg = 'NO_DATA'
+      } else {
+        var profile = providerProfile.result.map((element) => {
+          var data = {}
+          data.id = element.Id
+          data.firstName = element.FirstName
+          data.lastName = element.LastName
+          data.image = element.Image
+          data.email = element.Email
+          data.mobile = element.Mobile
+          data.countryCode = element.ExtCode
+          data.rating = element.Rating
+          data.about = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam in lorem iaculis, ullamcorper ligula eu, vestibulum neque. Fusce neque augue, suscipit sed arcu non, accumsan hendrerit purus. Nunc nec nulla sodales, tincidunt urna vel, gravida leo.'
+          return data
+        })
+        response.error = false
+        response.msg = 'VALID'
+        response.data = profile[0]
+      }
+      callback(response)
+    } catch (response) {
+      response.error = true
+      response.msg = 'OOPS'
+      callback(response)
+    }
+  }
+
   this.getServiceProviderBasedOnDistance = (data) => {
     var response = {}
     var lat = data.latitude

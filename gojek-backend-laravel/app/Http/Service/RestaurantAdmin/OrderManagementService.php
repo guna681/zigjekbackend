@@ -79,10 +79,10 @@ Class OrderManagementService
             $Item->netAmount = $currency.number_format($Item->netAmount,2);	
             $Item->orderPlaceTime = $orderPlaceTime;	
             $Item->orderReferenceId = substr($Item->orderReferenceId, 5);
-            if ($Item->orderStatus = 'completed') {
-            $Item->orderStatus = 'Delivered';    
+            if ($Item->orderStatus == 'completed') {
+            $Item->orderStatus = 'delivered';    
             } else {
-            $Item->orderStatus = 'cancelled';      
+            $Item->orderStatus = 'rejected';      
             }
         }	
         $data = new DataService();	
@@ -250,13 +250,13 @@ die;
                     $orderDetails->orderStatus = "accepted";
                     break;
                     case "arrived":
-                    $orderDetails->orderStatus = "reachoutlet";
+                    $orderDetails->orderStatus = "reachOutlet";
                     break;
                     case "pickedup":
                     $orderDetails->orderStatus = "pickedup";
                     break;
                     case "dropped":
-                    $orderDetails->orderStatus = "reachuserlocation";
+                    $orderDetails->orderStatus = "reachUserLocation";
                     break;
                     case "completed":
                     $orderDetails->orderStatus = "delivered";
@@ -266,6 +266,9 @@ die;
                     break;
                     case "unassigned":
                     $orderDetails->orderStatus = "unassigned";
+                    break;
+                    case "assigned":
+                    $orderDetails->orderStatus = "assigned";
                     }
             $ordersData->acceptedTime     = $orders->acceptedTime;
             $ordersData->rejectedTime     = $orders->rejectedTime;
@@ -336,22 +339,25 @@ die;
                     $ordersData->orderStatus = "accepted";
                     break;
                     case "arrived":
-                    $ordersData->orderStatus = "reachoutlet";
+                    $ordersData->orderStatus = "reachOutlet";
                     break;
                     case "pickedup":
                     $ordersData->orderStatus = "pickedup";
                     break;
                     case "dropped":
-                    $ordersData->orderStatus = "reachuserlocation";
+                    $ordersData->orderStatus = "reachUserLocation";
                     break;
                     case "completed":
                     $ordersData->orderStatus = "delivered";
                     break;
-                    case "rejected":
+                    case "cancelled":
                     $ordersData->orderStatus = "rejected";
                     break;
                     case "unassigned":
                     $ordersData->orderStatus = "unassigned";
+                    break;
+                    case "assigned":
+                    $ordersData->orderStatus = "assigned";
                     }
             $ordersData->acceptedTime     = $orders->acceptedTime;
             $ordersData->rejectedTime     = $orders->rejectedTime;
@@ -1052,13 +1058,13 @@ die;
                     $orderDetails->orderStatus = "accepted";
                     break;
                     case "arrived":
-                    $orderDetails->orderStatus = "reachoutlet";
+                    $orderDetails->orderStatus = "reachOutlet";
                     break;
                     case "pickedup":
                     $orderDetails->orderStatus = "pickedup";
                     break;
                     case "dropped":
-                    $orderDetails->orderStatus = "reachuserlocation";
+                    $orderDetails->orderStatus = "reachUserLocation";
                     break;
                     case "completed":
                     $orderDetails->orderStatus = "delivered";
@@ -1068,6 +1074,9 @@ die;
                     break;
                     case "unassigned":
                     $orderDetails->orderStatus = "unassigned";
+                    break;
+                    case "assigned":
+                    $orderDetails->orderStatus = "assigned";
                     }
                 $orderDetails->confirmedTime       = $order->confirmedTime;
                 $orderDetails->markReady           = $order->markReady;
