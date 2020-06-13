@@ -110,7 +110,7 @@ Class CouponRepostitory{
         $data= DB::table('Coupon')
                   ->select('Coupon.id','Coupon.outletId As outletId','Coupon.discountPerscentage','Coupon.maxDiscount','Coupon.couponName','Coupon.status As couponStatus','Outlets.name','Outlets.email','Outlets.image')
                   ->Join('Outlets', 'Coupon.outletId', '=', 'Outlets.id')
-                  ->where('Coupon.status','1')
+                //   ->where('Coupon.status','1')
                   ->paginate($perPage, ['*'], 'page', $arg->page);
         return $data;
     } 
