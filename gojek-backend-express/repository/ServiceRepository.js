@@ -9,6 +9,7 @@ module.exports = function () {
   const service = 'Service'
   const serviceGroupMapping = 'ServiceGroupMapping'
   const serviceImage = 'ServiceImage'
+  const bannerads = 'Banner'
 
   require('dotenv').config({ path: './../.env' })
   var config = {
@@ -313,6 +314,31 @@ module.exports = function () {
           resolve(err)
         })
         .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+    // banner ads Page Select
+  this.bannerAdsPageView = () => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(bannerads).select('Image_path as image','Title as type','Description as description', 'Url as webUrl')
+        .then((result) => {
+          if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = false
+            output.data = result
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
           knex.destroy()
         })
     })
