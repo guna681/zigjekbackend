@@ -718,7 +718,7 @@ Class UserService
     public function userLogout()
     {
 
-        $userId  = Auth::guard('api')->user()->id;
+        $userId  = Auth::guard('api')->user()->Id;
         $userRepository = new UserRepository();
         $update   = $userRepository->userLogout($userId);
         $data     = new DataService();

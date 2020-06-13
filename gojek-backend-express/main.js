@@ -92,6 +92,11 @@ require('./routes/InvoiceRoutes')(app)
 
 require('./routes/AdminRoutes')(app, validator)
 
+app.use(function (req, res, next) {
+  res.status(404)
+  res.send('404: File Not Found')
+})
+
 http.listen(process.env.PORT, function () {
   console.log('Server is running on ' + process.env.PORT + '!')
 })

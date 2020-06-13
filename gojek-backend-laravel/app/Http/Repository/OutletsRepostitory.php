@@ -42,6 +42,7 @@ class OutletsRepostitory extends Outlets
         $outlets->balanceAmount = $query->balanceAmount;
         $outlets->status = $query->status;
         $outlets->image  = $query->image;
+        $outlets->contactNumber = $query->contactNumber;
         return $outlets;
 
     }

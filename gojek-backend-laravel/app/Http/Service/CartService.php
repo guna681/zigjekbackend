@@ -76,9 +76,9 @@ Class  CartService{
             $data->errorMessage= __('validation.isCart');
             $billsdata = $this->getDishes($cart);
             $data->dishes      = $billsdata;
-            
-            if ($billsdata->billTotals[0]->itemTotal >= 100) {
-            $data->couponName  = $billsdata->billTotals[5]->couponCode;
+            // print_r($billsdata);
+            if ($billsdata->billTotals[0]->itemTotal > 100) {
+            $data->couponName  = $billsdata->billTotals[4]->couponCode;
             $data->couponStatus= true;
             } else {
             $data->couponStatus= false;
@@ -385,8 +385,8 @@ Class  CartService{
         } else {
         $total->couponSavingAmount  = $totalDiscountAmount + $slashedPrice;
         // $total->netAmount   = number_format($topay,2);
-        $total->netAmount   = (string)floatval($topay - $totalDiscountAmount + $dishes->slashedPrice);
-        $total->displayValue= $currency .(string)floatval($topay - $totalDiscountAmount - $dishes->slashedPrice);
+        $total->netAmount   = (string)floatval($topay - $totalDiscountAmount + $slashedPrice);
+        $total->displayValue= $currency .(string)floatval($topay - $totalDiscountAmount - $slashedPrice);
         }
         return array($total);
 
@@ -586,11 +586,11 @@ Class  CartService{
                     $data->couponStatus = true;
                     $data->couponName = $coupon->couponName;
                     $title = $coupon->couponName.' '.'applied';
-                    $message = '₹'.$billsdata->billTotals[5]->couponSavingAmount. ' savings with this coupon';
+                    $message = '₹'.$billsdata->billTotals[4]->couponSavingAmount. ' savings with this coupon';
                     $description = 'keep using coupon and save more with each order';
                     $data->title = $title;
                     $data->message = $message;
-                    $data->amount = $billsdata->billTotals[5]->couponSavingAmount;
+                    $data->amount = $billsdata->billTotals[4]->couponSavingAmount;
                     $data->description = $description;
                     } else {
                     $data->error            = Common::error_true;

@@ -1271,7 +1271,6 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(provider)
-        // .whereIn('Id', data)
         .limit(limit)
         .offset(offset)
         .then((result) => {

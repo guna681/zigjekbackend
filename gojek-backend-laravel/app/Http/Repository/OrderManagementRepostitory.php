@@ -44,9 +44,10 @@ Class OrderManagementRepostitory
         $perPage = Constant::PERPAGE;
         $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.Status as orderStatus','Booking.created_at','Users.Mobile','Users.Email','Booking.updated_at')
                           ->leftjoin('Users','Booking.userId','=','Users.id')
-                          // ->where('Orders.orderStatus','<>','DELIVERED')
+                          ->where('Booking.Status','=','unassigned')
                           ->where('outletId',$outletId)
                           ->where('Booking.RideName','food Delivery')
+                          ->whereNotIn('Booking.Status', ['completed','cancelled'])
                           ->orderby('Booking.id', 'DESC')
                           ->paginate($perPage, ['*'], 'page', $pageNumber);
 
@@ -56,10 +57,10 @@ Class OrderManagementRepostitory
     {
 
         $perPage = Constant::PERPAGE;
-        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.orderStatus','Booking.created_at as orderPlaceTime','Booking.confirmedTime','Users.Mobile','Users.Email','Booking.updated_at')
+        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.Status as orderStatus','Booking.created_at as orderPlaceTime','Booking.confirmedTime','Users.Mobile','Users.Email','Booking.updated_at')
                           ->leftjoin('Users','Booking.userId','=','Users.Id')
                           // ->where('Orders.orderStatus','=','DELIVERED')
-                          ->whereIN('Booking.orderStatus', ['DELIVERED','Rejected'])
+                          ->whereIN('Booking.Status', ['completed','cancelled'])
                           ->where('outletId',$outletId)
                           ->orderby('Booking.Id', 'DESC')
                           ->paginate($perPage, ['*'], 'page', $pageNumber);
@@ -71,14 +72,14 @@ Class OrderManagementRepostitory
     {
 
         $perPage = Constant::PERPAGE;
-        $data    = Orders::select('Orders.id as orderId','Orders.orderReferenceId','Orders.netAmount','Orders.orderStatus','Orders.orderPlaceTime','Orders.confirmedTime','Users.mobileNumber','Users.email','Orders.updated_at','Orders.markReady','DeliveryStaff.name as staffName','Orders.restaurantEta')
+        $data    = Orders::select('Orders.id as orderId','Orders.orderReferenceId','Orders.netAmount','Orders.Status as orderStatus','Orders.orderPlaceTime','Orders.confirmedTime','Users.mobileNumber','Users.email','Orders.updated_at','Orders.markReady','DeliveryStaff.name as staffName','Orders.restaurantEta')
                           ->leftjoin('Users','Orders.userId','=','Users.id')
-                          ->whereNotIn('Orders.orderStatus', ['DELIVERED','Rejected'])
                           ->leftjoin('DeliveryStaff', function ($join) {
                             $join->on('Orders.deliveryStaffId', '=', 'DeliveryStaff.id');
                         })
+                          ->whereNotIn('Orders.Status', ['completed','cancelled'])
                           ->where('outletId',$outletId)
-                          ->orderby('Orders.id', 'DESC')
+                          ->orderby('Orders.Id', 'DESC')
                           ->paginate($perPage, ['*'], 'page', $pageNumber);
 
         return $data;
@@ -86,7 +87,7 @@ Class OrderManagementRepostitory
 
     public function getOrder($orderId, $outletId)
     {
-        $orders =Orders::select(DB::raw("Booking.*,Users.FirstName,Users.Mobile,Users.Email,Users.ExtCode,Provider.FirstName as staffName,Provider.Mobile as staffMobileNumber,Provider.Email as staffeEmail"))
+        $orders =Orders::select(DB::raw("Booking.*,Users.Id as userId,Users.FirstName,Users.Mobile,Users.Email,Users.ExtCode,Provider.FirstName as staffName,Provider.Mobile as staffMobileNumber,Provider.Email as staffeEmail"))
                         ->leftjoin('Users','Booking.UserId','=','Users.Id')
                         ->leftjoin('Provider', function ($join) {
                             $join->on('Booking.ProviderId', '=', 'Provider.Id');
@@ -100,7 +101,8 @@ Class OrderManagementRepostitory
     public function getOrderListPopup($outletId)
     {
         $orders =Orders::select("*")
-                        ->where(['orderStatus'=>'unassigned','assignedTime' => NULL,'confirmedTime' => NULL])
+                        ->where(['Status'=>'unassigned','assignedTime' => NULL,'confirmedTime' => NULL])
+                        // ->whereNotIn('Orders.Status', ['cancelled'])
                         ->where('outletId',$outletId)
                         ->where('isOrderViewed','0')
                         ->orderby('id', 'DESC')
@@ -136,7 +138,7 @@ public function updateOrderViewStatus($arg)
             if($arg->orderStatus == 1) {
                 $update= Orders::where('Id',$arg->orderId)->update(['confirmedTime'=>NOW()]);
             } else {
-                $update = Orders::where('Id',$arg->orderId)->update(['orderStatus'=>'rejected']);
+                $update = Orders::where('Id',$arg->orderId)->update(['Status'=>'cancelled']);
 
             }
             

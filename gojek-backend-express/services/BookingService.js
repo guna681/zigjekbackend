@@ -891,7 +891,7 @@ module.exports = function () {
           var bookingInfo = orderList.result.map(element => {
             var data = {}
             data['bookingNo'] = element.Id
-            data['orderRefferenceID'] = 'ORDER No. #' + element.Id
+            data['orderRefferenceID'] = element.Type !== 'delivery' ? 'ORDER No. #' + element.Id : element.orderReferenceId
             data['outletName'] = element.OutletName
             data['sourceLocation'] = element.FromLocation
             data['sourceLat'] = element.SourceLat
@@ -978,7 +978,6 @@ module.exports = function () {
         }
         resolve(response)
       } catch (err) {
-        console.log(err)
         err.response = true
         resolve(err)
       }
