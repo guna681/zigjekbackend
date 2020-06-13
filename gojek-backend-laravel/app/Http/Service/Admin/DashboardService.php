@@ -17,13 +17,13 @@ Class DashboardService
         $currency         = new CurrencyRepostitory();
         $dashboardRepostitory   = new DashboardRepostitory();
         $widegets               = (object)array();
-        $widegets->users        = $dashboardRepostitory->getCount(Constant::USERS);
+        // $widegets->users        = $dashboardRepostitory->getCount(Constant::USERS);
         $widegets->restaurants  = $dashboardRepostitory->getCount(Constant::RESTAURANT);
         $widegets->outlets      = $dashboardRepostitory->getCount(Constant::OUTLETS);
-        $widegets->currency      = $currency->getCurrency();
-        $widegets->revenue      = $dashboardRepostitory->getRevenue();
-        $widegets->Providersrevenue      = $dashboardRepostitory->getProviderEarnings();
-        $widegets->outletsrevenue      = $dashboardRepostitory->getOutletsEarnings();        
+        // $widegets->currency      = $currency->getCurrency();
+        // $widegets->revenue      = $dashboardRepostitory->getRevenue();
+        // $widegets->Providersrevenue      = $dashboardRepostitory->getProviderEarnings();
+        // $widegets->outletsrevenue      = $dashboardRepostitory->getOutletsEarnings();        
 
 
         $data               = new DataService();

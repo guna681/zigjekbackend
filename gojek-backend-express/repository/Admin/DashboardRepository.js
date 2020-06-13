@@ -122,4 +122,31 @@ module.exports = function () {
         })
     })
   } 
+
+  // types of Bookings total earnings
+  this.typesOfBookingEarningsView = (name) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(booking).select().sum('TotalAmount as Total')
+        .where('Type',name)
+        .where(`Status`, 'completed')
+        .then((result) => {
+          if (result.length) {
+            output.error = false
+            output.data = result[0]
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
 }
