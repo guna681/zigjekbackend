@@ -19,6 +19,7 @@ use App\Http\Repository\CartRepostitory;
 use App\Http\Repository\CurrencyRepostitory;
 use App\Http\Repository\CustomisationCategoryRepostitory;
 use DB;
+Use Log;
 
 class DishRepostitory extends Dishes
 {
@@ -314,6 +315,21 @@ if ($data->isCustomisation == 1) {
               }
 
         }
+} else {
+	// public function removeCartDishes($data)
+ //  {
+                  Log::debug($data->dishId);
+             $delete = DB::table('Dishes_Customisation')->where('dishId', $data->dishId)->delete();
+
+      // $delete=DishesCustomisation::where('dishId','=',$data->dishId);
+                  // ->delete();
+                  // ->toSql();
+                  // $color = ProductColor::find( $color_id );
+                  // $delete->delete();
+                  Log::debug($delete);
+                  Log::debug('******');
+
+  // }
 }
 
         DB::Commit();

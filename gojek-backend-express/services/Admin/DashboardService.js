@@ -38,7 +38,9 @@ module.exports = function () {
       var taxiBookingCount = await dashboardRepository.bookingCountView(taxi)
       var deliveryBookingCount = await dashboardRepository.bookingCountView(delivery)
       var servicesBookingCount = await dashboardRepository.bookingCountView(services)
-
+      var taxiEarning = await dashboardRepository.typesOfBookingEarningsView(taxi)
+      var deliveryEarning = await dashboardRepository.typesOfBookingEarningsView(delivery)
+      var servicesEarning = await dashboardRepository.typesOfBookingEarningsView(services)
       
       dashboard.push({
         userscount: userscount.data['count'],
@@ -54,11 +56,15 @@ module.exports = function () {
         activeBookingCount: activeBooking.data['count'],
         taxiBookingCount: taxiBookingCount.data['count'],
         deliveryBookingCount: deliveryBookingCount.data['count'],
-        servicesBookingCount: servicesBookingCount.data['count']
+        servicesBookingCount: servicesBookingCount.data['count'],
+        taxiEarning: taxiEarning.data['Total'],
+        deliveryEarning: deliveryEarning.data['Total'],
+        servicesEarning: servicesEarning.data['Total']
       })
       if (userscount.error === false && providerscount.error === false && bookingscount.error === false && ridevehicletypecount.error === false &&
             dayearning.error === false && monthearning.error === false && weekearning.error === false && yearearning.error === false && completedBooking.error === false && cancelledBooking.error === false && activeBooking.error === false
-           && taxiBookingCount.error === false && deliveryBookingCount.error === false && servicesBookingCount.error === false) {
+           && taxiBookingCount.error === false && deliveryBookingCount.error === false && servicesBookingCount.error === false
+            && taxiEarning.error === false && deliveryEarning.error === false &&  servicesEarning.error === false) {
         response.error = false
         response.data = dashboard
         response.msg = 'VALID'
