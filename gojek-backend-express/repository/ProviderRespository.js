@@ -1271,6 +1271,8 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(provider)
+        .whereIn('Id', data)
+        .where('Status', 'verified')
         .limit(limit)
         .offset(offset)
         .then((result) => {
@@ -1278,7 +1280,8 @@ module.exports = function () {
             output.error = false
             output.result = result
           } else {
-            output.error = true
+            output.error = false
+            output.result = []
           }
           resolve(output)
         }).catch((output) => {

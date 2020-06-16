@@ -216,7 +216,7 @@ Class  CartService{
         $obj->slashedPrice           = $dishes->price;
         } else {
         $obj->slashedPrice           = 0;
-        $obj->displayDishTotal   =$currency.$dishes->price;
+        $obj->displayDishTotal   =$currency.($dishes->price+$customisationTotal)*$dish->quantity; ;
         $obj->dishTotal         =($dishes->price+$customisationTotal)*$dish->quantity;
         $obj->originalDishTotal         =($dishes->price+$customisationTotal)*$dish->quantity;
         }
@@ -594,7 +594,7 @@ Class  CartService{
                     $data->description = $description;
                     } else {
                     $data->error            = Common::error_true;
-                    $data->errorMessage     = __('validation.couponNotApply');
+                    $data->errorMessage     = 'Cart value is not sufficient';
                     $title = 'Oops!';
                     $data->title = $title;
                     $data->description = 'Cart value is not sufficient';

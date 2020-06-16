@@ -958,10 +958,10 @@ module.exports = function () {
     var response = {}
     try {
       var data
-      if (req.CategoryId) {
-        data = { SubCategoryId: req.subCategoryId }
+      if (req.categoryId) {
+        data = { CategoryId: req.categoryId }
       } else {
-        data = { categoryId: req.categoryId }
+        data = { SubCategoryId: req.subCategoryId }
       }
       var page = req.page
       providerService.getProviderListByService(data, page, (result) => {
