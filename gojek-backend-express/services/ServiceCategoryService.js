@@ -13,6 +13,7 @@ module.exports = function () {
       } else {
         var services = []
         var serviceCategory = await serviceRepository.fetchServiceCategory()
+        var appsliderPSelectSData = await serviceRepository.bannerAdsPageView()
         serviceTitle.result.map(element => {
           var title = {}
           var category = []
@@ -35,22 +36,23 @@ module.exports = function () {
         })
 
         var data = {}
-        data.banner = [
-          {
-            image: 'http://134.209.147.250:3000/images/banner/banner1.png',
-            type: 'CATEGORY',
-            categoryId: '1',
-            webUrl: null,
-            description: 'Zig Taxi'
-          },
-          {
-            image: 'http://134.209.147.250:3000/images/banner/banner2.png',
-            type: 'WEB',
-            categoryId: null,
-            webUrl: 'https://www.google.com',
-            description: 'Eatoo'
-          }
-        ]
+        data.banner = appsliderPSelectSData.data
+        // data.banner5 = [
+        //   {
+        //     image: 'http://134.209.147.250:3000/images/banner/banner1.png',
+        //     type: 'CATEGORY',
+        //     categoryId: '1',
+        //     webUrl: null,
+        //     description: 'Zig Taxi'
+        //   },
+        //   {
+        //     image: 'http://134.209.147.250:3000/images/banner/banner2.png',
+        //     type: 'WEB',
+        //     categoryId: null,
+        //     webUrl: 'https://www.google.com',
+        //     description: 'Eatoo'
+        //   }
+        // ]
         data.serviceList = services
 
         response.error = false

@@ -1731,9 +1731,9 @@ module.exports = function () {
   this.getProviderListByService = async (data, page, callback) => {
     var response = {}
     try {
+      
       var providerId = await providerRespository.getServiceProviderIds(data)
-      var providerIds = providerId.error ? [] : providerId.result.map((element) => { return element.Id })
-
+      var providerIds = providerId.error ? [] : providerId.result.map((element) => { return element.ProviderId })
       var providerList = await providerRespository.getProviderListByIds(providerIds, page)
 
       if (providerList.error) {
@@ -1781,7 +1781,7 @@ module.exports = function () {
           data.mobile = element.Mobile
           data.countryCode = element.ExtCode
           data.rating = element.Rating
-          data.about = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam in lorem iaculis, ullamcorper ligula eu, vestibulum neque. Fusce neque augue, suscipit sed arcu non, accumsan hendrerit purus. Nunc nec nulla sodales, tincidunt urna vel, gravida leo.'
+          data.about = 'Best in class service is 100 % customer satisfaction.'
           return data
         })
         response.error = false
