@@ -154,10 +154,14 @@ module.exports = function () {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(serviceCategory)
+     var query =  knex(serviceCategory)
         .select('Id', 'TitleId', 'Name', 'Type', 'HasSubCategory', 'IsFixedPricing', knex.raw('CONCAT(?, Icon) as Icon', [process.env.BASE_URL + process.env.SERVICE_PATH]))
-        .where('TitleId', data.titleId)
-        .then((result) => {
+        if (data.titleId) {
+        query.where('TitleId', data.titleId)
+        } else {
+        // query.where('TitleId', data.titleId)
+        }
+        query.then((result) => {
           if (result.length > 0) {
             output.error = false
             output.result = result

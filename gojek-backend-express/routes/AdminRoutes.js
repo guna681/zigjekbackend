@@ -2231,12 +2231,12 @@ module.exports = function (app, validator) {
   app.post(`${basePath}/bannerAdsAdd`, [
     validator.check('Title').isLength({ min: 1, max: 45 }).trim()
       .withMessage('INVALID: $[1],Title'),
-    validator.check('Description').trim().isLength({ min: 1, max: 255 })
-      .withMessage('INVALID: $[1],Description'),
+    // validator.check('Description').trim().isLength({ min: 1, max: 255 })
+    //   .withMessage('INVALID: $[1],Description'),
     validator.check('Image_path').isLength({ min: 1, max: 255 })
       .withMessage('INVALID: $[1],Image_path').optional().withMessage('INVALID: $[1],Image_path'),
-    validator.check('Url').isLength({ min: 1, max: 10 })
-      .withMessage('INVALID: $[1],Url'),
+    // validator.check('Url').isLength({ min: 1, max: 10 })
+    //   .withMessage('INVALID: $[1],Url'),
     validator.check('Status').isLength({ min: 1, max: 10 })
       .withMessage('INVALID: $[1],Status')
   ], app.adminauth, (req, res) => {
@@ -2293,12 +2293,12 @@ module.exports = function (app, validator) {
   app.post(`${basePath}/bannerAdsEdit`, [
     validator.check('Title').isLength({ min: 1, max: 45 }).trim()
       .withMessage('INVALID: $[1],Title'),
-    validator.check('Description').trim().isLength({ min: 1, max: 255 })
-      .withMessage('INVALID: $[1],Description'),
+    // validator.check('Description').trim().isLength({ min: 1, max: 255 })
+    //   .withMessage('INVALID: $[1],Description'),
     validator.check('Image_path').isLength({ min: 1, max: 255 })
       .withMessage('INVALID: $[1],Image_path').optional().withMessage('INVALID: $[1],Image_path'),
-    validator.check('Url').isLength({ min: 1, max: 10 })
-      .withMessage('INVALID: $[1],Url'),
+    // validator.check('Url').isLength({ min: 1, max: 10 })
+    //   .withMessage('INVALID: $[1],Url'),
     validator.check('Status').isLength({ min: 1, max: 10 })
       .withMessage('INVALID: $[1],Status')
   ], app.adminauth, (req, res) => {
@@ -2596,8 +2596,8 @@ module.exports = function (app, validator) {
   })
   // ServiceCategory  View
   app.post(`${basePath}/serviceCategoryListView`, [
-    validator.check('titleId').isNumeric().trim()
-      .withMessage('INVALID: $[1], titleId')
+    // validator.check('titleId').isNumeric().trim()
+    //   .withMessage('INVALID: $[1], titleId')
   ], (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)

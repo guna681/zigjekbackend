@@ -5,11 +5,11 @@ namespace App\Http\Repository;
 use App\User;
 use App\Address;
 use App\UserOtp;
+use App\UserDevices;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Utility\Constant;
 use DB;
-
 class UserRepository
 {
 
@@ -512,7 +512,9 @@ class UserRepository
     public function userLogout($data){
         DB::beginTransaction();
         try{
-            $data=UserDevices::where('UserId',$data)->update(['GCMId'=>'']);
+            // $data=UserDevices::where('UserId',$data)->update(['GCMId'=>'']);
+            $delete=UserDevices::where(['UserId'=>$data])
+                               ->delete();
 
         }catch(\Illuminate\Database\QueryException $ex){
             $jsonresp=$ex->getMessage();
