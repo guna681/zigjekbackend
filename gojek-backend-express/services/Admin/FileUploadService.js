@@ -8,7 +8,6 @@ module.exports = function () {
     var response = {}
     try {
       var imgupload = await common.imageUpload(data.req, data.res)
-      console.log(imgupload)
       if (imgupload.error === false) {
         response.error = false
         response.data = imgupload.msg
