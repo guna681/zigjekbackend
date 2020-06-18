@@ -18,6 +18,10 @@ module.exports = function () {
   const serviceTitle = 'ServiceTitle'
   const providerService = 'ProviderService'
   const serviceCategory = 'ServiceCategory'
+  const serviceCategoryBanner = 'ServiceCategoryBanner'
+  const serviceCategoryExtras = 'ServiceCategoryExtras'
+  const serviceCategoryTitle  = 'ServiceCategoryTitle'
+  const serviceCategorySlide  = 'ServiceCategorySlide'
   // services Page Select
   this.servicesView = () => {
     var output = {}
@@ -154,22 +158,22 @@ module.exports = function () {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-     var query =  knex(serviceCategory)
+      var query = knex(serviceCategory)
         .select('Id', 'TitleId', 'Name', 'Type', 'HasSubCategory', 'IsFixedPricing', knex.raw('CONCAT(?, Icon) as Icon', [process.env.BASE_URL + process.env.SERVICE_PATH]))
-        if (data.titleId) {
+      if (data.titleId) {
         query.where('TitleId', data.titleId)
+      } else {
+      // query.where('TitleId', data.titleId)
+      }
+      query.then((result) => {
+        if (result.length > 0) {
+          output.error = false
+          output.result = result
         } else {
-        // query.where('TitleId', data.titleId)
+          output.error = true
         }
-        query.then((result) => {
-          if (result.length > 0) {
-            output.error = false
-            output.result = result
-          } else {
-            output.error = true
-          }
-          resolve(output)
-        })
+        resolve(output)
+      })
         .catch((err) => {
           err.error = true
           resolve(err)
@@ -179,4 +183,133 @@ module.exports = function () {
         })
     })
   }
+  // category data Insert
+  this.categoryAdd = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceCategory)
+        .insert(data)
+        .then((result) => {
+          if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+  // category banner data Insert
+  this.categoryBannerAdd = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceCategoryBanner)
+        .insert(data)
+        .then((result) => {
+          if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+  // ServiceCategoryExtras data Insert
+  this.serviceCategoryExtrasAdd = (data) => {
+    console.log(data)
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceCategoryExtras)
+        .insert(data)
+        .then((result) => {
+          console.log(result)
+          if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+  // ServiceCategoryExtras data Insert
+  this.promotionTitleAdd = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceCategoryTitle)
+        .insert(data)
+        .then((result) => {
+          console.log(result)
+          if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+   // ServiceCategoryExtras data Insert
+   this.promotionImageAdd = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceCategorySlide)
+        .insert(data)
+        .then((result) => {
+          console.log(result)
+          if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  } 
 }
