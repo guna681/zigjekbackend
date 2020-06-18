@@ -12,6 +12,7 @@ module.exports = function () {
       if (imgupload.error === false) {
         response.error = false
         response.data = imgupload.msg
+        response.imageName = imgupload.imageName
         response.msg = 'VALID'
       } else {
         response.error = true
