@@ -15,6 +15,7 @@ module.exports = function () {
         response.error = false
         response.msg = result.msg
         response.data = result.data
+        response.imageName = result.imageName
       }
       callback(response)
     })

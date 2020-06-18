@@ -208,6 +208,7 @@ module.exports = function () {
           } else {
             data.error = false
             data.msg = process.env.HOST + ':' + process.env.PORT + '/' + image.file.path.replace('public/', '')
+            data.imageName = image.file.path
           }
           resolve(data)
         })
@@ -243,6 +244,7 @@ module.exports = function () {
           } else {
             data.error = false
             data.msg = process.env.HOST + ':' + process.env.PORT + '/' + image.file.path.replace('public/', '')
+            data.imageName = image.file.originalname
           }
           resolve(data)
         })
