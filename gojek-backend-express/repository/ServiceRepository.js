@@ -323,7 +323,8 @@ module.exports = function () {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(bannerads).select('Id as id','Image_path as image','Title as type','Description as description', 'Url as webUrl')
+      knex(bannerads).select('Id as id','Image_path as image','Title as type','Description as categoryId', 'Url as webUrl')
+        .where('Status', 'Active')
         .then((result) => {
           if (result.length) {
             output.error = false

@@ -84,12 +84,22 @@ module.exports = function () {
   this.bannerAdsEditService = async (data, callback) => {
     var response = {}
     try {
-      var resData = {
+      if (data.Title == 'WEB') {
+       var resData = {
         Title: data.Title,
-        Description: data.Description,
+        Description: '',
         Image_path: data.Image_path,
         Url: data.Url,
         Status: data.Status
+      }
+      } else {
+     var resData = {
+        Title: data.Title,
+        Description: data.Description,
+        Image_path: data.Image_path,
+        Url: '',
+        Status: data.Status
+      }
       }
       var appsliderdata = {
         data: resData,

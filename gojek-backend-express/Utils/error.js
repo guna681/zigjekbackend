@@ -43,6 +43,9 @@ module.exports = function () {
         message.error = status
         message.msg = ctrlSuccessMsg.translate(msg[0], msg[1], msg[2], msg[3])
         message.data = error[0].data
+        if (error[0].imageName) {
+        message.imageName = error[0].imageName 
+        }
       } catch (err) {
         message.error = status
         message.msg = 'Oops something went wrong'
