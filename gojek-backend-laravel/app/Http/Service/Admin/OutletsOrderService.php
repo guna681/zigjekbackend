@@ -74,7 +74,7 @@ Class OutletsOrderService
             $ordersData->staffMobileNumber  = $orders->staffMobileNumber;
             $ordersData->staffeEmail        = $orders->staffeEmail;
             $ordersData->tripStatus         = $orders->tripStatus;
-            $ordersData->orderSuggestions         = $orders->orderSuggestions;
+            $ordersData->orderSuggestions         = $orders->Description;
             $ordersData->outletEmail = $orders->outletEmail;
             $ordersData->OutletName = $orders->OutletName;
             $ordersData->addressLineOne = $orders->addressLineOne;

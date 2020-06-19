@@ -73,6 +73,7 @@ Class CustomisationCategoryRepostitory
     {
         $data = CustomisationCategory::select('id','name','type')
                                      ->where('outletId',$outletId)
+                                     ->where('status','1')
                                      ->whereNull('deleted_at')
                                      ->get();
 
