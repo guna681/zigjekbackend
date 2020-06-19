@@ -2614,4 +2614,35 @@ module.exports = function (app, validator) {
       })
     }
   })
+
+  // add category
+  app.post(`${basePath}/addCategory`, [
+    // validator.check('TitleId').trim().isNumeric()
+    //   .withMessage('INVALID:$[1],TitleId'),
+    // validator.check('Name').trim().isLength({ min: 1, max: 50 })
+    //   .withMessage('INVALID:$[1],Name'),
+    // validator.check('Category').trim().isLength({ min: 1, max: 50 })
+    //   .withMessage('INVALID:$[1],Category'),
+    // validator.check('HasSubCategory').trim().isNumeric()
+    //   .withMessage('INVALID:$[1],HasSubCategory'),
+    // validator.check('IsFixedPricing').trim().isNumeric()
+    //   .withMessage('INVALID:$[1],IsFixedPricing')
+    // validator.check('Icon').isLength({ min: 1, max: 255 })
+    //   .withMessage('INVALID: $[1],Icon').optional().withMessage('INVALID: $[1],Icon')
+  ], (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.addCategoryCtrl(data, (result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
 }

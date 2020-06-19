@@ -91,5 +91,20 @@ module.exports = function () {
       }
       callback(response)
     })
-  }  
+  }
+
+  this.addCategoryCtrl = (data, callback) => {
+    var response = {}
+    servicesService.addCategoryService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
 }
