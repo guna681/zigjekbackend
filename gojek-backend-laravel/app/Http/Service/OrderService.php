@@ -170,6 +170,9 @@ Class  OrderService
             $walletUpdate['UserType'] = 'user';
             $walletUpdate['Amount'] = $arg->netAmount;
             $walletBalanceUpdate          = $orderRepostitory->debitWallet($walletUpdate);
+            $walletUpdate['type']  = 'debit';
+            $walletUpdate['description'] = 'Paid by wallet - Food Delivery';
+            $updateWalletTransaction     = $orderRepostitory->createTransaction($walletUpdate);
 
             }
             if($arg->paymentType == '11'){
