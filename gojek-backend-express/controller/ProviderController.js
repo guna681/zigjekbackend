@@ -355,6 +355,7 @@ module.exports = function () {
           } else {
             earning.earnings = statistic.data
           }
+          earning.type = data.auth.Type
           response.error = false
           response.msg = result.msg
           response.data = earning

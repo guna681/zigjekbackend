@@ -185,17 +185,21 @@ module.exports = function () {
   }
   // category data Insert
   this.categoryAdd = (data) => {
+    console.log(data)
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(serviceCategory)
         .insert(data)
         .then((result) => {
+          console.log(result,'***')
           if (result.length) {
             output.error = false
             output.data = result
+          console.log(result,'^^^^^^')
           } else {
             output.error = true
+          console.log(result,'#####')
           }
           resolve(output)
         })

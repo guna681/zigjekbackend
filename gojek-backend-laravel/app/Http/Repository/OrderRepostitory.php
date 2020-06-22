@@ -16,6 +16,7 @@ use App\Http\Repository\CurrencyRepostitory;
 use App\OrderItems;
 use App\OrderItemsCustomisations;
 use App\Orders;
+use App\Wallet;
 use App\IntegrationSetting;
 // use APP\Reviews;
 use App\Http\Service\AppconfigService;
@@ -45,7 +46,7 @@ Class OrderRepostitory{
             if ($data->paymentType = 10) {
             $orders->PaymentMode       = 'cash';
             } else {
-            $orders->PaymentMode       = 'cash';
+            $orders->PaymentMode       = 'Card';
             }
             $orders->ToLocation     = $data->deliveryAddress;
             $orders->DestinyLat     = $data->DestinyLat;
@@ -398,7 +399,16 @@ public function addRating($data,$userId)
                         ->get();
 
         return $data;
-    }  
+    } 
+
+    public function debitWallet($walletUpdate)
+    {
+        print_r($walletUpdate['Amount']);
+        $Wallet = Wallet::where(['UserTypeId'=>$walletUpdate['UserTypeId'],'UserType'=>$walletUpdate['UserType']])
+                         ->decrement('Balance', $walletUpdate['Amount']);
+                         // ->update(['Balance' =>Balance - $walletUpdate->Amount]);
+        return $Wallet;
+    } 
 }
 
 

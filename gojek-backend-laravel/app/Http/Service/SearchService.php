@@ -70,7 +70,7 @@ Class SearchService{
                    $restaurant->couponEnabledForRestaurant = "0"; 
                 }
 				$restaurant->cuisines="";					
-				$restaurant->averageReview=(string)number_format($query->averageReview,1);
+				$restaurant->averageReview=(string)number_format($query->averageRating,1);
 				$restaurant->time=$query->time;
 				$restaurant->displayTime=$query->displayTime;
 				$restaurant->outlet=$oulet;	
@@ -146,7 +146,7 @@ Class SearchService{
                    $restaurant->couponEnabledForRestaurant = "0"; 
                 }
 				$restaurant->cuisines="";					
-				$restaurant->averageReview=(string)number_format($query->averageReview,1);
+				$restaurant->averageReview=(string)number_format($query->averageRating,1);
 				$restaurant->time=$query->time;
 				$restaurant->displayTime=$query->displayTime;
 				$restaurant->outlet=$oulet;	
@@ -171,6 +171,7 @@ Class SearchService{
 	            $dishes->cuisines="";			
 				$dishes->displayCostForTwo=$currencyRepostitory->getCurrency().$outlet[0]->costForTwo.trans('validation.forTwo');
 				$dishes->isExculsive=$outlet[0]->isExculsive;
+				$dishes->averageReview=(string)number_format($query->averageRating,1);
 							
 			$dishes->outletName = $outlet[0]->name;
 			  if ($outlet[0]->couponStatus == '1') {
@@ -181,7 +182,7 @@ Class SearchService{
 	            $dishes->shortDescription           = $shortDescription;
 	            $dishes->longDescription           = $longDescription;
 	            $dishes->cuisines="";					
-				$dishes->averageReview=(string)number_format($query->averageReview,1);
+				$dishes->averageReview=(string)number_format($query->averageRating,1);
 				$dishes->time=$query->time;
 				$dishes->displayTime=$query->displayTime;
 	        }  else {

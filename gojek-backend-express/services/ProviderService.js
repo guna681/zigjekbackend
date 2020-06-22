@@ -1781,6 +1781,8 @@ module.exports = function () {
           data.mobile = element.Mobile
           data.countryCode = element.ExtCode
           data.rating = element.Rating
+          data.latitude = element.Latitude
+          data.longitude = element.Longitude
           data.about = 'Best in class service is 100 % customer satisfaction.'
           return data
         })

@@ -139,6 +139,8 @@ module.exports = function () {
   }
   this.addCategoryService = async (data, callback) => {
     var response = {}
+console.log(data);
+    
     try {
       var resData = {
         TitleId: data.TitleId,
@@ -149,7 +151,7 @@ module.exports = function () {
         IsFixedPricing: data.IsFixedPricing,
         PricePerHour: data.PricePerHour
       }
-
+console.log(resData);
       var appsliderData = await servicesRepository.categoryAdd(resData)
       if (appsliderData.error === false) {
         response.error = false

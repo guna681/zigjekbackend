@@ -245,30 +245,30 @@ die;
             $ordersData->orderId          = $orders->Id;
             $ordersData->orderReferenceId = $orders->orderReferenceId;
             $ordersData->netAmount        = $orders->netAmount;
-            switch ($order->Status) {
+            switch ($orders->Status) {
                     case "accepted":
-                    $orderDetails->orderStatus = "accepted";
+                    $ordersData->orderStatus = "accepted";
                     break;
                     case "arrived":
-                    $orderDetails->orderStatus = "reachOutlet";
+                    $ordersData->orderStatus = "reachOutlet";
                     break;
                     case "pickedup":
-                    $orderDetails->orderStatus = "pickedup";
+                    $ordersData->orderStatus = "pickedup";
                     break;
                     case "dropped":
-                    $orderDetails->orderStatus = "reachUserLocation";
+                    $ordersData->orderStatus = "reachUserLocation";
                     break;
                     case "completed":
-                    $orderDetails->orderStatus = "delivered";
+                    $ordersData->orderStatus = "delivered";
                     break;
                     case "rejected":
-                    $orderDetails->orderStatus = "rejected";
+                    $ordersData->orderStatus = "rejected";
                     break;
                     case "unassigned":
-                    $orderDetails->orderStatus = "unassigned";
+                    $ordersData->orderStatus = "unassigned";
                     break;
                     case "assigned":
-                    $orderDetails->orderStatus = "assigned";
+                    $ordersData->orderStatus = "assigned";
                     }
             $ordersData->acceptedTime     = $orders->acceptedTime;
             $ordersData->rejectedTime     = $orders->rejectedTime;
@@ -286,7 +286,7 @@ die;
             $ordersData->staffMobileNumber = $orders->staffMobileNumber;
             $ordersData->staffeEmail       = $orders->staffeEmail;
             $ordersData->tripStatus        = $orders->tripStatus;
-            $ordersData->orderSuggestions  = $orders->orderSuggestions;
+            $ordersData->orderSuggestions  = $orders->Description;
             $ordersData->dishes            = $this->getOrderDishes($orders->Id);
 
             $cartService    = new CartService();
@@ -298,7 +298,8 @@ die;
             $ordersData->billTotals = array_collapse($totalcharges);
 
             $paymentGateway             = new IntegrationSettingRepository();
-            $ordersData->paymentDetails = $paymentGateway->getPaymentGatewayDetails($orders->PaymentTypeId);
+            // $ordersData->paymentDetails = $paymentGateway->getPaymentGatewayDetails($orders->PaymentTypeId);
+            $ordersData->paymentDetails = $orders->PaymentMode;
 
             $data->error        = Common::error_false;
             $data->errorMessage = __('validation.sucess');
@@ -399,7 +400,8 @@ die;
             $ordersData->billTotals = array_collapse($totalcharges);
 
             $paymentGateway             = new IntegrationSettingRepository();
-            $ordersData->paymentDetails = $paymentGateway->getPaymentGatewayDetails($orders->PaymentMode);
+            // $ordersData->paymentDetails = $paymentGateway->getPaymentGatewayDetails($orders->PaymentMode);
+            $ordersData->paymentDetails = $orders->PaymentMode;
 
             $data->error        = Common::error_false;
             $data->errorMessage = __('validation.sucess');
@@ -664,7 +666,8 @@ die;
             $ordersData->billTotals = array_collapse($totalcharges);
 
             $paymentGateway             = new IntegrationSettingRepository();
-            $ordersData->paymentDetails = $paymentGateway->getPaymentGatewayDetails($orders->PaymentTypeId);
+            // $ordersData->paymentDetails = $paymentGateway->getPaymentGatewayDetails($orders->PaymentTypeId);
+            $ordersData->paymentDetails = $orders->PaymentMode;
 
             $data->error        = Common::error_false;
             $data->errorMessage = __('validation.sucess');

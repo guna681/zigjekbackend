@@ -933,14 +933,14 @@ module.exports = function () {
         if (req.providerId) {
           var providerInfo = await providerService.getProivderMessageToken(req.providerId)
           pushNotification.sendPushNotificationByDeviceType(providerInfo.data, content)
-        }
-
-        var availableProvider = await providerService.getServiceProviderBasedOnDistance(req)
-        if (availableProvider.error === false) {
-          var bookingId = createBooking.data.bookingNo
-          var deviceToken = await providerService.getProviderDeviceTokensById(availableProvider.data)
-          var token = deviceToken.error ? '' : deviceToken.data.map((element) => pushNotification.sendPushNotificationByDeviceType(element, content, 'default'))
-          bookingService.updateServiceBookingInfo(bookingId, availableProvider.data)
+        } else {
+          var availableProvider = await providerService.getServiceProviderBasedOnDistance(req)
+          if (availableProvider.error === false) {
+            var bookingId = createBooking.data.bookingNo
+            var deviceToken = await providerService.getProviderDeviceTokensById(availableProvider.data)
+            if (!deviceToken.error) deviceToken.data.map((element) => pushNotification.sendPushNotificationByDeviceType(element, content, 'default'))
+            bookingService.updateServiceBookingInfo(bookingId, availableProvider.data)
+          }
         }
         response.error = false
         response.msg = createBooking.msg

@@ -876,6 +876,7 @@ module.exports = function () {
         }
         if (data.type === 'taxi') {
           orderList = await bookingRepository.fetchOrderList(condition, page)
+          dishesList.error = true
         } else if (data.type === 'delivery') {
           orderList = await bookingRepository.fetchDeliveryOrders(condition, page)
           orderId = orderList.error ? [] : orderList.result.map(element => { return element.Id })
@@ -883,6 +884,7 @@ module.exports = function () {
         } else if (data.type === 'services') {
           delete condition.Type
           orderList = await bookingRepository.fetchServiceList(condition, page)
+          dishesList.error = true
         }
         if (orderList.error) {
           response.error = true
@@ -904,7 +906,7 @@ module.exports = function () {
             data['total'] = (element.CurrencyType + element.TotalAmount).toString()
             data['isActive'] = element.IsActive
             data['status'] = element.Status
-            data['dishList'] = dishesList ? [] : dishesList.result.filter(dish => dish.orderId === element.Id)
+            data['dishList'] = dishesList.error ? [] : dishesList.result.filter(dish => dish.orderId === element.Id)
             data['vehicleName'] = element.VehicleName
             data['paymentMode'] = element.PaymentMode
             data['createdTime'] = element.CreateAt
@@ -921,6 +923,7 @@ module.exports = function () {
         }
         resolve(response)
       } catch (err) {
+        console.log(err)
         err.response = true
         err.msg = 'OOPS'
         resolve(err)
@@ -958,6 +961,7 @@ module.exports = function () {
           currency = pricing[0].currencyType
           return element
         })
+        service.Estimation = total
         service.TotalEarning = total
         service.ProviderEarning = providerEarning
         service.CurrencyType = currency

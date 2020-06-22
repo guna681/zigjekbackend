@@ -164,6 +164,14 @@ Class  OrderService
                       );
            
             $mailService = new MailService();
+            if ($arg->paymentType == '13') {
+            $walletUpdate = array();
+            $walletUpdate['UserTypeId'] = $userId;
+            $walletUpdate['UserType'] = 'user';
+            $walletUpdate['Amount'] = $arg->netAmount;
+            $walletBalanceUpdate          = $orderRepostitory->debitWallet($walletUpdate);
+
+            }
             if($arg->paymentType == '11'){
             $paymentService = new PaymentService();
             $paymentService->stripeCharge($stripeCustomerId, $arg->token , $orderdata->displayNetAmount , $userDetails->email);
@@ -560,8 +568,15 @@ $orderCustomisationItems = $orderRepostitory->orderCustomisationItems($cart['id'
             // $orders->status             = $order->orderStatus;
             $orders->receivedTime       = date('h:i:s A', strtotime($order->created_at));
             $orders->orderConfirmedTime = date('h:i:s A', strtotime($order->confirmedTime));
-            $orders->orderPickedUp      = (is_null($order->pickedupTime)) ? false : true;
-            $orders->orderPickedupTime  = date('h:i:s A', strtotime($order->pickedupTime));
+            if ($order->Status == 'pickedup') {
+            $orders->orderPickedUp = true;
+            $orders->orderPickedupTime  = date('h:i:s A', strtotime($order->UpdateAt));
+            } else {
+            $orders->orderPickedUp = false;
+            $orders->orderPickedupTime  = date('h:i:s A', strtotime($order->UpdateAt)); 
+            }
+            // $orders->orderPickedUp      = (is_null($order->pickedupTime)) ? false : true;
+            // $orders->orderPickedupTime  = date('h:i:s A', strtotime($order->pickedupTime));
             $orders->eta                = $order->eta;
             if ($order->orderStatus == 'accepted'  ) {
             $orders->deliveryboyAcceptedOrder = true;
