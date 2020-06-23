@@ -185,21 +185,17 @@ module.exports = function () {
   }
   // category data Insert
   this.categoryAdd = (data) => {
-    console.log(data)
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(serviceCategory)
         .insert(data)
         .then((result) => {
-          console.log(result,'***')
           if (result.length) {
             output.error = false
             output.data = result
-          console.log(result,'^^^^^^')
           } else {
             output.error = true
-          console.log(result,'#####')
           }
           resolve(output)
         })
@@ -315,5 +311,32 @@ module.exports = function () {
           knex.destroy()
         })
     })
-  } 
+  }
+
+  // category data Update
+  this.categoryEdit = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceCategory)
+        .where(data.where)
+        .update(data.data)
+        .then((result) => {
+          if (result) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
 }

@@ -17,6 +17,7 @@ use App\OrderItems;
 use App\OrderItemsCustomisations;
 use App\Orders;
 use App\Wallet;
+use App\Transaction;
 use App\IntegrationSetting;
 // use APP\Reviews;
 use App\Http\Service\AppconfigService;
@@ -406,9 +407,31 @@ public function addRating($data,$userId)
         print_r($walletUpdate['Amount']);
         $Wallet = Wallet::where(['UserTypeId'=>$walletUpdate['UserTypeId'],'UserType'=>$walletUpdate['UserType']])
                          ->decrement('Balance', $walletUpdate['Amount']);
-                         // ->update(['Balance' =>Balance - $walletUpdate->Amount]);
         return $Wallet;
     } 
+
+    public function createTransaction($data)
+    {
+
+                 try {
+                $Transaction             = new Transaction();
+                $Transaction->UserType    = $data['UserType'];
+                $Transaction->Description     = $data['description'];
+                $Transaction->UserTypeId   = $data['UserTypeId'];
+                $Transaction->Amount   = $data['Amount'];
+                $Transaction->Type      = $data['type'];
+                $Transaction->Status      = 'success';
+                $Transaction->save();
+
+
+
+            } catch (\Illuminate\Database\QueryException $ex) {
+                    $jsonresp = $ex->getMessage();
+                    return false;
+
+            }
+        return $Transaction;
+    }  
 }
 
 

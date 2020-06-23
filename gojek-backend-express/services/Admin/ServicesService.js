@@ -139,8 +139,6 @@ module.exports = function () {
   }
   this.addCategoryService = async (data, callback) => {
     var response = {}
-console.log(data);
-    
     try {
       var resData = {
         TitleId: data.TitleId,
@@ -151,7 +149,7 @@ console.log(data);
         IsFixedPricing: data.IsFixedPricing,
         PricePerHour: data.PricePerHour
       }
-console.log(resData);
+
       var appsliderData = await servicesRepository.categoryAdd(resData)
       if (appsliderData.error === false) {
         response.error = false
@@ -213,4 +211,84 @@ console.log(resData);
       callback(err)
     }
   }
+  this.EditCategoryService = async (data, callback) => {
+    var response = {}
+    try {
+      var resData = {
+        TitleId: data.TitleId,
+        Name: data.Name,
+        Type: data.Type,
+        Icon: data.Icon,
+        Status: '1',
+        HasSubCategory: data.HasSubCategory,
+        IsFixedPricing: data.IsFixedPricing,
+        PricePerHour: data.PricePerHour
+      }
+      var categorydata = {
+        data: resData,
+        where: { Id: data.Id }
+      }
+      console.log(categorydata)
+      var appsliderData = await servicesRepository.categoryEdit(categorydata)
+      console.log(appsliderData)
+      if (appsliderData.error === false) {
+        response.error = false
+        response.data = appsliderData.data
+        response.msg = 'VALID'
+        // if (data.Type == 'SERVICE') {
+        //   var bannerImages = JSON.parse(data.bannerImage)
+        //   var description  = JSON.parse(data.description)
+        //   if (bannerImages !== '') {
+        //     bannerImages.map(async element => {
+        //       var bannerData = {
+        //         CategoryId: appsliderData.data[0],
+        //         SubCategoryId: data.SubCategoryId,
+        //         Path: element.bannerImage,
+        //         Type: element.Type
+        //       }
+        //       var bannerImagesData = await servicesRepository.categoryBannerAdd(bannerData)
+        //     })
+        //   }
+        //   if (description !== '') {
+        //     description.map(async element => {
+        //       var bannerData = {
+        //         CategoryId: appsliderData.data[0],
+        //         SubCategoryId: data.SubCategoryId,
+        //         Icon: element.Icon,
+        //         Text: element.Text
+        //       }
+        //       var serviceCategoryExtrasData = await servicesRepository.serviceCategoryExtrasAdd(bannerData)
+        //     })
+        //   }
+        //   if (data.promotionTitle) {
+        //     var promotionTitleData = {
+        //       CategoryId: appsliderData.data[0],
+        //       Title: data.promotionTitle
+        //     }
+        //     var promotionTitlesData = servicesRepository.promotionTitleAdd(promotionTitleData)
+        //   }
+        //   var promotionImage  = JSON.parse(data.promotionImage)
+        //   if (promotionImage !== '') {
+        //     promotionImage.map(async element => {
+        //       var promotionImageData = {
+        //         CategoryId: appsliderData.data[0],
+        //         SubCategoryId: data.SubCategoryId,
+        //         Image: element.Image,
+        //         Text: element.Text
+        //       }
+        //       var promotionData = await servicesRepository.promotionImageAdd(promotionImageData)
+        //     })
+        //   }
+        // }
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  } 
 }
