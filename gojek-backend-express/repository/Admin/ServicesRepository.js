@@ -318,7 +318,7 @@ module.exports = function () {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(serviceCategory)
+      knex(data.table)
         .where(data.where)
         .update(data.data)
         .then((result) => {
@@ -327,6 +327,34 @@ module.exports = function () {
             output.data = result
           } else {
             output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+  // category View Page Select
+  this.categoryView = (data) => {
+    console.log(data)
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(data.table).select()
+        .where(data.where)
+        .then((result) => {
+          console.log(result)
+          if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = false
+            output.data = result
           }
           resolve(output)
         })

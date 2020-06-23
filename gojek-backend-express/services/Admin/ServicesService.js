@@ -225,61 +225,73 @@ module.exports = function () {
         PricePerHour: data.PricePerHour
       }
       var categorydata = {
+        table: { serviceCategory: 'ServiceCategory' },
         data: resData,
         where: { Id: data.Id }
       }
-      console.log(categorydata)
       var appsliderData = await servicesRepository.categoryEdit(categorydata)
-      console.log(appsliderData)
       if (appsliderData.error === false) {
         response.error = false
         response.data = appsliderData.data
         response.msg = 'VALID'
-        // if (data.Type == 'SERVICE') {
-        //   var bannerImages = JSON.parse(data.bannerImage)
-        //   var description  = JSON.parse(data.description)
-        //   if (bannerImages !== '') {
-        //     bannerImages.map(async element => {
-        //       var bannerData = {
-        //         CategoryId: appsliderData.data[0],
-        //         SubCategoryId: data.SubCategoryId,
-        //         Path: element.bannerImage,
-        //         Type: element.Type
-        //       }
-        //       var bannerImagesData = await servicesRepository.categoryBannerAdd(bannerData)
-        //     })
-        //   }
-        //   if (description !== '') {
-        //     description.map(async element => {
-        //       var bannerData = {
-        //         CategoryId: appsliderData.data[0],
-        //         SubCategoryId: data.SubCategoryId,
-        //         Icon: element.Icon,
-        //         Text: element.Text
-        //       }
-        //       var serviceCategoryExtrasData = await servicesRepository.serviceCategoryExtrasAdd(bannerData)
-        //     })
-        //   }
-        //   if (data.promotionTitle) {
-        //     var promotionTitleData = {
-        //       CategoryId: appsliderData.data[0],
-        //       Title: data.promotionTitle
-        //     }
-        //     var promotionTitlesData = servicesRepository.promotionTitleAdd(promotionTitleData)
-        //   }
-        //   var promotionImage  = JSON.parse(data.promotionImage)
-        //   if (promotionImage !== '') {
-        //     promotionImage.map(async element => {
-        //       var promotionImageData = {
-        //         CategoryId: appsliderData.data[0],
-        //         SubCategoryId: data.SubCategoryId,
-        //         Image: element.Image,
-        //         Text: element.Text
-        //       }
-        //       var promotionData = await servicesRepository.promotionImageAdd(promotionImageData)
-        //     })
-        //   }
-        // }
+        if (data.Type == 'SERVICE') {
+          var bannerImages = JSON.parse(data.bannerImage)
+          var description  = JSON.parse(data.description)
+          if (bannerImages !== '') {
+            bannerImages.map(async element => {
+              var bannerData = {
+                Path: element.bannerImage,
+                Type: element.Type
+              }
+              var bannerImageEdit = {
+                table: { serviceCategoryBanner: 'ServiceCategoryBanner' },
+                data: bannerData,
+                where: { Id: element.Id }
+              }
+              var bannerImagesData = await servicesRepository.categoryEdit(bannerImageEdit)
+            })
+          }
+          if (description !== '') {
+            description.map(async element => {
+              var descriptionData = {
+                Icon: element.Icon,
+                Text: element.Text
+              }
+              var descriptionEdit = {
+                table: { serviceCategoryExtras: 'ServiceCategoryExtras' },
+                data: descriptionData,
+                where: { Id: element.Id }
+              }
+              var serviceCategoryExtrasData = await servicesRepository.categoryEdit(descriptionEdit)
+            })
+          }
+          if (data.promotionTitle) {
+            var promotionTitleData = {
+              Title: data.promotionTitle
+            }
+            var promotionTitleEdit = {
+              table: { serviceCategoryTitle: 'ServiceCategoryTitle' },
+              data: promotionTitleData,
+              where: { Id: data.promotionTitleId }
+            }
+            var promotionTitlesData = servicesRepository.categoryEdit(promotionTitleEdit)
+          }
+          var promotionImage  = JSON.parse(data.promotionImage)
+          if (promotionImage !== '') {
+            promotionImage.map(async element => {
+              var promotionImageData = {
+                Image: element.Image,
+                Text: element.Text
+              }
+              var promotionImageEdit = {
+                table: { serviceCategorySlide: 'ServiceCategorySlide' },
+                data: promotionImageData,
+                where: { Id: element.Id }
+              }
+              var promotionImages = await servicesRepository.categoryEdit(promotionImageEdit)
+            })
+          }
+        }
       } else {
         response.error = true
         response.msg = 'FAILED'
@@ -290,5 +302,55 @@ module.exports = function () {
       err.msg = 'OOPS'
       callback(err)
     }
-  } 
+  }
+
+  this.categoryViewService = async (data, callback) => {
+    var response = {}
+    try {
+      var categorydata = {
+        table: { serviceCategory: 'ServiceCategory' },
+        where: { Id: data.id }
+      }
+      var categoryViewData = await servicesRepository.categoryView(categorydata)
+      var bannerImagesData = {
+        table: { serviceCategoryBanner: 'ServiceCategoryBanner' },
+        where: { CategoryId: data.id }
+      }
+      var bannerImagesViewData = await servicesRepository.categoryView(bannerImagesData)
+      var descriptionImagesData = {
+        table: { serviceCategoryExtras: 'ServiceCategoryExtras' },
+        where: { CategoryId: data.id }
+      }
+      var descriptionImagesViewData = await servicesRepository.categoryView(descriptionImagesData)
+
+      var promotionImageData = {
+        table: { serviceCategorySlide: 'ServiceCategorySlide' },
+        where: { CategoryId: data.id }
+      }
+      var promotionImageViewData = await servicesRepository.categoryView(promotionImageData)
+
+      var promotionTitleData = {
+        table: { serviceCategoryTitle: 'ServiceCategoryTitle' },
+        where: { CategoryId: data.id }
+      }
+      var promotionTitleViewData = await servicesRepository.categoryView(promotionTitleData)
+      if (categoryViewData.error === false) {
+        var result = []
+        result.push({ category: categoryViewData.data }, { bannerImage: bannerImagesViewData.data },
+          { description: descriptionImagesViewData.data }, { promotionImage: promotionImageViewData.data },
+          { promotionTitle: promotionTitleViewData.data })
+        response.error = false
+        response.data = result
+        response.msg = 'VALID'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
 }
