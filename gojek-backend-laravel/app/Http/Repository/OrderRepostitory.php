@@ -44,11 +44,22 @@ Class OrderRepostitory{
             $orders->DiscountAmount      = $data->discount;
             $orders->CouponCode          = $data->couponName;
             $orders->orderReferenceId    = $data->orderRefferenceId;
-            if ($data->paymentType = 10) {
-            $orders->PaymentMode       = 'cash';
-            } else {
-            $orders->PaymentMode       = 'Card';
-            }
+            // if ($data->paymentType = 10) {
+            // $orders->PaymentMode       = 'cash';
+            // } else {
+            // $orders->PaymentMode       = 'Card';
+            // }
+            switch ($data->paymentType) {
+                    case 10:
+                    $orders->PaymentMode = "cash";
+                    break;
+                    case 11:
+                    $orders->PaymentMode = "Card";
+                    break;
+                    case 13:
+                    $orders->PaymentMode = "wallet";
+                    break;
+                    }
             $orders->ToLocation     = $data->deliveryAddress;
             $orders->DestinyLat     = $data->DestinyLat;
             $orders->DestinyLong    = $data->DestinyLong;
@@ -404,7 +415,6 @@ public function addRating($data,$userId)
 
     public function debitWallet($walletUpdate)
     {
-        print_r($walletUpdate['Amount']);
         $Wallet = Wallet::where(['UserTypeId'=>$walletUpdate['UserTypeId'],'UserType'=>$walletUpdate['UserType']])
                          ->decrement('Balance', $walletUpdate['Amount']);
         return $Wallet;
@@ -432,6 +442,16 @@ public function addRating($data,$userId)
             }
         return $Transaction;
     }  
+
+       public function checkWallet($userId)
+    {
+
+        $data = array();
+        $data = Wallet::select()
+            ->where(['UserTypeId'=>$userId,'UserType'=>'user'])
+            ->get();
+        return $data;
+    } 
 }
 
 

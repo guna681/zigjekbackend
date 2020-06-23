@@ -198,7 +198,7 @@ Class  OrderService
             $pushNotification = new FCMPushNotificationServiceProvider();
             $pushNotification->setTitle($title);
             $notificationResp = $pushNotification->sendPushNotification($notificationData);
-                        $data->errorMessage = $notificationResp;
+                        // $data->errorMessage = $notificationResp;
 
             }
             if ($orderdata->restaurantDeviceToken){
@@ -218,7 +218,7 @@ Class  OrderService
             $notificationResp = $pushNotification->sendPushNotification($notificationData);
             Log::debug($notificationResp);
 
-                        $data->errorMessage = $notificationResp; 
+                        // $data->errorMessage = $notificationResp; 
         }
             // $title= __('validation.invoiceTitle');
             // $mailService->setTitle($title);
