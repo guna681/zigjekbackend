@@ -2676,4 +2676,25 @@ module.exports = function (app, validator) {
       })
     }
   })
+
+  // ServiceCategory  View
+  app.post(`${basePath}/categoryView`, [
+    validator.check('id').isNumeric().trim()
+      .withMessage('INVALID: $[1], titleId')
+  ], (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.categoryViewCtrl(data, (result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
 }

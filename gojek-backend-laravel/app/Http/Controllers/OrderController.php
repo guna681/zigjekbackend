@@ -8,6 +8,7 @@ use App\Http\Utility\Common;
 use App\Http\Utility\Defaults;
 use App\Http\Service\OrderService;
 use App\Http\Cron\OrdersEvent;
+use App\Http\Repository\OrderRepostitory;
 
 use Illuminate\Support\Facades\Response;
 use Validator;
@@ -45,7 +46,21 @@ Class OrderController extends Controller
             $response->errorMessage =$data->first();
         }else{
             $orderService           = new OrderService();
+            $userId = Auth::guard('api')->user()->Id;
+            $orderRepostitory     = new OrderRepostitory();
+
+        if ($request->paymentType == '13') {
+             $checkWalletBalance     = $orderRepostitory->checkWallet($userId);
+
+        if ($request->netAmount <= $checkWalletBalance[0]->Balance) {
             $response               = $orderService->orderConfirm($request);
+        } else {
+            $response->error        =Common::error_true;
+            $response->errorMessage ='wallet balance is low';
+        }
+        } else {
+            $response               = $orderService->orderConfirm($request);
+        }
         }
         $responsedata = Defaults::encode($response);
         return $responsedata;
