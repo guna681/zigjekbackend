@@ -235,14 +235,12 @@ module.exports = function () {
   }
   // ServiceCategoryExtras data Insert
   this.serviceCategoryExtrasAdd = (data) => {
-    console.log(data)
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(serviceCategoryExtras)
         .insert(data)
         .then((result) => {
-          console.log(result)
           if (result.length) {
             output.error = false
             output.data = result
@@ -268,7 +266,6 @@ module.exports = function () {
       knex(serviceCategoryTitle)
         .insert(data)
         .then((result) => {
-          console.log(result)
           if (result.length) {
             output.error = false
             output.data = result
@@ -294,7 +291,6 @@ module.exports = function () {
       knex(serviceCategorySlide)
         .insert(data)
         .then((result) => {
-          console.log(result)
           if (result.length) {
             output.error = false
             output.data = result
@@ -341,14 +337,12 @@ module.exports = function () {
   }
   // category View Page Select
   this.categoryView = (data) => {
-    console.log(data)
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(data.table).select()
         .where(data.where)
         .then((result) => {
-          console.log(result)
           if (result.length) {
             output.error = false
             output.data = result
@@ -367,4 +361,59 @@ module.exports = function () {
         })
     })
   }
+ //  Category Banner View Page Select
+  this.CategoryBannerView = (data) => {
+    console.log(data)
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(data.table).select('Id','CategoryId','SubCategoryId','Text','Type','Path as bannerImage','Status')
+        .where(data.where)
+        .then((result) => {
+          console.log(result)
+          if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = false
+            output.data = result
+                }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
 }
+ 
+  // Delete
+  this.categoryDelete = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(data.table)
+        .where(data.where)
+        .del()
+        .then((result) => {
+          if (result) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  } 
+  }
