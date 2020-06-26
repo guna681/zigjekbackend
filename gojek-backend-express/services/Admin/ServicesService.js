@@ -239,30 +239,68 @@ module.exports = function () {
           var description  = JSON.parse(data.description)
           if (bannerImages !== '') {
             bannerImages.map(async element => {
-              var bannerData = {
-                Path: element.bannerImage,
-                Type: element.Type
+              
+              if (element.isDeleted == '1') {
+                const serviceCategoryBanner = 'ServiceCategoryBanner'
+                var bannerImageEdit = {
+                  table: serviceCategoryBanner,
+                  // data: bannerData,
+                  where: { Id: element.Id }
+                }
+                var bannerImagesData = await servicesRepository.categoryDelete(bannerImageEdit)
+              } else if (!element.Id) {
+                var bannerData = {
+                  CategoryId: data.Id,
+                  SubCategoryId: data.SubCategoryId,
+                  Path: element.bannerImage,
+                  Type: element.Type
+                }
+                var bannerImagesData = await servicesRepository.categoryBannerAdd(bannerData)
+              } else {
+                var bannerData = {
+                  Path: element.bannerImage,
+                  Type: element.Type
+                }
+                var bannerImageEdit = {
+                  table: { serviceCategoryBanner: 'ServiceCategoryBanner' },
+                  data: bannerData,
+                  where: { Id: element.Id }
+                }
+                var bannerImagesData = await servicesRepository.categoryEdit(bannerImageEdit)
               }
-              var bannerImageEdit = {
-                table: { serviceCategoryBanner: 'ServiceCategoryBanner' },
-                data: bannerData,
-                where: { Id: element.Id }
-              }
-              var bannerImagesData = await servicesRepository.categoryEdit(bannerImageEdit)
             })
           }
           if (description !== '') {
             description.map(async element => {
-              var descriptionData = {
-                Icon: element.Icon,
-                Text: element.Text
+
+              if (element.isDeleted == '1') {
+                const serviceCategoryExtras = 'ServiceCategoryExtras'
+                var descriptionEdit = {
+                  table: serviceCategoryExtras,
+                  // data: bannerData,
+                  where: { Id: element.Id }
+                }
+                var descriptionResult = await servicesRepository.categoryDelete(descriptionEdit)
+              } else if (!element.Id) {
+                var descriptionData = {
+                  CategoryId: data.Id,
+                  SubCategoryId: data.SubCategoryId,
+                  Icon: element.Icon,
+                  Text: element.Text
+                }
+                var bannerImagesData = await servicesRepository.serviceCategoryExtrasAdd(descriptionData)
+              } else {
+                var descriptionData = {
+                  Icon: element.Icon,
+                  Text: element.Text
+                }
+                var descriptionEdit = {
+                  table: { serviceCategoryExtras: 'ServiceCategoryExtras' },
+                  data: descriptionData,
+                  where: { Id: element.Id }
+                }
+                var serviceCategoryExtrasData = await servicesRepository.categoryEdit(descriptionEdit)
               }
-              var descriptionEdit = {
-                table: { serviceCategoryExtras: 'ServiceCategoryExtras' },
-                data: descriptionData,
-                where: { Id: element.Id }
-              }
-              var serviceCategoryExtrasData = await servicesRepository.categoryEdit(descriptionEdit)
             })
           }
           if (data.promotionTitle) {
@@ -279,16 +317,35 @@ module.exports = function () {
           var promotionImage  = JSON.parse(data.promotionImage)
           if (promotionImage !== '') {
             promotionImage.map(async element => {
-              var promotionImageData = {
-                Image: element.Image,
-                Text: element.Text
+            
+              if (element.isDeleted == '1') {
+                const serviceCategorySlide = 'ServiceCategorySlide'
+                var promotionImageEdit = {
+                  table: serviceCategorySlide,
+                  // data: bannerData,
+                  where: { Id: element.Id }
+                }
+                var bannerImagesData = await servicesRepository.categoryDelete(promotionImageEdit)
+              } else if (!element.Id) {
+                var bannerImagesData = {
+                  CategoryId: data.Id,
+                  SubCategoryId: data.SubCategoryId,
+                  Image: element.Image,
+                  Text: element.Text
+                }
+                var bannerImagesResult = await servicesRepository.promotionImageAdd(bannerImagesData)
+              } else {
+                var promotionImageData = {
+                  Image: element.Image,
+                  Text: element.Text
+                }
+                var promotionImageEdit = {
+                  table: { serviceCategorySlide: 'ServiceCategorySlide' },
+                  data: promotionImageData,
+                  where: { Id: element.Id }
+                }
+                var promotionImages = await servicesRepository.categoryEdit(promotionImageEdit)
               }
-              var promotionImageEdit = {
-                table: { serviceCategorySlide: 'ServiceCategorySlide' },
-                data: promotionImageData,
-                where: { Id: element.Id }
-              }
-              var promotionImages = await servicesRepository.categoryEdit(promotionImageEdit)
             })
           }
         }
