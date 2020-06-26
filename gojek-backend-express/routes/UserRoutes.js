@@ -555,10 +555,10 @@ module.exports = function (server, validator) {
     }
   })
   server.post(basePath + 'addMoneyFromCard', [
-    validator.check('amount').trim().withMessage('MISSING: $[1],Amount')
-      .isLength({ min: 1 }).withMessage('INVALID: $[1],Amount'),
-    validator.check('cardId').trim().withMessage('MISSING: $[1],Card Id')
-      .isLength({ min: 1 }).withMessage('INVALID: $[1],Card ID')
+    validator.check('amount').trim().withMessage('INVALID: $[1],Amount')
+      .isLength({ min: 1, max: 4 }).withMessage('INVALID: $[1],Amount'),
+    validator.check('cardId').trim().withMessage('MISSING: $[1],Card ID')
+      .isLength({ min: 5, max: 50 }).withMessage('INVALID: $[1],Card ID')
   ], server.auth, (request, response) => {
     const error = validator.validation(request)
     const lang = request.headers.lang

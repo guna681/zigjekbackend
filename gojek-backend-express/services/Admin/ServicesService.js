@@ -316,7 +316,7 @@ module.exports = function () {
         table: { serviceCategoryBanner: 'ServiceCategoryBanner' },
         where: { CategoryId: data.id }
       }
-      var bannerImagesViewData = await servicesRepository.categoryView(bannerImagesData)
+      var bannerImagesViewData = await servicesRepository.CategoryBannerView(bannerImagesData)
       var descriptionImagesData = {
         table: { serviceCategoryExtras: 'ServiceCategoryExtras' },
         where: { CategoryId: data.id }

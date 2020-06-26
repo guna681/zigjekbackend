@@ -367,4 +367,32 @@ module.exports = function () {
         })
     })
   }
+ //  Category Banner View Page Select
+  this.CategoryBannerView = (data) => {
+    console.log(data)
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(data.table).select('Id','CategoryId','SubCategoryId','Text','Type','Path as bannerImage','Status')
+        .where(data.where)
+        .then((result) => {
+          console.log(result)
+          if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = false
+            output.data = result
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  } 
 }
