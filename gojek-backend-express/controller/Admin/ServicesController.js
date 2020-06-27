@@ -136,4 +136,19 @@ module.exports = function () {
       callback(response)
     })
   }
+
+  this.addSubCategoryCtrl = (data, callback) => {
+    var response = {}
+    servicesService.addSubCategoryService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
 }
