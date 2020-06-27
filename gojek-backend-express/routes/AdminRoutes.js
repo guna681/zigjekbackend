@@ -2697,4 +2697,37 @@ module.exports = function (app, validator) {
       })
     }
   })
+
+  // add SubCategory
+  app.post(`${basePath}/addSubCategory`, [
+    validator.check('TitleId').isNumeric().trim()
+      .withMessage('INVALID: $[1], titleId'),
+    validator.check('Name').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], Name'),
+    validator.check('Type').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], Type'),
+    validator.check('Icon').isLength({ min: 1, max: 500 }).trim()
+      .withMessage('INVALID: $[1], Icon'),
+    validator.check('HasSubCategory').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], HasSubCategory'),
+    validator.check('IsFixedPricing').isNumeric().trim()
+      .withMessage('INVALID: $[1], IsFixedPricing'),
+    validator.check('DisplayType').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], DisplayType')
+  ], (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.addSubCategoryCtrl(data, (result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  }) 
 }

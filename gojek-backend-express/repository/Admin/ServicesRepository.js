@@ -188,9 +188,10 @@ module.exports = function () {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(serviceCategory)
-        .insert(data)
+      knex(data.table)
+        .insert(data.data)
         .then((result) => {
+          console.log(result)
           if (result.length) {
             output.error = false
             output.data = result
@@ -363,14 +364,12 @@ module.exports = function () {
   }
  //  Category Banner View Page Select
   this.CategoryBannerView = (data) => {
-    console.log(data)
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(data.table).select('Id','CategoryId','SubCategoryId','Text','Type','Path as bannerImage','Status')
         .where(data.where)
         .then((result) => {
-          console.log(result)
           if (result.length) {
             output.error = false
             output.data = result
