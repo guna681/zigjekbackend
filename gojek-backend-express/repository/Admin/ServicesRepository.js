@@ -191,7 +191,6 @@ module.exports = function () {
       knex(data.table)
         .insert(data.data)
         .then((result) => {
-          console.log(result)
           if (result.length) {
             output.error = false
             output.data = result

@@ -151,11 +151,11 @@ module.exports = function () {
         DisplayType: data.DisplayType,
         DisplayDescription: data.DisplayDescription
       }
+      const serviceCategory = 'ServiceCategory'
       var categorydata = {
-        table: { serviceCategory: 'ServiceCategory' },
+        table: serviceCategory,
         data: resData
       }
-      console.log(categorydata)
       var appsliderData = await servicesRepository.categoryAdd(categorydata)
       if (appsliderData.error === false) {
         response.error = false
