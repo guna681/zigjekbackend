@@ -22,6 +22,7 @@ module.exports = function () {
   const serviceCategoryExtras = 'ServiceCategoryExtras'
   const serviceCategoryTitle  = 'ServiceCategoryTitle'
   const serviceCategorySlide  = 'ServiceCategorySlide'
+  const serviceSubCategory = 'ServiceSubCategory'
   // services Page Select
   this.servicesView = () => {
     var output = {}
@@ -410,6 +411,31 @@ module.exports = function () {
           err.data = null
           resolve(err)
         }).finally(() => {
+          knex.destroy()
+        })
+    })
+  } 
+
+  this.subCategoryView = () => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceSubCategory).select('ServiceSubCategory.Id', 'ServiceSubCategory.Name as SubCategoryName', 'ServiceSubCategory.Image', 'ServiceSubCategory.Status', 'ServiceSubCategory.ServicesDisplayStyle', 'ServiceCategory.Name as CategoryName')
+        .leftJoin('ServiceCategory', 'ServiceCategory.Id', `ServiceSubCategory.CategoryId`)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
           knex.destroy()
         })
     })

@@ -497,4 +497,24 @@ module.exports = function () {
       callback(err)
     }
   }
+
+  this.subCategoryService = async (callback) => {
+    var response = {}
+    try {
+      var appsliderData = await servicesRepository.subCategoryView()
+      if (appsliderData.error === false) {
+        response.error = false
+        response.data = appsliderData.result
+        response.msg = 'VALID'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }  
 }
