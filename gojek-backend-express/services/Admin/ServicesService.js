@@ -423,17 +423,19 @@ module.exports = function () {
     var response = {}
     try {
       var resData = {
-        TitleId: data.TitleId,
+        CategoryId: data.CategoryId,
         Name: data.Name,
-        Type: data.Type,
-        Icon: data.Icon,
-        HasSubCategory: data.HasSubCategory,
+        Image: data.Image,
         IsFixedPricing: data.IsFixedPricing,
         PricePerHour: data.PricePerHour,
-        DisplayType: data.DisplayType,
-        DisplayDescription: data.DisplayDescription
+        ServicesDisplayStyle: data.ServicesDisplayStyle
       }
-      var appsliderData = await servicesRepository.categoryAdd(resData)
+      const serviceSubCategory = 'ServiceSubCategory'
+      var subCategoryData = {
+        table: serviceSubCategory,
+        data: resData
+      }
+      var appsliderData = await servicesRepository.categoryAdd(subCategoryData)
       if (appsliderData.error === false) {
         response.error = false
         response.data = appsliderData.data
@@ -444,8 +446,8 @@ module.exports = function () {
           if (bannerImages !== '') {
             bannerImages.map(async element => {
               var bannerData = {
-                CategoryId: appsliderData.data[0],
-                SubCategoryId: data.SubCategoryId,
+                CategoryId: data.CategoryId,
+                SubCategoryId: appsliderData.data[0],
                 Path: element.bannerImage,
                 Type: element.Type
               }
@@ -455,8 +457,8 @@ module.exports = function () {
           if (description !== '') {
             description.map(async element => {
               var bannerData = {
-                CategoryId: appsliderData.data[0],
-                SubCategoryId: data.SubCategoryId,
+                CategoryId: data.CategoryId,
+                SubCategoryId: appsliderData.data[0],
                 Icon: element.Icon,
                 Text: element.Text
               }
@@ -465,7 +467,8 @@ module.exports = function () {
           }
           if (data.promotionTitle) {
             var promotionTitleData = {
-              CategoryId: appsliderData.data[0],
+              CategoryId: data.CategoryId,
+              SubCategoryId: appsliderData.data[0],
               Title: data.promotionTitle
             }
             var promotionTitlesData = servicesRepository.promotionTitleAdd(promotionTitleData)
@@ -474,8 +477,8 @@ module.exports = function () {
           if (promotionImage !== '') {
             promotionImage.map(async element => {
               var promotionImageData = {
-                CategoryId: appsliderData.data[0],
-                SubCategoryId: data.SubCategoryId,
+                CategoryId: data.CategoryId,
+                SubCategoryId: appsliderData.data[0],
                 Image: element.Image,
                 Text: element.Text
               }
@@ -493,5 +496,5 @@ module.exports = function () {
       err.msg = 'OOPS'
       callback(err)
     }
-  }  
+  }
 }

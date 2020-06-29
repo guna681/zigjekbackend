@@ -2,12 +2,12 @@ module.exports = function () {
   require('dotenv').config({ path: './../.env' })
   var admin = require('firebase-admin')
 
-  var serviceAccount = require('../keyFile/firebase-admin-sdk.json')
+  // var serviceAccount = require('../keyFile/firebase-admin-sdk.json')
 
   if (!admin.apps.length) {
     console.log('firebase admin initialized')
     admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
+      // credential: admin.credential.cert(serviceAccount),
       databaseURL: 'https://gettaxi-user-bde6a.firebaseio.com'
     })
   }

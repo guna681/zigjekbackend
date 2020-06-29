@@ -2617,18 +2617,18 @@ module.exports = function (app, validator) {
 
   // add category
   app.post(`${basePath}/addCategory`, [
-    // validator.check('TitleId').trim().isNumeric()
-    //   .withMessage('INVALID:$[1],TitleId'),
-    // validator.check('Name').trim().isLength({ min: 1, max: 50 })
-    //   .withMessage('INVALID:$[1],Name'),
-    // validator.check('Category').trim().isLength({ min: 1, max: 50 })
-    //   .withMessage('INVALID:$[1],Category'),
-    // validator.check('HasSubCategory').trim().isNumeric()
-    //   .withMessage('INVALID:$[1],HasSubCategory'),
-    // validator.check('IsFixedPricing').trim().isNumeric()
-    //   .withMessage('INVALID:$[1],IsFixedPricing')
-    // validator.check('Icon').isLength({ min: 1, max: 255 })
-    //   .withMessage('INVALID: $[1],Icon').optional().withMessage('INVALID: $[1],Icon')
+    validator.check('TitleId').isNumeric().trim()
+      .withMessage('INVALID: $[1], TitleId'),
+    validator.check('Name').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], Name'),
+    validator.check('Type').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], Type'),
+    validator.check('HasSubCategory').isNumeric().trim()
+      .withMessage('INVALID: $[1], HasSubCategory'),
+    validator.check('IsFixedPricing').isNumeric().trim()
+      .withMessage('INVALID: $[1], IsFixedPricing'),
+    validator.check('Icon').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], Icon')
   ], (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
@@ -2648,18 +2648,18 @@ module.exports = function (app, validator) {
 
   // edit category
   app.post(`${basePath}/EditCategory`, [
-    // validator.check('TitleId').trim().isNumeric()
-    //   .withMessage('INVALID:$[1],TitleId'),
-    // validator.check('Name').trim().isLength({ min: 1, max: 50 })
-    //   .withMessage('INVALID:$[1],Name'),
-    // validator.check('Category').trim().isLength({ min: 1, max: 50 })
-    //   .withMessage('INVALID:$[1],Category'),
-    // validator.check('HasSubCategory').trim().isNumeric()
-    //   .withMessage('INVALID:$[1],HasSubCategory'),
-    // validator.check('IsFixedPricing').trim().isNumeric()
-    //   .withMessage('INVALID:$[1],IsFixedPricing')
-    // validator.check('Icon').isLength({ min: 1, max: 255 })
-    //   .withMessage('INVALID: $[1],Icon').optional().withMessage('INVALID: $[1],Icon')
+    validator.check('TitleId').isNumeric().trim()
+      .withMessage('INVALID: $[1], TitleId'),
+    validator.check('Name').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], Name'),
+    validator.check('Type').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], Type'),
+    validator.check('HasSubCategory').isNumeric().trim()
+      .withMessage('INVALID: $[1], HasSubCategory'),
+    validator.check('IsFixedPricing').isNumeric().trim()
+      .withMessage('INVALID: $[1], IsFixedPricing'),
+    validator.check('Icon').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], Icon')
   ], (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
@@ -2700,20 +2700,14 @@ module.exports = function (app, validator) {
 
   // add SubCategory
   app.post(`${basePath}/addSubCategory`, [
-    validator.check('TitleId').isNumeric().trim()
-      .withMessage('INVALID: $[1], titleId'),
+    validator.check('CategoryId').isNumeric().trim()
+      .withMessage('INVALID: $[1], CategoryId'),
     validator.check('Name').isLength({ min: 1, max: 50 }).trim()
       .withMessage('INVALID: $[1], Name'),
-    validator.check('Type').isLength({ min: 1, max: 50 }).trim()
-      .withMessage('INVALID: $[1], Type'),
-    validator.check('Icon').isLength({ min: 1, max: 500 }).trim()
-      .withMessage('INVALID: $[1], Icon'),
-    validator.check('HasSubCategory').isLength({ min: 1, max: 50 }).trim()
-      .withMessage('INVALID: $[1], HasSubCategory'),
+    validator.check('Image').isLength({ min: 1, max: 500 }).trim()
+      .withMessage('INVALID: $[1], Image'),
     validator.check('IsFixedPricing').isNumeric().trim()
-      .withMessage('INVALID: $[1], IsFixedPricing'),
-    validator.check('DisplayType').isLength({ min: 1, max: 50 }).trim()
-      .withMessage('INVALID: $[1], DisplayType')
+      .withMessage('INVALID: $[1], IsFixedPricing')
   ], (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
