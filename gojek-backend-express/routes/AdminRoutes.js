@@ -2723,5 +2723,21 @@ module.exports = function (app, validator) {
         })
       })
     }
-  }) 
+  })
+
+  app.get(`${basePath}/serviceSubCategoryListView`, (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.serviceSubCategoryListViewCtrl((result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
 }
