@@ -414,7 +414,7 @@ module.exports = function () {
           knex.destroy()
         })
     })
-  } 
+  }
 
   this.subCategoryView = () => {
     var output = {}
@@ -439,5 +439,31 @@ module.exports = function () {
           knex.destroy()
         })
     })
-  } 
   }
+
+  // CategoryList view with subCategory
+  this.CategoryListView = () => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceCategory)
+        .where('HasSubCategory', '1')
+        .then((result) => {
+          if (result) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+}

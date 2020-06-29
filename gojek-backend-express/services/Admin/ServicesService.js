@@ -516,5 +516,24 @@ module.exports = function () {
       err.msg = 'OOPS'
       callback(err)
     }
-  }  
+  }
+  this.categoryListService = async (callback) => {
+    var response = {}
+    try {
+      var appsliderData = await servicesRepository.CategoryListView()
+      if (appsliderData.error === false) {
+        response.error = false
+        response.data = appsliderData.data
+        response.msg = 'VALID'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
 }
