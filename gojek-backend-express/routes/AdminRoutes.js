@@ -2617,18 +2617,18 @@ module.exports = function (app, validator) {
 
   // add category
   app.post(`${basePath}/addCategory`, [
-    validator.check('TitleId').isNumeric().trim()
-      .withMessage('INVALID: $[1], TitleId'),
-    validator.check('Name').isLength({ min: 1, max: 50 }).trim()
-      .withMessage('INVALID: $[1], Name'),
-    validator.check('Type').isLength({ min: 1, max: 50 }).trim()
-      .withMessage('INVALID: $[1], Type'),
-    validator.check('HasSubCategory').isNumeric().trim()
-      .withMessage('INVALID: $[1], HasSubCategory'),
-    validator.check('IsFixedPricing').isNumeric().trim()
-      .withMessage('INVALID: $[1], IsFixedPricing'),
-    validator.check('Icon').isLength({ min: 1, max: 50 }).trim()
-      .withMessage('INVALID: $[1], Icon')
+    validator.check('titleId').isNumeric().trim()
+      .withMessage('INVALID: $[1], titleId'),
+    validator.check('name').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], name'),
+    validator.check('type').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], type'),
+    validator.check('hasSubCategory').isNumeric().trim()
+      .withMessage('INVALID: $[1], hasSubCategory'),
+    validator.check('isFixedPricing').isNumeric().trim()
+      .withMessage('INVALID: $[1], isFixedPricing'),
+    validator.check('icon').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], icon')
   ], (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
@@ -2648,18 +2648,18 @@ module.exports = function (app, validator) {
 
   // edit category
   app.post(`${basePath}/EditCategory`, [
-    validator.check('TitleId').isNumeric().trim()
-      .withMessage('INVALID: $[1], TitleId'),
-    validator.check('Name').isLength({ min: 1, max: 50 }).trim()
-      .withMessage('INVALID: $[1], Name'),
-    validator.check('Type').isLength({ min: 1, max: 50 }).trim()
-      .withMessage('INVALID: $[1], Type'),
-    validator.check('HasSubCategory').isNumeric().trim()
-      .withMessage('INVALID: $[1], HasSubCategory'),
-    validator.check('IsFixedPricing').isNumeric().trim()
-      .withMessage('INVALID: $[1], IsFixedPricing'),
-    validator.check('Icon').isLength({ min: 1, max: 50 }).trim()
-      .withMessage('INVALID: $[1], Icon')
+    validator.check('titleId').isNumeric().trim()
+      .withMessage('INVALID: $[1], titleId'),
+    validator.check('name').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], name'),
+    validator.check('type').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], type'),
+    validator.check('hasSubCategory').isNumeric().trim()
+      .withMessage('INVALID: $[1], hasSubCategory'),
+    validator.check('isFixedPricing').isNumeric().trim()
+      .withMessage('INVALID: $[1], isFixedPricing'),
+    validator.check('icon').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], icon')
   ], (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
@@ -2700,14 +2700,14 @@ module.exports = function (app, validator) {
 
   // add SubCategory
   app.post(`${basePath}/addSubCategory`, [
-    validator.check('CategoryId').isNumeric().trim()
-      .withMessage('INVALID: $[1], CategoryId'),
-    validator.check('Name').isLength({ min: 1, max: 50 }).trim()
-      .withMessage('INVALID: $[1], Name'),
-    validator.check('Image').isLength({ min: 1, max: 500 }).trim()
-      .withMessage('INVALID: $[1], Image'),
-    validator.check('IsFixedPricing').isNumeric().trim()
-      .withMessage('INVALID: $[1], IsFixedPricing')
+    validator.check('categoryId').isNumeric().trim()
+      .withMessage('INVALID: $[1], categoryId'),
+    validator.check('name').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], name'),
+    validator.check('image').isLength({ min: 1, max: 500 }).trim()
+      .withMessage('INVALID: $[1], image'),
+    validator.check('isFixedPricing').isNumeric().trim()
+      .withMessage('INVALID: $[1], isFixedPricing')
   ], (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
