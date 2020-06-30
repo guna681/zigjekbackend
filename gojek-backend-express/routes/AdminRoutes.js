@@ -2617,18 +2617,18 @@ module.exports = function (app, validator) {
 
   // add category
   app.post(`${basePath}/addCategory`, [
-    // validator.check('TitleId').trim().isNumeric()
-    //   .withMessage('INVALID:$[1],TitleId'),
-    // validator.check('Name').trim().isLength({ min: 1, max: 50 })
-    //   .withMessage('INVALID:$[1],Name'),
-    // validator.check('Category').trim().isLength({ min: 1, max: 50 })
-    //   .withMessage('INVALID:$[1],Category'),
-    // validator.check('HasSubCategory').trim().isNumeric()
-    //   .withMessage('INVALID:$[1],HasSubCategory'),
-    // validator.check('IsFixedPricing').trim().isNumeric()
-    //   .withMessage('INVALID:$[1],IsFixedPricing')
-    // validator.check('Icon').isLength({ min: 1, max: 255 })
-    //   .withMessage('INVALID: $[1],Icon').optional().withMessage('INVALID: $[1],Icon')
+    validator.check('titleId').isNumeric().trim()
+      .withMessage('INVALID: $[1], titleId'),
+    validator.check('name').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], name'),
+    validator.check('type').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], type'),
+    validator.check('hasSubCategory').isNumeric().trim()
+      .withMessage('INVALID: $[1], hasSubCategory'),
+    validator.check('isFixedPricing').isNumeric().trim()
+      .withMessage('INVALID: $[1], isFixedPricing'),
+    validator.check('icon').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], icon')
   ], (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
@@ -2648,18 +2648,18 @@ module.exports = function (app, validator) {
 
   // edit category
   app.post(`${basePath}/EditCategory`, [
-    // validator.check('TitleId').trim().isNumeric()
-    //   .withMessage('INVALID:$[1],TitleId'),
-    // validator.check('Name').trim().isLength({ min: 1, max: 50 })
-    //   .withMessage('INVALID:$[1],Name'),
-    // validator.check('Category').trim().isLength({ min: 1, max: 50 })
-    //   .withMessage('INVALID:$[1],Category'),
-    // validator.check('HasSubCategory').trim().isNumeric()
-    //   .withMessage('INVALID:$[1],HasSubCategory'),
-    // validator.check('IsFixedPricing').trim().isNumeric()
-    //   .withMessage('INVALID:$[1],IsFixedPricing')
-    // validator.check('Icon').isLength({ min: 1, max: 255 })
-    //   .withMessage('INVALID: $[1],Icon').optional().withMessage('INVALID: $[1],Icon')
+    validator.check('titleId').isNumeric().trim()
+      .withMessage('INVALID: $[1], titleId'),
+    validator.check('name').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], name'),
+    validator.check('type').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], type'),
+    validator.check('hasSubCategory').isNumeric().trim()
+      .withMessage('INVALID: $[1], hasSubCategory'),
+    validator.check('isFixedPricing').isNumeric().trim()
+      .withMessage('INVALID: $[1], isFixedPricing'),
+    validator.check('icon').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], icon')
   ], (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
@@ -2692,6 +2692,64 @@ module.exports = function (app, validator) {
     } else {
       servicesController.categoryViewCtrl(data, (result) => {
         this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
+
+  // add SubCategory
+  app.post(`${basePath}/addSubCategory`, [
+    validator.check('categoryId').isNumeric().trim()
+      .withMessage('INVALID: $[1], categoryId'),
+    validator.check('name').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], name'),
+    validator.check('image').isLength({ min: 1, max: 500 }).trim()
+      .withMessage('INVALID: $[1], image'),
+    validator.check('isFixedPricing').isNumeric().trim()
+      .withMessage('INVALID: $[1], isFixedPricing')
+  ], (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.addSubCategoryCtrl(data, (result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
+
+  app.get(`${basePath}/serviceSubCategoryListView`, (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.serviceSubCategoryListViewCtrl((result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
+  app.get(`${basePath}/categoryList`, (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.categoryListCtrl((result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })
       })

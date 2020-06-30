@@ -136,4 +136,48 @@ module.exports = function () {
       callback(response)
     })
   }
+
+  this.addSubCategoryCtrl = (data, callback) => {
+    var response = {}
+    servicesService.addSubCategoryService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+  this.serviceSubCategoryListViewCtrl = (callback) => {
+    var response = {}
+    servicesService.subCategoryService((result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.categoryListCtrl = (callback) => {
+    var response = {}
+    servicesService.categoryListService((result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
 }

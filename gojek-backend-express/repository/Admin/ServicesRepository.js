@@ -22,6 +22,7 @@ module.exports = function () {
   const serviceCategoryExtras = 'ServiceCategoryExtras'
   const serviceCategoryTitle  = 'ServiceCategoryTitle'
   const serviceCategorySlide  = 'ServiceCategorySlide'
+  const serviceSubCategory = 'ServiceSubCategory'
   // services Page Select
   this.servicesView = () => {
     var output = {}
@@ -188,8 +189,8 @@ module.exports = function () {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(serviceCategory)
-        .insert(data)
+      knex(data.table)
+        .insert(data.data)
         .then((result) => {
           if (result.length) {
             output.error = false
@@ -363,14 +364,12 @@ module.exports = function () {
   }
  //  Category Banner View Page Select
   this.CategoryBannerView = (data) => {
-    console.log(data)
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(data.table).select('Id','CategoryId','SubCategoryId','Text','Type','Path as bannerImage','Status')
         .where(data.where)
         .then((result) => {
-          console.log(result)
           if (result.length) {
             output.error = false
             output.data = result
@@ -415,5 +414,56 @@ module.exports = function () {
           knex.destroy()
         })
     })
-  } 
   }
+
+  this.subCategoryView = () => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceSubCategory).select('ServiceSubCategory.Id', 'ServiceSubCategory.Name as SubCategoryName', 'ServiceSubCategory.Image', 'ServiceSubCategory.Status', 'ServiceSubCategory.ServicesDisplayStyle', 'ServiceCategory.Name as CategoryName')
+        .leftJoin('ServiceCategory', 'ServiceCategory.Id', `ServiceSubCategory.CategoryId`)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  // CategoryList view with subCategory
+  this.CategoryListView = () => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceCategory)
+        .where('HasSubCategory', '1')
+        .then((result) => {
+          if (result) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+}
