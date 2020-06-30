@@ -141,15 +141,15 @@ module.exports = function () {
     var response = {}
     try {
       var resData = {
-        TitleId: data.TitleId,
-        Name: data.Name,
-        Type: data.Type,
-        Icon: data.Icon,
-        HasSubCategory: data.HasSubCategory,
-        IsFixedPricing: data.IsFixedPricing,
-        PricePerHour: data.PricePerHour,
-        DisplayType: data.DisplayType,
-        DisplayDescription: data.DisplayDescription
+        TitleId: data.titleId,
+        Name: data.name,
+        Type: data.type,
+        Icon: data.icon,
+        HasSubCategory: data.hasSubCategory,
+        IsFixedPricing: data.isFixedPricing,
+        PricePerHour: data.pricePerHour,
+        DisplayType: data.displayType,
+        DisplayDescription: data.displayDescription
       }
       const serviceCategory = 'ServiceCategory'
       var categorydata = {
@@ -161,14 +161,14 @@ module.exports = function () {
         response.error = false
         response.data = appsliderData.data
         response.msg = 'VALID'
-        if (data.Type == 'SERVICE') {
+        if (data.type == 'SERVICE') {
           var bannerImages = JSON.parse(data.bannerImage)
           var description  = JSON.parse(data.description)
           if (bannerImages !== '') {
             bannerImages.map(async element => {
               var bannerData = {
                 CategoryId: appsliderData.data[0],
-                SubCategoryId: data.SubCategoryId,
+                SubCategoryId: data.subCategoryId,
                 Path: element.bannerImage,
                 Type: element.Type
               }
@@ -179,7 +179,7 @@ module.exports = function () {
             description.map(async element => {
               var bannerData = {
                 CategoryId: appsliderData.data[0],
-                SubCategoryId: data.SubCategoryId,
+                SubCategoryId: data.subCategoryId,
                 Icon: element.Icon,
                 Text: element.Text
               }
@@ -198,7 +198,7 @@ module.exports = function () {
             promotionImage.map(async element => {
               var promotionImageData = {
                 CategoryId: appsliderData.data[0],
-                SubCategoryId: data.SubCategoryId,
+                SubCategoryId: data.subCategoryId,
                 Image: element.Image,
                 Text: element.Text
               }
@@ -221,28 +221,28 @@ module.exports = function () {
     var response = {}
     try {
       var resData = {
-        TitleId: data.TitleId,
-        Name: data.Name,
-        Type: data.Type,
-        Icon: data.Icon,
+        TitleId: data.titleId,
+        Name: data.name,
+        Type: data.type,
+        Icon: data.icon,
         Status: '1',
-        HasSubCategory: data.HasSubCategory,
-        IsFixedPricing: data.IsFixedPricing,
-        PricePerHour: data.PricePerHour,
-        DisplayType: data.DisplayType,
-        DisplayDescription: data.DisplayDescription
+        HasSubCategory: data.hasSubCategory,
+        IsFixedPricing: data.isFixedPricing,
+        PricePerHour: data.pricePerHour,
+        DisplayType: data.displayType,
+        DisplayDescription: data.displayDescription
       }
       var categorydata = {
         table: { serviceCategory: 'ServiceCategory' },
         data: resData,
-        where: { Id: data.Id }
+        where: { Id: data.id }
       }
       var appsliderData = await servicesRepository.categoryEdit(categorydata)
       if (appsliderData.error === false) {
         response.error = false
         response.data = appsliderData.data
         response.msg = 'VALID'
-        if (data.Type == 'SERVICE') {
+        if (data.type == 'SERVICE') {
           var bannerImages = JSON.parse(data.bannerImage)
           var description  = JSON.parse(data.description)
           if (bannerImages !== '') {
@@ -258,8 +258,8 @@ module.exports = function () {
                 var bannerImagesData = await servicesRepository.categoryDelete(bannerImageEdit)
               } else if (!element.Id) {
                 var bannerData = {
-                  CategoryId: data.Id,
-                  SubCategoryId: data.SubCategoryId,
+                  CategoryId: data.id,
+                  SubCategoryId: data.subCategoryId,
                   Path: element.bannerImage,
                   Type: element.Type
                 }
@@ -291,8 +291,8 @@ module.exports = function () {
                 var descriptionResult = await servicesRepository.categoryDelete(descriptionEdit)
               } else if (!element.Id) {
                 var descriptionData = {
-                  CategoryId: data.Id,
-                  SubCategoryId: data.SubCategoryId,
+                  CategoryId: data.id,
+                  SubCategoryId: data.subCategoryId,
                   Icon: element.Icon,
                   Text: element.Text
                 }
@@ -336,8 +336,8 @@ module.exports = function () {
                 var bannerImagesData = await servicesRepository.categoryDelete(promotionImageEdit)
               } else if (!element.Id) {
                 var bannerImagesData = {
-                  CategoryId: data.Id,
-                  SubCategoryId: data.SubCategoryId,
+                  CategoryId: data.id,
+                  SubCategoryId: data.subCategoryId,
                   Image: element.Image,
                   Text: element.Text
                 }
@@ -423,12 +423,12 @@ module.exports = function () {
     var response = {}
     try {
       var resData = {
-        CategoryId: data.CategoryId,
-        Name: data.Name,
-        Image: data.Image,
-        IsFixedPricing: data.IsFixedPricing,
-        PricePerHour: data.PricePerHour,
-        ServicesDisplayStyle: data.ServicesDisplayStyle
+        CategoryId: data.categoryId,
+        Name: data.name,
+        Image: data.image,
+        IsFixedPricing: data.isFixedPricing,
+        PricePerHour: data.pricePerHour,
+        ServicesDisplayStyle: data.servicesDisplayStyle
       }
       const serviceSubCategory = 'ServiceSubCategory'
       var subCategoryData = {
@@ -440,13 +440,13 @@ module.exports = function () {
         response.error = false
         response.data = appsliderData.data
         response.msg = 'VALID'
-        if (data.Type == 'SERVICE') {
+        if (data.type == 'SERVICE') {
           var bannerImages = JSON.parse(data.bannerImage)
           var description  = JSON.parse(data.description)
           if (bannerImages !== '') {
             bannerImages.map(async element => {
               var bannerData = {
-                CategoryId: data.CategoryId,
+                CategoryId: data.categoryId,
                 SubCategoryId: appsliderData.data[0],
                 Path: element.bannerImage,
                 Type: element.Type
@@ -457,7 +457,7 @@ module.exports = function () {
           if (description !== '') {
             description.map(async element => {
               var bannerData = {
-                CategoryId: data.CategoryId,
+                CategoryId: data.categoryId,
                 SubCategoryId: appsliderData.data[0],
                 Icon: element.Icon,
                 Text: element.Text
@@ -467,7 +467,7 @@ module.exports = function () {
           }
           if (data.promotionTitle) {
             var promotionTitleData = {
-              CategoryId: data.CategoryId,
+              CategoryId: data.categoryId,
               SubCategoryId: appsliderData.data[0],
               Title: data.promotionTitle
             }
@@ -477,7 +477,7 @@ module.exports = function () {
           if (promotionImage !== '') {
             promotionImage.map(async element => {
               var promotionImageData = {
-                CategoryId: data.CategoryId,
+                CategoryId: data.categoryId,
                 SubCategoryId: appsliderData.data[0],
                 Image: element.Image,
                 Text: element.Text
@@ -516,5 +516,24 @@ module.exports = function () {
       err.msg = 'OOPS'
       callback(err)
     }
-  }  
+  }
+  this.categoryListService = async (callback) => {
+    var response = {}
+    try {
+      var appsliderData = await servicesRepository.CategoryListView()
+      if (appsliderData.error === false) {
+        response.error = false
+        response.data = appsliderData.data
+        response.msg = 'VALID'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
 }
