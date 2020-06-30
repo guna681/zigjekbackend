@@ -2755,4 +2755,56 @@ module.exports = function (app, validator) {
       })
     }
   })
+
+  // SubCategory  View
+  app.post(`${basePath}/subCategoryView`, [
+    validator.check('subCategoryId').isNumeric().trim()
+      .withMessage('INVALID: $[1], subCategoryId')
+  ], (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.subCategoryViewCtrl(data, (result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
+
+  // Edit SubCategory
+  app.post(`${basePath}/editSubCategory`, [
+    validator.check('subCategoryId').isNumeric().trim()
+      .withMessage('INVALID: $[1], subCategoryId'),
+    validator.check('categoryId').isNumeric().trim()
+      .withMessage('INVALID: $[1], categoryId'),
+    validator.check('name').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], name'),
+    validator.check('image').isLength({ min: 1, max: 500 }).trim()
+      .withMessage('INVALID: $[1], image'),
+    validator.check('isFixedPricing').isNumeric().trim()
+      .withMessage('INVALID: $[1], isFixedPricing'),
+    validator.check('servicesDisplayStyle').isNumeric().trim()
+      .withMessage('INVALID: $[1], servicesDisplayStyle')
+  ], (req, res) => {
+    const lang = req.headers.lang 
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.editSubCategoryCtrl(data, (result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
 }
