@@ -609,13 +609,15 @@ module.exports = function () {
         response.error = false
         response.data = appsliderData.data
         response.msg = 'VALID'
-        if (data.type == 'SERVICE') {
+        // if (data.type == 'SERVICE') {
           var bannerImages = JSON.parse(data.bannerImage)
           var description  = JSON.parse(data.description)
           if (bannerImages !== '') {
+            console.log(bannerImages)
             bannerImages.map(async element => {
               
               if (element.isDeleted == '1') {
+                console.log(element)
                 const serviceCategoryBanner = 'ServiceCategoryBanner'
                 var bannerImageEdit = {
                   table: serviceCategoryBanner,
@@ -623,6 +625,7 @@ module.exports = function () {
                   where: { Id: element.Id }
                 }
                 var bannerImagesData = await servicesRepository.categoryDelete(bannerImageEdit)
+                console.log(bannerImagesData)
               } else if (!element.Id) {
                 var bannerData = {
                   CategoryId: data.categoryId,
@@ -723,7 +726,7 @@ module.exports = function () {
               }
             })
           }
-        }
+        // }
       } else {
         response.error = true
         response.msg = 'FAILED'
