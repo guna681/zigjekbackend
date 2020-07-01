@@ -536,4 +536,206 @@ module.exports = function () {
       callback(err)
     }
   }
+  // sub Category view
+  this.subCategoryViewService = async (data, callback) => {
+    var response = {}
+    try {
+      var categorydata = {
+        table: { serviceSubCategory: 'ServiceSubCategory' },
+        where: { Id: data.subCategoryId }
+      }
+      var subCategoryViewData = await servicesRepository.categoryView(categorydata)
+      var bannerImagesData = {
+        table: { serviceCategoryBanner: 'ServiceCategoryBanner' },
+        where: { SubCategoryId: data.subCategoryId }
+      }
+      var bannerImagesViewData = await servicesRepository.CategoryBannerView(bannerImagesData)
+      var descriptionImagesData = {
+        table: { serviceCategoryExtras: 'ServiceCategoryExtras' },
+        where: { SubCategoryId: data.subCategoryId }
+      }
+      var descriptionImagesViewData = await servicesRepository.categoryView(descriptionImagesData)
+
+      var promotionImageData = {
+        table: { serviceCategorySlide: 'ServiceCategorySlide' },
+        where: { SubCategoryId: data.subCategoryId }
+      }
+      var promotionImageViewData = await servicesRepository.categoryView(promotionImageData)
+
+      var promotionTitleData = {
+        table: { serviceCategoryTitle: 'ServiceCategoryTitle' },
+        where: { SubCategoryId: data.subCategoryId }
+      }
+      var promotionTitleViewData = await servicesRepository.categoryView(promotionTitleData)
+      if (subCategoryViewData.error === false) {
+        var result = []
+        result.push({ subCategory: subCategoryViewData.data }, { bannerImage: bannerImagesViewData.data },
+          { description: descriptionImagesViewData.data }, { promotionImage: promotionImageViewData.data },
+          { promotionTitle: promotionTitleViewData.data })
+        response.error = false
+        response.data = result
+        response.msg = 'VALID'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
+
+  this.editSubCategoryService = async (data, callback) => {
+    var response = {}
+    try {
+      var resData = {
+        CategoryId: data.categoryId,
+        Name: data.name,
+        Image: data.image,
+        Status: '1',
+        IsFixedPricing: data.isFixedPricing,
+        PricePerHour: data.pricePerHour,
+        ServicesDisplayStyle: data.servicesDisplayStyle
+      }
+      var categorydata = {
+        table: { serviceSubCategory: 'ServiceSubCategory' },
+        data: resData,
+        where: { Id: data.subCategoryId }
+      }
+      var appsliderData = await servicesRepository.categoryEdit(categorydata)
+      if (appsliderData.error === false) {
+        response.error = false
+        response.data = appsliderData.data
+        response.msg = 'VALID'
+        // if (data.type == 'SERVICE') {
+          var bannerImages = JSON.parse(data.bannerImage)
+          var description  = JSON.parse(data.description)
+          if (bannerImages !== '') {
+            console.log(bannerImages)
+            bannerImages.map(async element => {
+              
+              if (element.isDeleted == '1') {
+                console.log(element)
+                const serviceCategoryBanner = 'ServiceCategoryBanner'
+                var bannerImageEdit = {
+                  table: serviceCategoryBanner,
+                  // data: bannerData,
+                  where: { Id: element.Id }
+                }
+                var bannerImagesData = await servicesRepository.categoryDelete(bannerImageEdit)
+                console.log(bannerImagesData)
+              } else if (!element.Id) {
+                var bannerData = {
+                  CategoryId: data.categoryId,
+                  SubCategoryId: data.subCategoryId,
+                  Path: element.bannerImage,
+                  Type: element.Type
+                }
+                var bannerImagesData = await servicesRepository.categoryBannerAdd(bannerData)
+              } else {
+                var bannerData = {
+                  Path: element.bannerImage,
+                  Type: element.Type
+                }
+                var bannerImageEdit = {
+                  table: { serviceCategoryBanner: 'ServiceCategoryBanner' },
+                  data: bannerData,
+                  where: { Id: element.Id }
+                }
+                var bannerImagesData = await servicesRepository.categoryEdit(bannerImageEdit)
+              }
+            })
+          }
+          if (description !== '') {
+            description.map(async element => {
+
+              if (element.isDeleted == '1') {
+                const serviceCategoryExtras = 'ServiceCategoryExtras'
+                var descriptionEdit = {
+                  table: serviceCategoryExtras,
+                  // data: bannerData,
+                  where: { Id: element.Id }
+                }
+                var descriptionResult = await servicesRepository.categoryDelete(descriptionEdit)
+              } else if (!element.Id) {
+                var descriptionData = {
+                  CategoryId: data.categoryId,
+                  SubCategoryId: data.subCategoryId,
+                  Icon: element.Icon,
+                  Text: element.Text
+                }
+                var bannerImagesData = await servicesRepository.serviceCategoryExtrasAdd(descriptionData)
+              } else {
+                var descriptionData = {
+                  Icon: element.Icon,
+                  Text: element.Text
+                }
+                var descriptionEdit = {
+                  table: { serviceCategoryExtras: 'ServiceCategoryExtras' },
+                  data: descriptionData,
+                  where: { Id: element.Id }
+                }
+                var serviceCategoryExtrasData = await servicesRepository.categoryEdit(descriptionEdit)
+              }
+            })
+          }
+          if (data.promotionTitle) {
+            var promotionTitleData = {
+              Title: data.promotionTitle
+            }
+            var promotionTitleEdit = {
+              table: { serviceCategoryTitle: 'ServiceCategoryTitle' },
+              data: promotionTitleData,
+              where: { Id: data.promotionTitleId }
+            }
+            var promotionTitlesData = servicesRepository.categoryEdit(promotionTitleEdit)
+          }
+          var promotionImage  = JSON.parse(data.promotionImage)
+          if (promotionImage !== '') {
+            promotionImage.map(async element => {
+            
+              if (element.isDeleted == '1') {
+                const serviceCategorySlide = 'ServiceCategorySlide'
+                var promotionImageEdit = {
+                  table: serviceCategorySlide,
+                  // data: bannerData,
+                  where: { Id: element.Id }
+                }
+                var bannerImagesData = await servicesRepository.categoryDelete(promotionImageEdit)
+              } else if (!element.Id) {
+                var bannerImagesData = {
+                  CategoryId: data.categoryId,
+                  SubCategoryId: data.subCategoryId,
+                  Image: element.Image,
+                  Text: element.Text
+                }
+                var bannerImagesResult = await servicesRepository.promotionImageAdd(bannerImagesData)
+              } else {
+                var promotionImageData = {
+                  Image: element.Image,
+                  Text: element.Text
+                }
+                var promotionImageEdit = {
+                  table: { serviceCategorySlide: 'ServiceCategorySlide' },
+                  data: promotionImageData,
+                  where: { Id: element.Id }
+                }
+                var promotionImages = await servicesRepository.categoryEdit(promotionImageEdit)
+              }
+            })
+          }
+        // }
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
 }
