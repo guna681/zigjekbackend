@@ -2725,15 +2725,17 @@ module.exports = function (app, validator) {
     }
   })
 
-  app.get(`${basePath}/serviceSubCategoryListView`, (req, res) => {
+  app.get(`${basePath}/serviceSubCategoryListView/:page`, (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
+    var limit = 3
+    var page = { page: req.params.page, limit: limit }
     if (error.array().length) {
       errorHandler.requestHandler(error.array(), true, lang, (message) => {
         return res.send(message)
       })
     } else {
-      servicesController.serviceSubCategoryListViewCtrl((result) => {
+      servicesController.serviceSubCategoryListViewCtrl(page, (result) => {
         errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })

@@ -336,6 +336,32 @@ module.exports = function () {
         })
     })
   }
+
+  // subcategory View count
+  this.subCategoryCount = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceSubCategory).count(`Id as count`)
+        .limit(data.limit).offset(data.dataoffset)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
   // category View Page Select
   this.categoryView = (data) => {
     var output = {}
@@ -416,12 +442,16 @@ module.exports = function () {
     })
   }
 
-  this.subCategoryView = () => {
+  this.subCategoryView = (data) => {
     var output = {}
+    var limit = data.limit
+    var page = data.page
+    var offset = (page - 1) * limit
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(serviceSubCategory).select('ServiceSubCategory.Id', 'ServiceSubCategory.Name as SubCategoryName', 'ServiceSubCategory.Image', 'ServiceSubCategory.Status', 'ServiceSubCategory.ServicesDisplayStyle', 'ServiceCategory.Name as CategoryName')
         .leftJoin('ServiceCategory', 'ServiceCategory.Id', `ServiceSubCategory.CategoryId`)
+        .limit(limit).offset(offset)
         .then((result) => {
           if (result.length > 0) {
             output.error = false
