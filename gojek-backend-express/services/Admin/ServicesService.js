@@ -609,7 +609,7 @@ module.exports = function () {
         response.error = false
         response.data = appsliderData.data
         response.msg = 'VALID'
-        if (data.type == 'SERVICE') {
+        // if (data.type == 'SERVICE') {
           var bannerImages = JSON.parse(data.bannerImage)
           var description  = JSON.parse(data.description)
           if (bannerImages !== '') {
@@ -723,7 +723,7 @@ module.exports = function () {
               }
             })
           }
-        }
+        // }
       } else {
         response.error = true
         response.msg = 'FAILED'
