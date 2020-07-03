@@ -191,7 +191,7 @@ module.exports = function () {
               CategoryId: appsliderData.data[0],
               Title: data.promotionTitle
             }
-            var promotionTitlesData = servicesRepository.promotionTitleAdd(promotionTitleData)
+            var promotionTitlesData = await servicesRepository.promotionTitleAdd(promotionTitleData)
           }
           var promotionImage  = JSON.parse(data.promotionImage)
           if (promotionImage !== '') {
@@ -315,12 +315,15 @@ module.exports = function () {
             var promotionTitleData = {
               Title: data.promotionTitle
             }
+            var categoryData = {
+              CategoryId: data.id
+            }
             var promotionTitleEdit = {
               table: { serviceCategoryTitle: 'ServiceCategoryTitle' },
               data: promotionTitleData,
-              where: { Id: data.promotionTitleId }
+              where: categoryData
             }
-            var promotionTitlesData = servicesRepository.categoryEdit(promotionTitleEdit)
+            var promotionTitlesData = await servicesRepository.categoryEdit(promotionTitleEdit)
           }
           var promotionImage  = JSON.parse(data.promotionImage)
           if (promotionImage !== '') {
@@ -689,7 +692,7 @@ module.exports = function () {
           var promotionTitleEdit = {
             table: { serviceCategoryTitle: 'ServiceCategoryTitle' },
             data: promotionTitleData,
-            where: { Id: data.promotionTitleId }
+            where: { subCategoryId: data.subCategoryId }
           }
           var promotionTitlesData = servicesRepository.categoryEdit(promotionTitleEdit)
         }
