@@ -4,3 +4,8 @@
 gojek-admin
 gojek-restaurant-admin
 zigjek-admin
+*.log
+*.jpeg
+*.png
+*.gif
+/gojek-backend-express/public/images
