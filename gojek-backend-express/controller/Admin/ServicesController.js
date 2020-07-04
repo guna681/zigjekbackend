@@ -151,9 +151,9 @@ module.exports = function () {
       callback(response)
     })
   }
-  this.serviceSubCategoryListViewCtrl = (callback) => {
+  this.serviceSubCategoryListViewCtrl = (data, callback) => {
     var response = {}
-    servicesService.subCategoryService((result) => {
+    servicesService.subCategoryService(data, (result) => {
       if (result.error) {
         response.error = true
         response.msg = result.msg

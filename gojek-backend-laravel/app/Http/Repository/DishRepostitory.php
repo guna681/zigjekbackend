@@ -84,6 +84,7 @@ class DishRepostitory extends Dishes
         $data = DishesCustomisationCategories::select('Dishes_Customisation_Categories.id as customisationCategoryId', 'Dishes_Customisation_Categories.name as customisationName', 'Dishes_Customisation_Categories.dishId', '.Dishes_Customisation_Categories.categoriesType', 'Dishes_Customisation_Categories.categoriesPathId')
                                          ->join('Customisation_Category','Dishes_Customisation_Categories.categoriesPathId','=','Customisation_Category.id')
                                          ->where('dishId', $dishId)
+                                         ->where('Customisation_Category.status', '1')
                                          ->whereNull('Customisation_Category.deleted_at')
                                          ->get();
 

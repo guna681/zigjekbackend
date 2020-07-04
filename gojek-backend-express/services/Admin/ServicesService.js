@@ -191,7 +191,7 @@ module.exports = function () {
               CategoryId: appsliderData.data[0],
               Title: data.promotionTitle
             }
-            var promotionTitlesData = servicesRepository.promotionTitleAdd(promotionTitleData)
+            var promotionTitlesData = await servicesRepository.promotionTitleAdd(promotionTitleData)
           }
           var promotionImage  = JSON.parse(data.promotionImage)
           if (promotionImage !== '') {
@@ -315,12 +315,15 @@ module.exports = function () {
             var promotionTitleData = {
               Title: data.promotionTitle
             }
+            var categoryData = {
+              CategoryId: data.id
+            }
             var promotionTitleEdit = {
               table: { serviceCategoryTitle: 'ServiceCategoryTitle' },
               data: promotionTitleData,
-              where: { Id: data.promotionTitleId }
+              where: categoryData
             }
-            var promotionTitlesData = servicesRepository.categoryEdit(promotionTitleEdit)
+            var promotionTitlesData = await servicesRepository.categoryEdit(promotionTitleEdit)
           }
           var promotionImage  = JSON.parse(data.promotionImage)
           if (promotionImage !== '') {
@@ -498,13 +501,19 @@ module.exports = function () {
     }
   }
 
-  this.subCategoryService = async (callback) => {
+  this.subCategoryService = async (data, callback) => {
     var response = {}
     try {
-      var appsliderData = await servicesRepository.subCategoryView()
+      var uresult = []
+      var subCategorycount = await servicesRepository.subCategoryCount(data)
+      var appsliderData = await servicesRepository.subCategoryView(data)
       if (appsliderData.error === false) {
+        uresult.push({
+          SubCategoryList: appsliderData.result,
+          Count: subCategorycount.result[0].count
+        })
         response.error = false
-        response.data = appsliderData.result
+        response.data = uresult
         response.msg = 'VALID'
       } else {
         response.error = true
@@ -613,11 +622,9 @@ module.exports = function () {
           var bannerImages = JSON.parse(data.bannerImage)
           var description  = JSON.parse(data.description)
           if (bannerImages !== '') {
-            console.log(bannerImages)
             bannerImages.map(async element => {
               
               if (element.isDeleted == '1') {
-                console.log(element)
                 const serviceCategoryBanner = 'ServiceCategoryBanner'
                 var bannerImageEdit = {
                   table: serviceCategoryBanner,
@@ -625,7 +632,6 @@ module.exports = function () {
                   where: { Id: element.Id }
                 }
                 var bannerImagesData = await servicesRepository.categoryDelete(bannerImageEdit)
-                console.log(bannerImagesData)
               } else if (!element.Id) {
                 var bannerData = {
                   CategoryId: data.categoryId,
@@ -645,87 +651,120 @@ module.exports = function () {
                   where: { Id: element.Id }
                 }
                 var bannerImagesData = await servicesRepository.categoryEdit(bannerImageEdit)
+        var bannerImages = JSON.parse(data.bannerImage)
+        var description  = JSON.parse(data.description)
+        if (bannerImages !== '') {
+          bannerImages.map(async element => {
+            if (element.isDeleted == '1') {
+              const serviceCategoryBanner = 'ServiceCategoryBanner'
+              var bannerImageEdit = {
+                table: serviceCategoryBanner,
+                // data: bannerData,
+                where: { Id: element.Id }
               }
-            })
-          }
-          if (description !== '') {
-            description.map(async element => {
-
-              if (element.isDeleted == '1') {
-                const serviceCategoryExtras = 'ServiceCategoryExtras'
-                var descriptionEdit = {
-                  table: serviceCategoryExtras,
-                  // data: bannerData,
-                  where: { Id: element.Id }
-                }
-                var descriptionResult = await servicesRepository.categoryDelete(descriptionEdit)
-              } else if (!element.Id) {
-                var descriptionData = {
-                  CategoryId: data.categoryId,
-                  SubCategoryId: data.subCategoryId,
-                  Icon: element.Icon,
-                  Text: element.Text
-                }
-                var bannerImagesData = await servicesRepository.serviceCategoryExtrasAdd(descriptionData)
-              } else {
-                var descriptionData = {
-                  Icon: element.Icon,
-                  Text: element.Text
-                }
-                var descriptionEdit = {
-                  table: { serviceCategoryExtras: 'ServiceCategoryExtras' },
-                  data: descriptionData,
-                  where: { Id: element.Id }
-                }
-                var serviceCategoryExtrasData = await servicesRepository.categoryEdit(descriptionEdit)
+              var bannerImagesData = await servicesRepository.categoryDelete(bannerImageEdit)
+            } else if (!element.Id) {
+              var bannerData = {
+                CategoryId: data.categoryId,
+                SubCategoryId: data.subCategoryId,
+                Path: element.bannerImage,
+                Type: element.Type
               }
-            })
-          }
-          if (data.promotionTitle) {
-            var promotionTitleData = {
-              Title: data.promotionTitle
+              var bannerImagesData = await servicesRepository.categoryBannerAdd(bannerData)
+            } else {
+              var bannerData = {
+                Path: element.bannerImage,
+                Type: element.Type
+              }
+              var bannerImageEdit = {
+                table: { serviceCategoryBanner: 'ServiceCategoryBanner' },
+                data: bannerData,
+                where: { Id: element.Id }
+              }
+              var bannerImagesData = await servicesRepository.categoryEdit(bannerImageEdit)
             }
-            var promotionTitleEdit = {
-              table: { serviceCategoryTitle: 'ServiceCategoryTitle' },
-              data: promotionTitleData,
-              where: { Id: data.promotionTitleId }
-            }
-            var promotionTitlesData = servicesRepository.categoryEdit(promotionTitleEdit)
-          }
-          var promotionImage  = JSON.parse(data.promotionImage)
-          if (promotionImage !== '') {
-            promotionImage.map(async element => {
-            
-              if (element.isDeleted == '1') {
-                const serviceCategorySlide = 'ServiceCategorySlide'
-                var promotionImageEdit = {
-                  table: serviceCategorySlide,
-                  // data: bannerData,
-                  where: { Id: element.Id }
-                }
-                var bannerImagesData = await servicesRepository.categoryDelete(promotionImageEdit)
-              } else if (!element.Id) {
-                var bannerImagesData = {
-                  CategoryId: data.categoryId,
-                  SubCategoryId: data.subCategoryId,
-                  Image: element.Image,
-                  Text: element.Text
-                }
-                var bannerImagesResult = await servicesRepository.promotionImageAdd(bannerImagesData)
-              } else {
-                var promotionImageData = {
-                  Image: element.Image,
-                  Text: element.Text
-                }
-                var promotionImageEdit = {
-                  table: { serviceCategorySlide: 'ServiceCategorySlide' },
-                  data: promotionImageData,
-                  where: { Id: element.Id }
-                }
-                var promotionImages = await servicesRepository.categoryEdit(promotionImageEdit)
+          })
+        }
+        if (description !== '') {
+          description.map(async element => {
+            if (element.isDeleted == '1') {
+              const serviceCategoryExtras = 'ServiceCategoryExtras'
+              var descriptionEdit = {
+                table: serviceCategoryExtras,
+                // data: bannerData,
+                where: { Id: element.Id }
               }
-            })
+              var descriptionResult = await servicesRepository.categoryDelete(descriptionEdit)
+            } else if (!element.Id) {
+              var descriptionData = {
+                CategoryId: data.categoryId,
+                SubCategoryId: data.subCategoryId,
+                Icon: element.Icon,
+                Text: element.Text
+              }
+              var bannerImagesData = await servicesRepository.serviceCategoryExtrasAdd(descriptionData)
+            } else {
+              var descriptionData = {
+                Icon: element.Icon,
+                Text: element.Text
+              }
+              var descriptionEdit = {
+                table: { serviceCategoryExtras: 'ServiceCategoryExtras' },
+                data: descriptionData,
+                where: { Id: element.Id }
+              }
+              var serviceCategoryExtrasData = await servicesRepository.categoryEdit(descriptionEdit)
+            }
+          })
+        }
+        if (data.promotionTitle) {
+          var promotionTitleData = {
+            Title: data.promotionTitle
           }
+          var promotionTitleEdit = {
+            table: { serviceCategoryTitle: 'ServiceCategoryTitle' },
+            data: promotionTitleData,
+            where: { subCategoryId: data.subCategoryId }
+          }
+<<<<<<< HEAD
+=======
+          var promotionTitlesData = servicesRepository.categoryEdit(promotionTitleEdit)
+        }
+        var promotionImage  = JSON.parse(data.promotionImage)
+        if (promotionImage !== '') {
+          promotionImage.map(async element => {
+          
+            if (element.isDeleted == '1') {
+              const serviceCategorySlide = 'ServiceCategorySlide'
+              var promotionImageEdit = {
+                table: serviceCategorySlide,
+                // data: bannerData,
+                where: { Id: element.Id }
+              }
+              var bannerImagesData = await servicesRepository.categoryDelete(promotionImageEdit)
+            } else if (!element.Id) {
+              var bannerImagesData = {
+                CategoryId: data.categoryId,
+                SubCategoryId: data.subCategoryId,
+                Image: element.Image,
+                Text: element.Text
+              }
+              var bannerImagesResult = await servicesRepository.promotionImageAdd(bannerImagesData)
+            } else {
+              var promotionImageData = {
+                Image: element.Image,
+                Text: element.Text
+              }
+              var promotionImageEdit = {
+                table: { serviceCategorySlide: 'ServiceCategorySlide' },
+                data: promotionImageData,
+                where: { Id: element.Id }
+              }
+              var promotionImages = await servicesRepository.categoryEdit(promotionImageEdit)
+            }
+          })
+        }
+>>>>>>> master/master
         // }
       } else {
         response.error = true
