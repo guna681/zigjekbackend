@@ -621,6 +621,38 @@ module.exports = function () {
         response.data = appsliderData.data
         response.msg = 'VALID'
         // if (data.type == 'SERVICE') {
+          var bannerImages = JSON.parse(data.bannerImage)
+          var description  = JSON.parse(data.description)
+          if (bannerImages !== '') {
+            bannerImages.map(async element => {
+              
+              if (element.isDeleted == '1') {
+                const serviceCategoryBanner = 'ServiceCategoryBanner'
+                var bannerImageEdit = {
+                  table: serviceCategoryBanner,
+                  // data: bannerData,
+                  where: { Id: element.Id }
+                }
+                var bannerImagesData = await servicesRepository.categoryDelete(bannerImageEdit)
+              } else if (!element.Id) {
+                var bannerData = {
+                  CategoryId: data.categoryId,
+                  SubCategoryId: data.subCategoryId,
+                  Path: element.bannerImage,
+                  Type: element.Type
+                }
+                var bannerImagesData = await servicesRepository.categoryBannerAdd(bannerData)
+              } else {
+                var bannerData = {
+                  Path: element.bannerImage,
+                  Type: element.Type
+                }
+                var bannerImageEdit = {
+                  table: { serviceCategoryBanner: 'ServiceCategoryBanner' },
+                  data: bannerData,
+                  where: { Id: element.Id }
+                }
+                var bannerImagesData = await servicesRepository.categoryEdit(bannerImageEdit)
         var bannerImages = JSON.parse(data.bannerImage)
         var description  = JSON.parse(data.description)
         if (bannerImages !== '') {
@@ -696,6 +728,8 @@ module.exports = function () {
             data: promotionTitleData,
             where: { subCategoryId: data.subCategoryId }
           }
+<<<<<<< HEAD
+=======
           var promotionTitlesData = servicesRepository.categoryEdit(promotionTitleEdit)
         }
         var promotionImage  = JSON.parse(data.promotionImage)
@@ -732,6 +766,7 @@ module.exports = function () {
             }
           })
         }
+>>>>>>> master/master
         // }
       } else {
         response.error = true
