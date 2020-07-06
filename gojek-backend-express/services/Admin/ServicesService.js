@@ -742,4 +742,42 @@ module.exports = function () {
       callback(err)
     }
   }
+
+  this.addServicesService = async (data, callback) => {
+    var response = {}
+    try {
+      var resData = {
+        categoryId: data.categoryId,
+        SubCategoryId: data.subCategoryId,
+        SubTitle: data.subTitle,
+        Name: data.name,
+        Image: data.image,
+        Price: data.price,
+        IsFixedPrice: data.isFixedPrice,
+        PricePerHour: data.pricePerHour,
+        Status: data.status,
+        Limit: data.limit,
+        SlashPrice: data.slashPrice,
+        CurrencyType: data.currencyType,
+        Commission: data.commission,
+        Description: data.description,
+        Duration: data.duration
+      }
+      console.log(resData);
+      var appsliderData = await servicesRepository.addServices(resData)
+      if (appsliderData.error === false) {
+        response.error = false
+        response.data = appsliderData.data
+        response.msg = 'VALID'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
 }
