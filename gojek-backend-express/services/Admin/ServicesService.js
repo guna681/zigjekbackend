@@ -6,7 +6,7 @@ module.exports = function () {
   var servicesRepository = new ServicesRepository()
   var common = new Common()
 
-  this.servicesViewService = async (callback) => {
+  this.servicesTitleService = async (callback) => {
     var response = {}
     try {
       var appsliderData = await servicesRepository.servicesView()
@@ -878,6 +878,30 @@ module.exports = function () {
         })
         response.error = false
         response.data = uresult
+        response.msg = 'VALID'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
+
+  this.subCategoryListService = async (data, callback) => {
+    var response = {}
+    try {
+      var categorydata = {
+        table: { serviceSubCategory: 'ServiceSubCategory' },
+        where: { CategoryId: data.categoryId }
+      }
+      var servicesViewData = await servicesRepository.categoryView(categorydata)
+      if (servicesViewData.error === false) {
+        response.error = false
+        response.data = servicesViewData.data
         response.msg = 'VALID'
       } else {
         response.error = true
