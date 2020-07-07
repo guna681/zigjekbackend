@@ -20,8 +20,8 @@ module.exports = function () {
   const serviceCategory = 'ServiceCategory'
   const serviceCategoryBanner = 'ServiceCategoryBanner'
   const serviceCategoryExtras = 'ServiceCategoryExtras'
-  const serviceCategoryTitle  = 'ServiceCategoryTitle'
-  const serviceCategorySlide  = 'ServiceCategorySlide'
+  const serviceCategoryTitle = 'ServiceCategoryTitle'
+  const serviceCategorySlide = 'ServiceCategorySlide'
   const serviceSubCategory = 'ServiceSubCategory'
   const service = 'Service'
   // services Page Select
@@ -189,7 +189,7 @@ module.exports = function () {
     })
   }
 
-   // serviceCategory View count
+  // serviceCategory View count
   this.categoryCount = (data) => {
     var output = {}
     return new Promise(function (resolve) {
@@ -212,7 +212,8 @@ module.exports = function () {
           knex.destroy()
         })
     })
-  } 
+  }
+
   // category data Insert
   this.categoryAdd = (data) => {
     var output = {}
@@ -417,12 +418,12 @@ module.exports = function () {
         })
     })
   }
- //  Category Banner View Page Select
+  //  Category Banner View Page Select
   this.CategoryBannerView = (data) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(data.table).select('Id','CategoryId','SubCategoryId','Text','Type','Path as bannerImage','Status')
+      knex(data.table).select('Id', 'CategoryId', 'SubCategoryId', 'Text', 'Type', 'Path as bannerImage', 'Status')
         .where(data.where)
         .then((result) => {
           if (result.length) {
@@ -431,7 +432,7 @@ module.exports = function () {
           } else {
             output.error = false
             output.data = result
-                }
+          }
           resolve(output)
         })
         .catch((err) => {
@@ -442,8 +443,8 @@ module.exports = function () {
           knex.destroy()
         })
     })
-}
- 
+  }
+
   // Delete
   this.categoryDelete = (data) => {
     var output = {}

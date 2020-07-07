@@ -480,9 +480,7 @@ module.exports = function () {
               SubCategoryId: appsliderData.data[0],
               Title: data.promotionTitle
             }
-            console.log(promotionTitleData)
             var promotionTitlesData = await servicesRepository.promotionTitleAdd(promotionTitleData)
-            console.log(promotionTitlesData,'****')
           }
           var promotionImage  = JSON.parse(data.promotionImage)
           if (promotionImage !== '') {

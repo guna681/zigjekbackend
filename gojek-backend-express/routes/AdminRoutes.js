@@ -2858,7 +2858,7 @@ module.exports = function (app, validator) {
     }
   })
 
-  //services edit 
+  // services edit
   app.post(`${basePath}/editServices`, [
     validator.check('id').isNumeric().trim()
       .withMessage('INVALID: $[1], id'),
@@ -2905,7 +2905,7 @@ module.exports = function (app, validator) {
         })
       })
     }
-  })  
+  })
 
   // services  View
   app.post(`${basePath}/servicesView`, [
@@ -2926,5 +2926,5 @@ module.exports = function (app, validator) {
         })
       })
     }
-  })  
+  })
 }

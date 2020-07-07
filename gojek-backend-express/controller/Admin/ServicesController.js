@@ -3,7 +3,7 @@ module.exports = function () {
   const Common = require('../../Utils/common')
   require('dotenv').config({ path: './../.env' })
 
-  var servicesService = new ServicesService();
+  var servicesService = new ServicesService()
 
   this.servicesTitleListViewCtrl = (callback) => {
     var response = {}
@@ -194,7 +194,7 @@ module.exports = function () {
       }
       callback(response)
     })
- }
+  }
 
   this.editSubCategoryCtrl = (data, callback) => {
     var response = {}
@@ -210,7 +210,7 @@ module.exports = function () {
       callback(response)
     })
   }
- 
+
   this.addServicesCtrl = (data, callback) => {
     var response = {}
     servicesService.addServicesService(data, (result) => {
@@ -239,9 +239,9 @@ module.exports = function () {
       }
       callback(response)
     })
-  } 
+  }
 
-   this.servicesViewCtrl = (data, callback) => {
+  this.servicesViewCtrl = (data, callback) => {
     var response = {}
     servicesService.servicesViewService(data, (result) => {
       if (result.error) {
@@ -254,5 +254,5 @@ module.exports = function () {
       }
       callback(response)
     })
- }  
+  }
 }
