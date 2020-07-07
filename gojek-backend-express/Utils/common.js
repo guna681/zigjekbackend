@@ -122,17 +122,17 @@ module.exports = function () {
     var response = {}
     return new Promise(function (resolve) {
       try {
-        // authy.phones().verification_start(mobileNumber, countryCode, { via: 'sms', locale: 'en' }, function (err, res) {
-        //   if (res) {
+        authy.phones().verification_start(mobileNumber, countryCode, { via: 'sms', locale: 'en' }, function (err, res) {
+          if (res) {
         response.error = false
-        // response.data = res
-        //   } else {
-        //     response.error = true
-        //     response.data = null
-        //     response.msg = err.message
-        //   }
-        //   resolve(response)
-        // })
+        response.data = res
+          } else {
+            response.error = true
+            response.data = null
+            response.msg = err.message
+          }
+          resolve(response)
+        })
       } catch (err) {
         err.error = true
         err.msg = 'FAILED'
@@ -146,6 +146,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       try {
         authy.phones().verification_check(mobileNumber, countryCode, otp, function (err, res) {
+          console.log(res)
           if (res) {
             response.error = false
             response.data = res

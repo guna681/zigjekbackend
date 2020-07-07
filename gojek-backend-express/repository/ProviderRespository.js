@@ -100,6 +100,7 @@ module.exports = function () {
           }
         })
         .catch((err) => {
+
           err.error = true
           resolve(err)
         })
@@ -137,6 +138,7 @@ module.exports = function () {
 
   this.updateProviderOtpState = (data, status) => {
     var output = {}
+
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(providerOtp)

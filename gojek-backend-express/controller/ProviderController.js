@@ -58,6 +58,40 @@ module.exports = function () {
       callback(response)
     })
   }
+  this.twilioMobileValidation = (req, callback) => {
+    var response = {}
+    var name = 'provider'
+    providerService.checkProviderExsist(req, async (result) => {
+      var authtyperesult = await appConfigService.authTypeChecking(name)
+      if (result.error) {
+        if (authtyperesult.error) {
+          response.error = true
+          response.msg = 'OOPS'
+        } else {
+
+            common.sendOtpMobile(req.number, req.ext)
+            response=result;
+            // response.error = false
+            // response.msg = result.msg
+        }
+      } else {
+        if (authtyperesult.error) {
+          response.error = true
+          response.msg = 'OOPS'
+        } else {
+          if (authtyperesult.data['Value'] === 'OTP') {
+            common.sendOtpMobile(req.number, req.ext)
+            response.error = false
+            response.msg = result.msg
+          } else {
+            response.error = false
+            response.msg = result.msg
+          }
+        }
+      }
+      callback(response)
+    })
+  }
 
   this.providerMobileValidation = (req, callback) => {
     var response = {}
@@ -70,7 +104,7 @@ module.exports = function () {
           response.msg = 'OOPS'
         } else {
           if (authtyperesult.data['Value'] === 'OTP') {
-            // this.sendOtpMobile(req.number, req.ext)
+            common.sendOtpMobile(req.number, req.ext)
             response.error = true
             response.msg = result.msg
           } else {
@@ -84,7 +118,7 @@ module.exports = function () {
           response.msg = 'OOPS'
         } else {
           if (authtyperesult.data['Value'] === 'OTP') {
-            // this.sendOtpMobile(req.number, req.ext)
+             common.sendOtpMobile(req.number, req.ext)
             response.error = false
             response.msg = result.msg
             response.data = result.data
@@ -102,11 +136,12 @@ module.exports = function () {
   this.providerOtpValidation = async (req, callback) => {
     var response = {}
     var data = req
-    // var otpVerifynumber = await this.otpVerify(data.mobile, data.countryCode, data.otp)
-    // if (otpVerifynumber.error) {
-    //   response.error = true
-    //   response.msg = 'OTP_VERIFY'
-    // } else {
+    var otpVerifynumber = await common.otpVerify(data.mobile, data.countryCode, data.otp)
+    if (otpVerifynumber.error) {
+      response.error = true
+      response.msg = 'OTP_VERIFY'
+    } else {
+      data.otp='1234';
     providerService.providerOtpVerify(data, (result) => {
       if (result.error) {
         response.error = true
@@ -118,13 +153,15 @@ module.exports = function () {
       }
       callback(response)
     })
-    // }
+    }
+   
+    callback(response)
   }
 
   this.providerOtpRecall = async (req, callback) => {
     var response = {}
     var data = req
-    // var otpResendMobile = await this.sendOtpMobile(data.mobile, data.countryCode)
+     var otpResendMobile = await common.sendOtpMobile(data.mobile, data.countryCode)
     var otpResendMobile = false
     if (otpResendMobile.error) {
       response.error = true

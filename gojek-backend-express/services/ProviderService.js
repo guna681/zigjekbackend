@@ -42,26 +42,26 @@ module.exports = function () {
       var providerOtp = {}
       providerOtp.Mobile = data.number
       providerOtp.ExtCode = data.ext
-
-      if (provider.error) {
+      var otpStatus = await providerRespository.delProviderOtp(providerOtp)
+      if (provider.error && otpStatus.error == false) {
         providerOtp.Type = 'register'
-        providerRespository.delProviderOtp(providerOtp)
+       await providerRespository.delProviderOtp(providerOtp)
         providerOtp.OTP = common.generateOTP()
 
         response.error = true
         response.msg = 'NOTEXIST: $[1],mobile number'
       } else {
         var lang = {}
-        var language = provider.result[0].Language
+        var language = provider.error === true ? 'default' : provider.result[0].Language
         lang.language = language
         providerOtp.Type = 'login'
-        providerRespository.delProviderOtp(providerOtp)
+     await   providerRespository.delProviderOtp(providerOtp)
         providerOtp.OTP = common.generateOTP()
         response.error = false
         response.msg = 'EXIST: $[1],mobile number'
         response.data = lang
       }
-      providerRespository.addProviderOtp(providerOtp)
+    var add = await providerRespository.addProviderOtp(providerOtp)
       callback(response)
     } catch (err) {
       err.error = true
@@ -108,7 +108,6 @@ module.exports = function () {
       providerData.Status = 'pending'
 
       var otp = await providerRespository.updateProviderOtpState(providerData, 'verified')
-
       if (otp.error) {
         response.error = true
         response.msg = 'OTP'
@@ -118,7 +117,6 @@ module.exports = function () {
           providerInfo.Mobile = data.mobile
           providerInfo.ExtCode = data.countryCode
           var provider = await providerRespository.fetchProvider(providerInfo)
-
           if (provider.error) {
             response.error = true
             response.msg = 'NOTEXIST: $[1],mobile number'

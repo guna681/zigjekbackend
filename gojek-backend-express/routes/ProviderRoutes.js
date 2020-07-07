@@ -37,7 +37,7 @@ module.exports = function (server, validator) {
       var data = {}
       data.number = body.mobile
       data.ext = body.countryCode
-      providerController.providerMobileValidation(data, (result) => {
+      providerController.twilioMobileValidation(data, (result) => {
         errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return response.send(message)
         })

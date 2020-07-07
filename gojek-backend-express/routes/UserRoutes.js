@@ -39,7 +39,7 @@ module.exports = function (server, validator) {
       var mobile = {}
       mobile.number = body.mobile
       mobile.ext = body.countryCode
-      userController.mobileValidation(mobile, (result) => {
+      userController.twilioMobileValidation(mobile, (result) => {
         errorController.ctrlHandler([result], result.error, lang, (message) => {
           return response.send(message)
         })

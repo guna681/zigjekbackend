@@ -8,7 +8,7 @@ module.exports = function () {
     console.log('firebase admin initialized')
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
-      databaseURL: 'https://gettaxi-user-bde6a.firebaseio.com'
+      databaseURL: 'https://kwikleo-e1521.firebaseio.com'
     })
   }
 

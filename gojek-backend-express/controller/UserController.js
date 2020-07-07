@@ -62,6 +62,7 @@ module.exports = function () {
     var name = 'user'
     userService.checkUserExists(mobile, async (result) => {
       var authtyperesult = await appConfigService.authTypeChecking(name)
+      console.log(authtyperesult);
       if (result.error) {
         if (authtyperesult.error) {
           response.error = true
@@ -69,8 +70,7 @@ module.exports = function () {
         } else {
           if (authtyperesult.data['Value'] === 'OTP') {
             common.sendOtpMobile(mobile.number, mobile.ext)
-            response.error = false
-            response.msg = result.msg
+            response= result;
           } else {
             common.sendOtpMobile(mobile.number, mobile.ext)
             response.error = false
@@ -106,10 +106,11 @@ module.exports = function () {
         response.msg = result.msg
       } else {
         var userId = await common.getPayloadFromToken(result.data.token, process.env.JWT_SECRET)
-        var striperes = await paymentHelperService.createPaymentCustomerId(data.email)
-        var stripeCustomerId = striperes.data.id
+        // var striperes = await paymentHelperService.createPaymentCustomerId(data.email)
+        // var stripeCustomerId = striperes.data.id
+        var stripeCustomerId = 1234
         stripeData.StripeCustomerID = stripeCustomerId
-        await userService.updateUserStripeCustomerID(stripeData, userId.data.sub)
+        await userService.updateUserStripeCustomerID(stripeData, userId.data.Id)
         var smtp = await appConfigService.getSMTPConfig()
         var template = await appConfigService.getEmailTemplateList(1)
         var FirstName = data.firstName
@@ -117,7 +118,7 @@ module.exports = function () {
         var year = new Date().getFullYear()
         var temp = await common.multipleStringReplace(template.data, [
           { substr: '*username*', to: FirstName + LastName }, { substr: '*year*', to: year }])
-        mailer.MailerNew(smtp.data, req.email, 'Welcome', temp)
+          mailer.MailerNew(smtp.data, req.email, 'Welcome', temp)
         if (!userId.error) {
           walletService.createWalletService(userId.data.Id, 'user', 0)
         }
@@ -133,7 +134,7 @@ module.exports = function () {
     var response = {}
     var mobile = req.mobile
     var ext = req.countryCode
-    // var otpResendMobile = await common.sendOtpMobile(mobile, ext)
+    var recallOTP = await common.sendOtpMobile(mobile, ext)
     var otpResendMobile = false
     if (otpResendMobile) {
       response.error = true
@@ -148,12 +149,13 @@ module.exports = function () {
   this.otpValidate = async (req, callback) => {
     var response = {}
     var data = req
-    // var otpVerifynumber = await this.otpVerify(data.mobile, data.countryCode, data.otp)
-    // if (otpVerifynumber.error) {
-    //   response.error = true
-    //   response.msg = 'OTP_VERIFY'
-    //   callback(response)
-    // } else {
+    var otpVerifynumber = await common.otpVerify(data.mobile, data.countryCode, data.otp)
+    if (otpVerifynumber.error) {
+      response.error = true
+      response.msg = 'OTP_VERIFY'
+      callback(response)
+    } else {
+      data.otp='1234'
     userService.verifyOTP(data, (result) => {
       if (result.error) {
         response.error = true
@@ -165,7 +167,7 @@ module.exports = function () {
       }
       callback(response)
     })
-    // }
+     }
   }
 
   this.pwdValidate = (req, callback) => {

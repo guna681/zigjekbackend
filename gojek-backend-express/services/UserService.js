@@ -85,7 +85,7 @@ module.exports = function () {
       const deviceId = data.uuid
 
       var verify = await userRepository.fetchOtp(details)
-
+      console.log(verify)
       if (verify.error) {
         response.error = true
         response.msg = 'OTP_VERIFY'
