@@ -56,7 +56,7 @@ Class StaffOrderService
                 $userData->paymentType          = ($list->PaymentTypeId == '10') ? __('validation.payedCash') : __('validation.payedCard');
 
                 $orders->usersDetails = $userData;
-
+                
                 $outlet      = $outletsRepostitory->getOutlet($list->outletId);
                 $outletData                     = new  Outlets();
                 $outletData->outletName         = $outlet->name;
