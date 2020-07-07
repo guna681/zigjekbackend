@@ -211,7 +211,7 @@ module.exports = function () {
     })
   }
  
-  this.addServicesCategoryCtrl = (data, callback) => {
+  this.addServicesCtrl = (data, callback) => {
     var response = {}
     servicesService.addServicesService(data, (result) => {
       if (result.error) {
@@ -225,4 +225,34 @@ module.exports = function () {
       callback(response)
     })
   }
+
+  this.editServicesCtrl = (data, callback) => {
+    var response = {}
+    servicesService.editServicesService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  } 
+
+   this.servicesViewCtrl = (data, callback) => {
+    var response = {}
+    servicesService.servicesViewService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+ }  
 }

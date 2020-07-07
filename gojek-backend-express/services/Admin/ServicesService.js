@@ -120,11 +120,17 @@ module.exports = function () {
 
   this.serviceCategoryService = async (data, callback) => {
     var response = {}
+    var uresult = []
     try {
+      var subCategorycount = await servicesRepository.categoryCount(data)
       var appsliderData = await servicesRepository.serviceCategoryView(data)
       if (appsliderData.error === false) {
+        uresult.push({
+          SubCategoryList: appsliderData.result,
+          Count: subCategorycount.result[0].count
+        })
         response.error = false
-        response.data = appsliderData.result
+        response.data = uresult
         response.msg = 'VALID'
       } else {
         response.error = true
@@ -621,38 +627,6 @@ module.exports = function () {
         response.data = appsliderData.data
         response.msg = 'VALID'
         // if (data.type == 'SERVICE') {
-          var bannerImages = JSON.parse(data.bannerImage)
-          var description  = JSON.parse(data.description)
-          if (bannerImages !== '') {
-            bannerImages.map(async element => {
-              
-              if (element.isDeleted == '1') {
-                const serviceCategoryBanner = 'ServiceCategoryBanner'
-                var bannerImageEdit = {
-                  table: serviceCategoryBanner,
-                  // data: bannerData,
-                  where: { Id: element.Id }
-                }
-                var bannerImagesData = await servicesRepository.categoryDelete(bannerImageEdit)
-              } else if (!element.Id) {
-                var bannerData = {
-                  CategoryId: data.categoryId,
-                  SubCategoryId: data.subCategoryId,
-                  Path: element.bannerImage,
-                  Type: element.Type
-                }
-                var bannerImagesData = await servicesRepository.categoryBannerAdd(bannerData)
-              } else {
-                var bannerData = {
-                  Path: element.bannerImage,
-                  Type: element.Type
-                }
-                var bannerImageEdit = {
-                  table: { serviceCategoryBanner: 'ServiceCategoryBanner' },
-                  data: bannerData,
-                  where: { Id: element.Id }
-                }
-                var bannerImagesData = await servicesRepository.categoryEdit(bannerImageEdit)
         var bannerImages = JSON.parse(data.bannerImage)
         var description  = JSON.parse(data.description)
         if (bannerImages !== '') {
@@ -728,8 +702,6 @@ module.exports = function () {
             data: promotionTitleData,
             where: { subCategoryId: data.subCategoryId }
           }
-<<<<<<< HEAD
-=======
           var promotionTitlesData = servicesRepository.categoryEdit(promotionTitleEdit)
         }
         var promotionImage  = JSON.parse(data.promotionImage)
@@ -766,7 +738,6 @@ module.exports = function () {
             }
           })
         }
->>>>>>> master/master
         // }
       } else {
         response.error = true
@@ -800,7 +771,6 @@ module.exports = function () {
         Description: data.description,
         Duration: data.duration
       }
-      console.log(resData);
       var appsliderData = await servicesRepository.addServices(resData)
       if (appsliderData.error === false) {
         response.error = false
@@ -817,4 +787,70 @@ module.exports = function () {
       callback(err)
     }
   }
+
+    this.editServicesService = async (data, callback) => {
+    var response = {}
+    try {
+      var resData = {
+        categoryId: data.categoryId,
+        SubCategoryId: data.subCategoryId,
+        SubTitle: data.subTitle,
+        Name: data.name,
+        Image: data.image,
+        Price: data.price,
+        IsFixedPrice: data.isFixedPrice,
+        PricePerHour: data.pricePerHour,
+        Status: data.status,
+        Limit: data.limit,
+        SlashPrice: data.slashPrice,
+        CurrencyType: data.currencyType,
+        Commission: data.commission,
+        Description: data.description,
+        Duration: data.duration
+      }
+      var servicesdata = {
+        table: { service: 'Service' },
+        data: resData,
+        where: { Id: data.id }
+      }
+      var appsliderData = await servicesRepository.categoryEdit(servicesdata)
+      if (appsliderData.error === false) {
+        response.error = false
+        response.data = appsliderData.data
+        response.msg = 'VALID'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
+
+   this.servicesViewService = async (data, callback) => {
+    var response = {}
+    try {
+      var categorydata = {
+        table: { service: 'Service' },
+        where: { Id: data.servicesId }
+      }
+      var servicesViewData = await servicesRepository.categoryView(categorydata)
+      if (servicesViewData.error === false) {
+        response.error = false
+        response.data = servicesViewData.data
+        response.msg = 'VALID'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  } 
 }

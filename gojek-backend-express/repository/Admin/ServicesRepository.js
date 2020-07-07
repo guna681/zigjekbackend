@@ -158,14 +158,17 @@ module.exports = function () {
   }
   this.serviceCategoryView = (data) => {
     var output = {}
+    var offset = (data.page - 1) * data.limit
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       var query = knex(serviceCategory)
         .select('Id', 'TitleId', 'Name', 'Type', 'HasSubCategory', 'IsFixedPricing', knex.raw('CONCAT(?, Icon) as Icon', [process.env.BASE_URL + process.env.SERVICE_PATH]))
       if (data.titleId) {
         query.where('TitleId', data.titleId)
+        query.limit(data.limit).offset(offset)
       } else {
       // query.where('TitleId', data.titleId)
+        query.limit(data.limit).offset(offset)
       }
       query.then((result) => {
         if (result.length > 0) {
@@ -185,6 +188,31 @@ module.exports = function () {
         })
     })
   }
+
+   // serviceCategory View count
+  this.categoryCount = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceCategory).count(`Id as count`)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  } 
   // category data Insert
   this.categoryAdd = (data) => {
     var output = {}
