@@ -2729,7 +2729,7 @@ module.exports = function (app, validator) {
   app.get(`${basePath}/serviceSubCategoryListView/:page`, (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
-    var limit = 3
+    var limit = 10
     var page = { page: req.params.page, limit: limit }
     if (error.array().length) {
       errorHandler.requestHandler(error.array(), true, lang, (message) => {
@@ -2821,8 +2821,8 @@ module.exports = function (app, validator) {
       .withMessage('INVALID: $[1], subTitle'),
     validator.check('name').isLength({ min: 1, max: 500 }).trim()
       .withMessage('INVALID: $[1], name'),
-    validator.check('image').isLength({ min: 1, max: 500 }).trim()
-      .withMessage('INVALID: $[1], image'),
+    // validator.check('image').isLength({ min: 1, max: 500 }).trim()
+    //   .withMessage('INVALID: $[1], image'),
     validator.check('price').isNumeric().trim()
       .withMessage('INVALID: $[1], price'),
     validator.check('isFixedPrice').isNumeric().trim()
@@ -2831,12 +2831,8 @@ module.exports = function (app, validator) {
       .withMessage('INVALID: $[1], pricePerHour'),
     validator.check('status').isNumeric().trim()
       .withMessage('INVALID: $[1], status'),
-    validator.check('limit').isNumeric().trim()
-      .withMessage('INVALID: $[1], limit'),
     validator.check('slashPrice').isNumeric().trim()
       .withMessage('INVALID: $[1], slashPrice'),
-    validator.check('currencyType').isLength({ min: 1, max: 3 }).trim()
-      .withMessage('INVALID: $[1], currencyType'),
     validator.check('commission').isNumeric().trim()
       .withMessage('INVALID: $[1], commission'),
     validator.check('duration').isLength({ min: 1, max: 20 }).trim()
@@ -2922,6 +2918,24 @@ module.exports = function (app, validator) {
     } else {
       servicesController.servicesViewCtrl(data, (result) => {
         this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
+
+  app.get(`${basePath}/servicesList/:page`, (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var limit = 10
+    var page = { page: req.params.page, limit: limit }
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.servicesListViewCtrl(page, (result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })
       })

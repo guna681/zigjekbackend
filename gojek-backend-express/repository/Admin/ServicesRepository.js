@@ -24,6 +24,7 @@ module.exports = function () {
   const serviceCategorySlide = 'ServiceCategorySlide'
   const serviceSubCategory = 'ServiceSubCategory'
   const service = 'Service'
+  const serviceImage = 'ServiceImage'
   // services Page Select
   this.servicesView = () => {
     var output = {}
@@ -368,11 +369,11 @@ module.exports = function () {
   }
 
   // subcategory View count
-  this.subCategoryCount = (data) => {
+  this.subCategoryCount = (data, table) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(serviceSubCategory).count(`Id as count`)
+      knex(table).count(`Id as count`)
         .limit(data.limit).offset(data.dataoffset)
         .then((result) => {
           if (result.length > 0) {
@@ -533,6 +534,60 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(service)
+        .insert(data)
+        .then((result) => {
+          if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.servicesListView = (data, table) => {
+    var output = {}
+    var limit = data.limit
+    var page = data.page
+    var offset = (page - 1) * limit
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(table).select()
+        .limit(limit).offset(offset)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  // category banner data Insert
+  this.servicesImageAdd = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceImage)
         .insert(data)
         .then((result) => {
           if (result.length) {
