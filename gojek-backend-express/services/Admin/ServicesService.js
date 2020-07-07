@@ -511,7 +511,8 @@ module.exports = function () {
     var response = {}
     try {
       var uresult = []
-      var subCategorycount = await servicesRepository.subCategoryCount(data)
+      var table = { serviceSubCategory: 'ServiceSubCategory' }
+      var subCategorycount = await servicesRepository.subCategoryCount(data, table)
       var appsliderData = await servicesRepository.subCategoryView(data)
       if (appsliderData.error === false) {
         uresult.push({
@@ -626,7 +627,7 @@ module.exports = function () {
         response.msg = 'VALID'
         // if (data.type == 'SERVICE') {
         var bannerImages = JSON.parse(data.bannerImage)
-        var description  = JSON.parse(data.description)
+        var description = JSON.parse(data.description)
         if (bannerImages !== '') {
           bannerImages.map(async element => {
             if (element.isDeleted == '1') {
@@ -757,20 +758,31 @@ module.exports = function () {
         SubCategoryId: data.subCategoryId,
         SubTitle: data.subTitle,
         Name: data.name,
-        Image: data.image,
+        Image: null,
         Price: data.price,
         IsFixedPrice: data.isFixedPrice,
         PricePerHour: data.pricePerHour,
         Status: data.status,
-        Limit: data.limit,
+        Limit: '5',
         SlashPrice: data.slashPrice,
-        CurrencyType: data.currencyType,
+        CurrencyType: '$',
         Commission: data.commission,
         Description: data.description,
         Duration: data.duration
       }
       var appsliderData = await servicesRepository.addServices(resData)
       if (appsliderData.error === false) {
+        var image  = JSON.parse(data.image)
+        if (image !== '') {
+          image.map(async element => {
+            var bannerData = {
+              ServiceId: appsliderData['data'],
+              Path: element.Image,
+              Type: element.Type
+            }
+            var bannerImagesData = await servicesRepository.servicesImageAdd(bannerData)
+          })
+        }
         response.error = false
         response.data = appsliderData.data
         response.msg = 'VALID'
@@ -786,7 +798,7 @@ module.exports = function () {
     }
   }
 
-    this.editServicesService = async (data, callback) => {
+  this.editServicesService = async (data, callback) => {
     var response = {}
     try {
       var resData = {
@@ -828,7 +840,7 @@ module.exports = function () {
     }
   }
 
-   this.servicesViewService = async (data, callback) => {
+  this.servicesViewService = async (data, callback) => {
     var response = {}
     try {
       var categorydata = {
@@ -850,5 +862,32 @@ module.exports = function () {
       err.msg = 'OOPS'
       callback(err)
     }
-  } 
+  }
+
+  this.servicesListService = async (data, callback) => {
+    var response = {}
+    try {
+      var uresult = []
+      var table = { service: 'Service' }
+      var servicescount = await servicesRepository.subCategoryCount(data, table)
+      var servicesListData = await servicesRepository.servicesListView(data, table)
+      if (servicesListData.error === false) {
+        uresult.push({
+          SubCategoryList: servicesListData.result,
+          Count: servicescount.result[0].count
+        })
+        response.error = false
+        response.data = uresult
+        response.msg = 'VALID'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
 }
