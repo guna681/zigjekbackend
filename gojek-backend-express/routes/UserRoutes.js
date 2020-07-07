@@ -62,7 +62,7 @@ module.exports = function (server, validator) {
     validator.check('countryId')
       .isLength({ min: 1, max: 5 }).withMessage('TEXT_LIMIT: $[1] $[2] $[3],countryId,1,5'),
     validator.check('loginType').optional()
-      .isIn(['manual', 'google', 'facebook']).withMessage('INVALID: $[1],loginType'),
+      .isIn(['manual', 'google', 'facebook', 'apple']).withMessage('INVALID: $[1],loginType'),
     validator.check('socialToken')
       .optional()
       .isLength({ min: 1, max: 100 }).withMessage('TEXT_LIMIT: $[1] $[2] $[3],socialToken,1,100'),
@@ -533,7 +533,7 @@ module.exports = function (server, validator) {
   })
   server.post(basePath + 'usersSocialTokencheck', [
     validator.check('loginType')
-      .isIn(['manual', 'google', 'facebook']).withMessage('INVALID: $[1],loginType'),
+      .isIn(['manual', 'google', 'facebook', 'apple']).withMessage('INVALID: $[1],loginType'),
     validator.check('socialToken')
       .isLength({ min: 1, max: 100 }).withMessage('TEXT_LIMIT: $[1] $[2] $[3],socialToken,1,100'),
     validator.check('uuid')
