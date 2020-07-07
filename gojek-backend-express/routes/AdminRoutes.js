@@ -2492,7 +2492,7 @@ module.exports = function (app, validator) {
   })
 
   // services Page View
-  app.get(`${basePath}/servicesTitleListView`, app.adminauth, (req, res) => {
+  app.get(`${basePath}/servicesTitleListView`, (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
     if (error.array().length) {
@@ -2936,6 +2936,27 @@ module.exports = function (app, validator) {
     } else {
       servicesController.servicesListViewCtrl(page, (result) => {
         errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
+
+  // services  View
+  app.post(`${basePath}/subCategoryList`, [
+    validator.check('categoryId').isNumeric().trim()
+      .withMessage('INVALID: $[1], servicesId')
+  ], (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.subCategoryListCtrl(data, (result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })
       })

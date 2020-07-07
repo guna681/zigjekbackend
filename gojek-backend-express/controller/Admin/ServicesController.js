@@ -7,7 +7,7 @@ module.exports = function () {
 
   this.servicesTitleListViewCtrl = (callback) => {
     var response = {}
-    servicesService.servicesViewService((result) => {
+    servicesService.servicesTitleService((result) => {
       if (result.error) {
         response.error = true
         response.msg = result.msg
@@ -269,5 +269,20 @@ module.exports = function () {
       }
       callback(response)
     })
-  } 
+  }
+
+  this.subCategoryListCtrl = (data, callback) => {
+    var response = {}
+    servicesService.subCategoryListService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
 }
