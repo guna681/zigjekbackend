@@ -874,7 +874,13 @@ module.exports = function () {
         table: { service: 'Service' },
         where: { Id: data.servicesId }
       }
+      var servicesImage = {
+        table: { ServiceImage: 'ServiceImage' },
+        where: { ServiceId: data.servicesId }
+      }
       var servicesViewData = await servicesRepository.categoryView(categorydata)
+      var servicesImageData = await servicesRepository.categoryView(servicesImage)
+      servicesViewData.data[0].Image = servicesImageData.data
       if (servicesViewData.error === false) {
         response.error = false
         response.data = servicesViewData.data
