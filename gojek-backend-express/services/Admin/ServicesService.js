@@ -753,12 +753,13 @@ module.exports = function () {
   this.addServicesService = async (data, callback) => {
     var response = {}
     try {
+      var image  = JSON.parse(data.image)
       var resData = {
         categoryId: data.categoryId,
         SubCategoryId: data.subCategoryId,
         SubTitle: data.subTitle,
         Name: data.name,
-        Image: null,
+        Image: image[0].Image,
         Price: data.price,
         IsFixedPrice: data.isFixedPrice,
         PricePerHour: data.pricePerHour,
@@ -800,12 +801,13 @@ module.exports = function () {
   this.editServicesService = async (data, callback) => {
     var response = {}
     try {
+      var image  = JSON.parse(data.image)
       var resData = {
         categoryId: data.categoryId,
         SubCategoryId: data.subCategoryId,
         SubTitle: data.subTitle,
         Name: data.name,
-        // Image: data.image,
+        Image: image[0].Image,
         Price: data.price,
         IsFixedPrice: data.isFixedPrice,
         PricePerHour: data.pricePerHour,
