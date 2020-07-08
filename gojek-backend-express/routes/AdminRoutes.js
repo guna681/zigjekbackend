@@ -2811,7 +2811,7 @@ module.exports = function (app, validator) {
     }
   })
 
-  //services add 
+  // services add
   app.post(`${basePath}/addServices`, [
     validator.check('categoryId').isNumeric().trim()
       .withMessage('INVALID: $[1], categoryId'),
