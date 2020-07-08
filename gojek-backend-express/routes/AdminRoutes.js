@@ -2833,8 +2833,6 @@ module.exports = function (app, validator) {
       .withMessage('INVALID: $[1], status'),
     validator.check('slashPrice').isNumeric().trim()
       .withMessage('INVALID: $[1], slashPrice'),
-    validator.check('commission').isNumeric().trim()
-      .withMessage('INVALID: $[1], commission'),
     validator.check('duration').isLength({ min: 1, max: 20 }).trim()
       .withMessage('INVALID: $[1], duration')
   ], (req, res) => {
@@ -2878,8 +2876,6 @@ module.exports = function (app, validator) {
       .withMessage('INVALID: $[1], status'),
     validator.check('slashPrice').isNumeric().trim()
       .withMessage('INVALID: $[1], slashPrice'),
-    validator.check('commission').isNumeric().trim()
-      .withMessage('INVALID: $[1], commission'),
     validator.check('duration').isLength({ min: 1, max: 20 }).trim()
       .withMessage('INVALID: $[1], duration')
   ], (req, res) => {
