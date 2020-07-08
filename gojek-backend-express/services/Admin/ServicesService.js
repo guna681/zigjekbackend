@@ -766,7 +766,6 @@ module.exports = function () {
         Limit: '5',
         SlashPrice: data.slashPrice,
         CurrencyType: '$',
-        Commission: data.commission,
         Description: data.description,
         Duration: data.duration
       }
@@ -812,7 +811,6 @@ module.exports = function () {
         PricePerHour: data.pricePerHour,
         Status: data.status,
         SlashPrice: data.slashPrice,
-        Commission: data.commission,
         Description: data.description,
         Duration: data.duration
       }
