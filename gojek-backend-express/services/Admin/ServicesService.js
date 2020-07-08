@@ -806,14 +806,12 @@ module.exports = function () {
         SubCategoryId: data.subCategoryId,
         SubTitle: data.subTitle,
         Name: data.name,
-        Image: data.image,
+        // Image: data.image,
         Price: data.price,
         IsFixedPrice: data.isFixedPrice,
         PricePerHour: data.pricePerHour,
         Status: data.status,
-        Limit: data.limit,
         SlashPrice: data.slashPrice,
-        CurrencyType: data.currencyType,
         Commission: data.commission,
         Description: data.description,
         Duration: data.duration
@@ -825,6 +823,37 @@ module.exports = function () {
       }
       var appsliderData = await servicesRepository.categoryEdit(servicesdata)
       if (appsliderData.error === false) {
+        var image = JSON.parse(data.image)
+        if (image !== '') {
+          image.map(async element => {
+            if (element.isDeleted == '1') {
+              const serviceImage = 'ServiceImage'
+              var bannerImageEdit = {
+                table: serviceImage,
+                where: { Id: element.Id }
+              }
+              var imagesData = await servicesRepository.categoryDelete(bannerImageEdit)
+            } else if (!element.Id) {
+              var servicesImagesData = {
+                ServiceId: data.id,
+                Path: element.Image,
+                Type: element.Type
+              }
+              var bannerImagesData = await servicesRepository.servicesImageAdd(servicesImagesData)
+            } else {
+              var images = {
+                Path: element.Image,
+                Type: element.Type
+              }
+              var ImageEdit = {
+                table: { serviceImage: 'ServiceImage' },
+                data: images,
+                where: { Id: element.Id }
+              }
+              var imageseditData = await servicesRepository.categoryEdit(ImageEdit)
+            }
+          })
+        }
         response.error = false
         response.data = appsliderData.data
         response.msg = 'VALID'
