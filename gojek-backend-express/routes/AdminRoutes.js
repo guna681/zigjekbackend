@@ -2866,8 +2866,8 @@ module.exports = function (app, validator) {
       .withMessage('INVALID: $[1], subTitle'),
     validator.check('name').isLength({ min: 1, max: 500 }).trim()
       .withMessage('INVALID: $[1], name'),
-    validator.check('image').isLength({ min: 1, max: 500 }).trim()
-      .withMessage('INVALID: $[1], image'),
+    // validator.check('image').isLength({ min: 1, max: 500 }).trim()
+    //   .withMessage('INVALID: $[1], image'),
     validator.check('price').isNumeric().trim()
       .withMessage('INVALID: $[1], price'),
     validator.check('isFixedPrice').isNumeric().trim()
@@ -2876,12 +2876,8 @@ module.exports = function (app, validator) {
       .withMessage('INVALID: $[1], pricePerHour'),
     validator.check('status').isNumeric().trim()
       .withMessage('INVALID: $[1], status'),
-    validator.check('limit').isNumeric().trim()
-      .withMessage('INVALID: $[1], limit'),
     validator.check('slashPrice').isNumeric().trim()
       .withMessage('INVALID: $[1], slashPrice'),
-    validator.check('currencyType').isLength({ min: 1, max: 3 }).trim()
-      .withMessage('INVALID: $[1], currencyType'),
     validator.check('commission').isNumeric().trim()
       .withMessage('INVALID: $[1], commission'),
     validator.check('duration').isLength({ min: 1, max: 20 }).trim()
