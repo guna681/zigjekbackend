@@ -196,6 +196,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(serviceCategory).count(`Id as count`)
+        .where('TitleId', data.titleId)
         .then((result) => {
           if (result.length > 0) {
             output.error = false
