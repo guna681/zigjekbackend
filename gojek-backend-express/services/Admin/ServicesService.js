@@ -759,7 +759,7 @@ module.exports = function () {
         SubCategoryId: data.subCategoryId,
         SubTitle: data.subTitle,
         Name: data.name,
-        Image: image[0].Image,
+        Image: image[0].Path,
         Price: data.price,
         IsFixedPrice: data.isFixedPrice,
         PricePerHour: data.pricePerHour,
@@ -777,7 +777,7 @@ module.exports = function () {
           image.map(async element => {
             var bannerData = {
               ServiceId: appsliderData['data'],
-              Path: element.Image,
+              Path: element.Path,
               Type: element.Type
             }
             var bannerImagesData = await servicesRepository.servicesImageAdd(bannerData)
@@ -807,7 +807,7 @@ module.exports = function () {
         SubCategoryId: data.subCategoryId,
         SubTitle: data.subTitle,
         Name: data.name,
-        Image: image[0].Image,
+        Image: image[0].Path,
         Price: data.price,
         IsFixedPrice: data.isFixedPrice,
         PricePerHour: data.pricePerHour,
@@ -836,13 +836,13 @@ module.exports = function () {
             } else if (!element.Id) {
               var servicesImagesData = {
                 ServiceId: data.id,
-                Path: element.Image,
+                Path: element.Path,
                 Type: element.Type
               }
               var bannerImagesData = await servicesRepository.servicesImageAdd(servicesImagesData)
             } else {
               var images = {
-                Path: element.Image,
+                Path: element.Path,
                 Type: element.Type
               }
               var ImageEdit = {
