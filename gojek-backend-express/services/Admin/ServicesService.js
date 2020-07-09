@@ -949,4 +949,48 @@ module.exports = function () {
       callback(err)
     }
   }
+
+  this.updateStatusService = async (data, callback) => {
+    var response = {}
+    try {
+      switch (data.tableName) {
+        case 'serviceSubCategory':
+          data.tableName = { serviceSubCategory: 'ServiceSubCategory' }
+          break
+        case 'serviceCategory':
+          data.tableName = { serviceCategory: 'ServiceCategory' }
+          break
+        case 'serviceTitle':
+          data.tableName = { serviceTitle: 'ServiceTitle' }
+          break
+        case 'service':
+          data.tableName = { service: 'Service' }
+          break
+        default:
+          break
+      }
+      var resData = {
+        Status: data.status
+      }
+      var ImageEdit = {
+        table: data.tableName,
+        data: resData,
+        where: { Id: data.id }
+      }
+      var appsliderData = await servicesRepository.updateStatus(ImageEdit)
+      if (appsliderData.error === false) {
+        response.error = false
+        response.data = appsliderData.result
+        response.msg = 'VALID'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
 }

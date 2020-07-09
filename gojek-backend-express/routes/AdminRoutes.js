@@ -2954,4 +2954,29 @@ module.exports = function (app, validator) {
       })
     }
   })
+
+  // services  View
+  app.post(`${basePath}/updateStatus`, [
+    validator.check('id').isNumeric().trim()
+      .withMessage('INVALID: $[1], id'),
+    validator.check('tableName').isLength({ min: 3, max: 50 }).trim()
+      .withMessage('INVALID: $[1], tableName'),
+    validator.check('status').isNumeric().trim()
+      .withMessage('INVALID: $[1], status')
+  ], (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.updateStatusCtrl(data, (result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
 }
