@@ -163,7 +163,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       var query = knex(serviceCategory)
-        .select('Id', 'TitleId', 'Name', 'Type', 'HasSubCategory', 'IsFixedPricing', knex.raw('CONCAT(?, Icon) as Icon', [process.env.BASE_URL + process.env.SERVICE_PATH]))
+        .select('Id', 'TitleId', 'Name', 'Type', 'HasSubCategory', 'Status', 'IsFixedPricing', knex.raw('CONCAT(?, Icon) as Icon', [process.env.BASE_URL + process.env.SERVICE_PATH]))
       if (data.titleId) {
         query.where('TitleId', data.titleId)
         query.limit(data.limit).offset(offset)
