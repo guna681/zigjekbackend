@@ -923,7 +923,6 @@ module.exports = function () {
         }
         resolve(response)
       } catch (err) {
-        console.log(err)
         err.response = true
         err.msg = 'OOPS'
         resolve(err)

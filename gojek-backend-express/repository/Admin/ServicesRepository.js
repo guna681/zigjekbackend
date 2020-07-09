@@ -163,7 +163,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       var query = knex(serviceCategory)
-        .select('Id', 'TitleId', 'Name', 'Type', 'HasSubCategory', 'IsFixedPricing', knex.raw('CONCAT(?, Icon) as Icon', [process.env.BASE_URL + process.env.SERVICE_PATH]))
+        .select('Id', 'TitleId', 'Name', 'Type', 'HasSubCategory', 'Status', 'IsFixedPricing', knex.raw('CONCAT(?, Icon) as Icon', [process.env.BASE_URL + process.env.SERVICE_PATH]))
       if (data.titleId) {
         query.where('TitleId', data.titleId)
         query.limit(data.limit).offset(offset)
@@ -196,6 +196,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(serviceCategory).count(`Id as count`)
+        .where('TitleId', data.titleId)
         .then((result) => {
           if (result.length > 0) {
             output.error = false
@@ -591,6 +592,33 @@ module.exports = function () {
         .insert(data)
         .then((result) => {
           if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  // category data Update
+  this.updateStatus = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(data.table)
+        .where(data.where)
+        .update(data.data)
+        .then((result) => {
+          if (result) {
             output.error = false
             output.data = result
           } else {
