@@ -161,16 +161,15 @@ module.exports = function () {
       var categoryBanner = await serviceRepository.fetchServiceCategoryBanner(data)
       var categoryExtras = await serviceRepository.fetchServiceCategoryExtras(data)
       var categorySlide = await serviceRepository.fetchServiceCategorySlide(data)
-      var servideTitle = await serviceRepository.SubCategoryServiceTitle(data)
-      console.log(servideTitle.result[0].Title,'***')
+      var servideTitle = await serviceRepository.subCategoryServiceTitle(data)
+      var subCategoryData = await serviceRepository.subCategoryServiceView(req.subCategoryId)
       var ratingData = await serviceRepository.rating(data)
-      console.log(ratingData.data[0].totalRating, ratingData.data[0].totalReview)
       service.serviceList = []
       service.groupTitle = servideTitle.result[0].Title
       service.categoryBanner = categoryBanner.error ? [] : categoryBanner.result
       service.categoryExtras = categoryExtras.error ? [] : categoryExtras.result
       service.categorySlide = categorySlide.error ? [] : categorySlide.result
-      service.categorySlideTitle = 'See how its get done'
+      service.categorySlideTitle = subCategoryData.result[0].CategorySlideTitle
       service.rating = [{ rating: Math.round(ratingData.data[0].totalRating) + '/5', totalReview: ratingData.data[0].totalReview }]
       service.ratingTitle = 'What user are saying about us'
       response.error = false

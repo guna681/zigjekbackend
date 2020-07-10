@@ -169,7 +169,7 @@ module.exports = function () {
         response.msg = 'VALID'
         if (data.type == 'SERVICE') {
           var bannerImages = JSON.parse(data.bannerImage)
-          var description  = JSON.parse(data.description)
+          var description = JSON.parse(data.description)
           if (bannerImages !== '') {
             bannerImages.map(async element => {
               var bannerData = {
@@ -250,10 +250,9 @@ module.exports = function () {
         response.msg = 'VALID'
         if (data.type == 'SERVICE') {
           var bannerImages = JSON.parse(data.bannerImage)
-          var description  = JSON.parse(data.description)
+          var description = JSON.parse(data.description)
           if (bannerImages !== '') {
             bannerImages.map(async element => {
-              
               if (element.isDeleted == '1') {
                 const serviceCategoryBanner = 'ServiceCategoryBanner'
                 var bannerImageEdit = {
@@ -286,7 +285,6 @@ module.exports = function () {
           }
           if (description !== '') {
             description.map(async element => {
-
               if (element.isDeleted == '1') {
                 const serviceCategoryExtras = 'ServiceCategoryExtras'
                 var descriptionEdit = {
@@ -331,10 +329,9 @@ module.exports = function () {
             }
             var promotionTitlesData = await servicesRepository.categoryEdit(promotionTitleEdit)
           }
-          var promotionImage  = JSON.parse(data.promotionImage)
+          var promotionImage = JSON.parse(data.promotionImage)
           if (promotionImage !== '') {
             promotionImage.map(async element => {
-            
               if (element.isDeleted == '1') {
                 const serviceCategorySlide = 'ServiceCategorySlide'
                 var promotionImageEdit = {
@@ -437,7 +434,8 @@ module.exports = function () {
         Image: data.image,
         IsFixedPricing: data.isFixedPricing,
         PricePerHour: data.pricePerHour,
-        ServicesDisplayStyle: data.servicesDisplayStyle
+        ServicesDisplayStyle: data.servicesDisplayStyle,
+        CategorySlideTitle: data.categorySlideTitle
       }
       const serviceSubCategory = 'ServiceSubCategory'
       var subCategoryData = {
@@ -449,52 +447,50 @@ module.exports = function () {
         response.error = false
         response.data = appsliderData.data
         response.msg = 'VALID'
-        // if (data.type == 'SERVICE') {
-          var bannerImages = JSON.parse(data.bannerImage)
-          var description  = JSON.parse(data.description)
-          if (bannerImages !== '') {
-            bannerImages.map(async element => {
-              var bannerData = {
-                CategoryId: data.categoryId,
-                SubCategoryId: appsliderData.data[0],
-                Path: element.bannerImage,
-                Type: element.Type
-              }
-              var bannerImagesData = await servicesRepository.categoryBannerAdd(bannerData)
-            })
-          }
-          if (description !== '') {
-            description.map(async element => {
-              var bannerData = {
-                CategoryId: data.categoryId,
-                SubCategoryId: appsliderData.data[0],
-                Icon: element.Icon,
-                Text: element.Text
-              }
-              var serviceCategoryExtrasData = await servicesRepository.serviceCategoryExtrasAdd(bannerData)
-            })
-          }
-          if (data.promotionTitle) {
-            var promotionTitleData = {
+        var bannerImages = JSON.parse(data.bannerImage)
+        var description = JSON.parse(data.description)
+        if (bannerImages !== '') {
+          bannerImages.map(async element => {
+            var bannerData = {
               CategoryId: data.categoryId,
               SubCategoryId: appsliderData.data[0],
-              Title: data.promotionTitle
+              Path: element.bannerImage,
+              Type: element.Type
             }
-            var promotionTitlesData = await servicesRepository.promotionTitleAdd(promotionTitleData)
+            var bannerImagesData = await servicesRepository.categoryBannerAdd(bannerData)
+          })
+        }
+        if (description !== '') {
+          description.map(async element => {
+            var bannerData = {
+              CategoryId: data.categoryId,
+              SubCategoryId: appsliderData.data[0],
+              Icon: element.Icon,
+              Text: element.Text
+            }
+            var serviceCategoryExtrasData = await servicesRepository.serviceCategoryExtrasAdd(bannerData)
+          })
+        }
+        if (data.promotionTitle) {
+          var promotionTitleData = {
+            CategoryId: data.categoryId,
+            SubCategoryId: appsliderData.data[0],
+            Title: data.promotionTitle
           }
-          var promotionImage  = JSON.parse(data.promotionImage)
-          if (promotionImage !== '') {
-            promotionImage.map(async element => {
-              var promotionImageData = {
-                CategoryId: data.categoryId,
-                SubCategoryId: appsliderData.data[0],
-                Image: element.Image,
-                Text: element.Text
-              }
-              var promotionData = await servicesRepository.promotionImageAdd(promotionImageData)
-            })
-          }
-        // }
+          var promotionTitlesData = await servicesRepository.promotionTitleAdd(promotionTitleData)
+        }
+        var promotionImage = JSON.parse(data.promotionImage)
+        if (promotionImage !== '') {
+          promotionImage.map(async element => {
+            var promotionImageData = {
+              CategoryId: data.categoryId,
+              SubCategoryId: appsliderData.data[0],
+              Image: element.Image,
+              Text: element.Text
+            }
+            var promotionData = await servicesRepository.promotionImageAdd(promotionImageData)
+          })
+        }
       } else {
         response.error = true
         response.msg = 'FAILED'
@@ -613,7 +609,8 @@ module.exports = function () {
         Status: '1',
         IsFixedPricing: data.isFixedPricing,
         PricePerHour: data.pricePerHour,
-        ServicesDisplayStyle: data.servicesDisplayStyle
+        ServicesDisplayStyle: data.servicesDisplayStyle,
+        CategorySlideTitle: data.categorySlideTitle
       }
       var categorydata = {
         table: { serviceSubCategory: 'ServiceSubCategory' },
@@ -625,7 +622,6 @@ module.exports = function () {
         response.error = false
         response.data = appsliderData.data
         response.msg = 'VALID'
-        // if (data.type == 'SERVICE') {
         var bannerImages = JSON.parse(data.bannerImage)
         var description = JSON.parse(data.description)
         if (bannerImages !== '') {
@@ -634,7 +630,6 @@ module.exports = function () {
               const serviceCategoryBanner = 'ServiceCategoryBanner'
               var bannerImageEdit = {
                 table: serviceCategoryBanner,
-                // data: bannerData,
                 where: { Id: element.Id }
               }
               var bannerImagesData = await servicesRepository.categoryDelete(bannerImageEdit)
@@ -666,7 +661,6 @@ module.exports = function () {
               const serviceCategoryExtras = 'ServiceCategoryExtras'
               var descriptionEdit = {
                 table: serviceCategoryExtras,
-                // data: bannerData,
                 where: { Id: element.Id }
               }
               var descriptionResult = await servicesRepository.categoryDelete(descriptionEdit)
@@ -703,15 +697,13 @@ module.exports = function () {
           }
           var promotionTitlesData = servicesRepository.categoryEdit(promotionTitleEdit)
         }
-        var promotionImage  = JSON.parse(data.promotionImage)
+        var promotionImage = JSON.parse(data.promotionImage)
         if (promotionImage !== '') {
           promotionImage.map(async element => {
-          
             if (element.isDeleted == '1') {
               const serviceCategorySlide = 'ServiceCategorySlide'
               var promotionImageEdit = {
                 table: serviceCategorySlide,
-                // data: bannerData,
                 where: { Id: element.Id }
               }
               var bannerImagesData = await servicesRepository.categoryDelete(promotionImageEdit)
@@ -737,7 +729,6 @@ module.exports = function () {
             }
           })
         }
-        // }
       } else {
         response.error = true
         response.msg = 'FAILED'
@@ -753,7 +744,7 @@ module.exports = function () {
   this.addServicesService = async (data, callback) => {
     var response = {}
     try {
-      var image  = JSON.parse(data.image)
+      var image = JSON.parse(data.image)
       var resData = {
         categoryId: data.categoryId,
         SubCategoryId: data.subCategoryId,
@@ -772,7 +763,7 @@ module.exports = function () {
       }
       var appsliderData = await servicesRepository.addServices(resData)
       if (appsliderData.error === false) {
-        var image  = JSON.parse(data.image)
+        var image = JSON.parse(data.image)
         if (image !== '') {
           image.map(async element => {
             var bannerData = {
@@ -801,7 +792,7 @@ module.exports = function () {
   this.editServicesService = async (data, callback) => {
     var response = {}
     try {
-      var image  = JSON.parse(data.image)
+      var image = JSON.parse(data.image)
       var resData = {
         categoryId: data.categoryId,
         SubCategoryId: data.subCategoryId,

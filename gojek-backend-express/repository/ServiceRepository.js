@@ -320,12 +320,12 @@ module.exports = function () {
         })
     })
   }
-    // banner ads Page Select
+  // banner ads Page Select
   this.bannerAdsPageView = () => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(bannerads).select('Id as id','Image_path as image','Title as type','Description as categoryId', 'Url as webUrl')
+      knex(bannerads).select('Id as id', 'Image_path as image', 'Title as type', 'Description as categoryId', 'Url as webUrl')
         .where('Status', 'Active')
         .then((result) => {
           if (result.length) {
@@ -347,8 +347,8 @@ module.exports = function () {
     })
   }
 
-// services Title
-    this.SubCategoryServiceTitle = (data) => {
+  // services Title
+  this.subCategoryServiceTitle = (data) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
@@ -373,7 +373,7 @@ module.exports = function () {
     })
   }
 
-  // services category Select
+  // find Rating for subcategory
   this.rating = (data) => {
     var output = {}
     return new Promise(function (resolve) {
@@ -399,5 +399,32 @@ module.exports = function () {
           knex.destroy()
         })
     })
-  }  
+  }
+
+  // SubCategory View
+  this.subCategoryServiceView = (subCategoryId) => {
+    var data = { Id: subCategoryId }
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceSubCategory)
+        .where(data)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
 }
