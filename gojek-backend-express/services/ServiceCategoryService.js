@@ -161,8 +161,10 @@ module.exports = function () {
       var categoryBanner = await serviceRepository.fetchServiceCategoryBanner(data)
       var categoryExtras = await serviceRepository.fetchServiceCategoryExtras(data)
       var categorySlide = await serviceRepository.fetchServiceCategorySlide(data)
+      var servideTitle = await serviceRepository.SubCategoryServiceTitle(data)
+      console.log(servideTitle.result[0].Title,'***')
       service.serviceList = []
-      service.groupTitle = 'What do you want help with ?'
+      service.groupTitle = servideTitle.result[0].Title
       service.categoryBanner = categoryBanner.error ? [] : categoryBanner.result
       service.categoryExtras = categoryExtras.error ? [] : categoryExtras.result
       service.categorySlide = categorySlide.error ? [] : categorySlide.result

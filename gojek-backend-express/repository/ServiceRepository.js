@@ -10,6 +10,7 @@ module.exports = function () {
   const serviceGroupMapping = 'ServiceGroupMapping'
   const serviceImage = 'ServiceImage'
   const bannerads = 'Banner'
+  const serviceCategoryTitle = 'ServiceCategoryTitle'
 
   require('dotenv').config({ path: './../.env' })
   var config = {
@@ -340,6 +341,32 @@ module.exports = function () {
           err.data = null
           resolve(err)
         }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+// services Title
+    this.SubCategoryServiceTitle = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceCategoryTitle)
+        .where(data)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
           knex.destroy()
         })
     })
