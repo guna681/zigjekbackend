@@ -11,6 +11,7 @@ module.exports = function () {
   const serviceImage = 'ServiceImage'
   const bannerads = 'Banner'
   const serviceCategoryTitle = 'ServiceCategoryTitle'
+  const provider = 'Provider'
 
   require('dotenv').config({ path: './../.env' })
   var config = {
@@ -371,4 +372,32 @@ module.exports = function () {
         })
     })
   }
+
+  // services category Select
+  this.rating = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(provider).avg('Rating as totalRating').sum('Provider.Id as totalReview')
+        .leftJoin('ProviderService', 'ProviderService.ProviderId', `Provider.Id`)
+        .where(data)
+        .then((result) => {
+          if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = false
+            output.data = result
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }  
 }
