@@ -2,6 +2,7 @@ module.exports = function () {
   const appConfig = 'AppConfig'
   const slider = 'AppSlider'
   const emailTemplate = 'EmailTemplate'
+  const country = 'Country'
 
   require('dotenv').config({ path: './../.env' })
   const config = {
@@ -80,6 +81,30 @@ module.exports = function () {
     knex(slider)
       .select('Id as id', 'Title as title', 'Description as description', 'Image as image')
       .where(data)
+      .then((result) => {
+        if (result.length > 0) {
+          response.error = false
+          response.result = result
+        } else {
+          response.error = true
+        }
+        callback(response)
+      })
+      .catch((err) => {
+        err.error = false
+        callback(err)
+      })
+      .finally(() => {
+        knex.destroy()
+      })
+  }
+
+    this.currencySymbol = (callback) => {
+    var response = {}
+    var knex = new Knex(config)
+    knex(country)
+      .select()
+      .where('status','1')
       .then((result) => {
         if (result.length > 0) {
           response.error = false

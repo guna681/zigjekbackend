@@ -58,6 +58,7 @@ Class FCMPushNotificationServiceProvider
                                             "title"     => $this->title,
                                             "notification_type"=>$data['body'],
                                             "orderId"=>$data['orderId'],
+                                            "notifyType"=>'newOrder',
                                              // $data['body']['extraKey'] =>$data['body']['extraValue']
                                          ],                   
                   ];

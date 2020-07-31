@@ -27,6 +27,13 @@ Class  MenuController extends Controller
         return $responseData;
     }
 
+    public function listAllCuisines(request $request)
+    {
+        $menuService    = new MenuService();
+        $response       = $menuService->listAllCuisines();
+        $responseData   = Defaults::encode($response);
+        return $responseData;
+    }
 
     public function addCuisines(request $request)
     {
