@@ -19,6 +19,14 @@ class MenuRepostitory{
         return $data;
     }
 
+    public function listAllCuisines()
+    {
+        $perPage = Constant::PERPAGE;
+        $data = Cuisines::select('id as cuisinesId', 'name as CuisinesName', 'status')
+                            ->paginate(100, ['*'], 'page', 1);
+        return $data;
+    }
+
     public function addCuisines($data){
         DB::beginTransaction();
 		try{

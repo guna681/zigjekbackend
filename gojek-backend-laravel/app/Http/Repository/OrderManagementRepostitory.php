@@ -101,10 +101,10 @@ Class OrderManagementRepostitory
     public function getOrderListPopup($outletId)
     {
         $orders =Orders::select("*")
-                        ->where(['Status'=>'unassigned','assignedTime' => NULL,'confirmedTime' => NULL])
+                        ->where(['Status'=>'unassigned','confirmedTime' => NULL])
                         // ->whereNotIn('Orders.Status', ['cancelled'])
                         ->where('outletId',$outletId)
-                        ->where('isOrderViewed','0')
+                        // ->where('isOrderViewed','0')
                         ->orderby('id', 'DESC')
                         ->get();
 

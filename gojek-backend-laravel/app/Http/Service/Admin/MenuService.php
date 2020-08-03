@@ -32,6 +32,24 @@ Class  MenuService
         return $data;
     }
 
+        public function listAllCuisines()
+    {
+        $menuRepostitory    = new MenuRepostitory();
+        $cusinies           = $menuRepostitory->listAllCuisines();
+        $data               = new DataService();
+        if ($cusinies) {
+            $data->error        = Common::error_false;
+            $data->errorMessage = trans('validation.sucess');
+            $data->cusinies     = $cusinies->flatten();
+        } else {
+            $data->error = Common::error_false;
+            $data->errorMessage = trans('validation.failure');
+            $data->cusinies = $cusinies;
+
+        }
+        return $data;
+    }
+
     public function addCuisines($arg)
     {
         $menuRepostitory = new MenuRepostitory();

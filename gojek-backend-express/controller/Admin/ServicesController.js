@@ -3,11 +3,11 @@ module.exports = function () {
   const Common = require('../../Utils/common')
   require('dotenv').config({ path: './../.env' })
 
-  var servicesService = new ServicesService();
+  var servicesService = new ServicesService()
 
   this.servicesTitleListViewCtrl = (callback) => {
     var response = {}
-    servicesService.servicesViewService((result) => {
+    servicesService.servicesTitleService((result) => {
       if (result.error) {
         response.error = true
         response.msg = result.msg
@@ -151,9 +151,9 @@ module.exports = function () {
       callback(response)
     })
   }
-  this.serviceSubCategoryListViewCtrl = (callback) => {
+  this.serviceSubCategoryListViewCtrl = (data, callback) => {
     var response = {}
-    servicesService.subCategoryService((result) => {
+    servicesService.subCategoryService(data, (result) => {
       if (result.error) {
         response.error = true
         response.msg = result.msg
@@ -194,7 +194,7 @@ module.exports = function () {
       }
       callback(response)
     })
- }
+  }
 
   this.editSubCategoryCtrl = (data, callback) => {
     var response = {}
@@ -209,5 +209,95 @@ module.exports = function () {
       }
       callback(response)
     })
-  } 
+  }
+
+  this.addServicesCtrl = (data, callback) => {
+    var response = {}
+    servicesService.addServicesService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.editServicesCtrl = (data, callback) => {
+    var response = {}
+    servicesService.editServicesService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.servicesViewCtrl = (data, callback) => {
+    var response = {}
+    servicesService.servicesViewService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.servicesListViewCtrl = (data, callback) => {
+    var response = {}
+    servicesService.servicesListService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.subCategoryListCtrl = (data, callback) => {
+    var response = {}
+    servicesService.subCategoryListService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.updateStatusCtrl = (data, callback) => {
+    var response = {}
+    servicesService.updateStatusService(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
 }

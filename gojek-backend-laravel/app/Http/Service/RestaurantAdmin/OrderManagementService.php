@@ -359,6 +359,9 @@ die;
                     break;
                     case "assigned":
                     $ordersData->orderStatus = "assigned";
+                    break;
+                    case "processing":
+                    $ordersData->orderStatus = "unassigned";
                     }
             $ordersData->acceptedTime     = $orders->acceptedTime;
             $ordersData->rejectedTime     = $orders->rejectedTime;
@@ -1080,6 +1083,9 @@ die;
                     break;
                     case "assigned":
                     $orderDetails->orderStatus = "assigned";
+                    break;
+                    case "processing":
+                    $orderDetails->orderStatus = "unassigned";
                     }
                 $orderDetails->confirmedTime       = $order->confirmedTime;
                 $orderDetails->markReady           = $order->markReady;

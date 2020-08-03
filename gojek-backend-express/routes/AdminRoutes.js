@@ -2492,7 +2492,7 @@ module.exports = function (app, validator) {
   })
 
   // services Page View
-  app.get(`${basePath}/servicesTitleListView`, app.adminauth, (req, res) => {
+  app.get(`${basePath}/servicesTitleListView`, (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
     if (error.array().length) {
@@ -2595,19 +2595,20 @@ module.exports = function (app, validator) {
     }
   })
   // ServiceCategory  View
-  app.post(`${basePath}/serviceCategoryListView`, [
+  app.post(`${basePath}/serviceCategoryListView/:page`, [
     // validator.check('titleId').isNumeric().trim()
     //   .withMessage('INVALID: $[1], titleId')
   ], (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
-    var data = req.body
+    var limit = 10
+    var page = { page: req.params.page, limit: limit, titleId: req.body.titleId }
     if (error.array().length) {
       this.requestHandler(error.array(), true, lang, (message) => {
         return res.send(message)
       })
     } else {
-      servicesController.serviceCategoryListViewCtrl(data, (result) => {
+      servicesController.serviceCategoryListViewCtrl(page, (result) => {
         this.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })
@@ -2725,15 +2726,17 @@ module.exports = function (app, validator) {
     }
   })
 
-  app.get(`${basePath}/serviceSubCategoryListView`, (req, res) => {
+  app.get(`${basePath}/serviceSubCategoryListView/:page`, (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
+    var limit = 10
+    var page = { page: req.params.page, limit: limit }
     if (error.array().length) {
       errorHandler.requestHandler(error.array(), true, lang, (message) => {
         return res.send(message)
       })
     } else {
-      servicesController.serviceSubCategoryListViewCtrl((result) => {
+      servicesController.serviceSubCategoryListViewCtrl(page, (result) => {
         errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })
@@ -2792,7 +2795,7 @@ module.exports = function (app, validator) {
     validator.check('servicesDisplayStyle').isNumeric().trim()
       .withMessage('INVALID: $[1], servicesDisplayStyle')
   ], (req, res) => {
-    const lang = req.headers.lang 
+    const lang = req.headers.lang
     const error = validator.validation(req)
     var data = req.body
     if (error.array().length) {
@@ -2801,6 +2804,175 @@ module.exports = function (app, validator) {
       })
     } else {
       servicesController.editSubCategoryCtrl(data, (result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
+
+  // services add
+  app.post(`${basePath}/addServices`, [
+    validator.check('categoryId').isNumeric().trim()
+      .withMessage('INVALID: $[1], categoryId'),
+    validator.check('subCategoryId').isNumeric().optional()
+      .withMessage('INVALID: $[1], subCategoryId'),
+    validator.check('subTitle').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], subTitle'),
+    validator.check('name').isLength({ min: 1, max: 500 }).trim()
+      .withMessage('INVALID: $[1], name'),
+    // validator.check('image').isLength({ min: 1, max: 500 }).trim()
+    //   .withMessage('INVALID: $[1], image'),
+    validator.check('price').isNumeric().trim()
+      .withMessage('INVALID: $[1], price'),
+    validator.check('isFixedPrice').isNumeric().trim()
+      .withMessage('INVALID: $[1], isFixedPrice'),
+    validator.check('pricePerHour').isNumeric().optional()
+      .withMessage('INVALID: $[1], pricePerHour'),
+    validator.check('status').isNumeric().trim()
+      .withMessage('INVALID: $[1], status'),
+    validator.check('slashPrice').isNumeric().trim()
+      .withMessage('INVALID: $[1], slashPrice'),
+    validator.check('duration').isLength({ min: 1, max: 20 }).trim()
+      .withMessage('INVALID: $[1], duration')
+  ], (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.addServicesCtrl(data, (result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
+
+  // services edit
+  app.post(`${basePath}/editServices`, [
+    validator.check('id').isNumeric().trim()
+      .withMessage('INVALID: $[1], id'),
+    validator.check('categoryId').isNumeric().trim()
+      .withMessage('INVALID: $[1], categoryId'),
+    validator.check('subCategoryId').isNumeric().optional()
+      .withMessage('INVALID: $[1], subCategoryId'),
+    validator.check('subTitle').isLength({ min: 1, max: 50 }).trim()
+      .withMessage('INVALID: $[1], subTitle'),
+    validator.check('name').isLength({ min: 1, max: 500 }).trim()
+      .withMessage('INVALID: $[1], name'),
+    // validator.check('image').isLength({ min: 1, max: 500 }).trim()
+    //   .withMessage('INVALID: $[1], image'),
+    validator.check('price').isNumeric().trim()
+      .withMessage('INVALID: $[1], price'),
+    validator.check('isFixedPrice').isNumeric().trim()
+      .withMessage('INVALID: $[1], isFixedPrice'),
+    validator.check('pricePerHour').isNumeric().optional()
+      .withMessage('INVALID: $[1], pricePerHour'),
+    validator.check('status').isNumeric().trim()
+      .withMessage('INVALID: $[1], status'),
+    validator.check('slashPrice').isNumeric().trim()
+      .withMessage('INVALID: $[1], slashPrice'),
+    validator.check('duration').isLength({ min: 1, max: 20 }).trim()
+      .withMessage('INVALID: $[1], duration')
+  ], (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.editServicesCtrl(data, (result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
+
+  // services  View
+  app.post(`${basePath}/servicesView`, [
+    validator.check('servicesId').isNumeric().trim()
+      .withMessage('INVALID: $[1], servicesId')
+  ], (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.servicesViewCtrl(data, (result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
+
+  app.get(`${basePath}/servicesList/:page`, (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var limit = 10
+    var page = { page: req.params.page, limit: limit }
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.servicesListViewCtrl(page, (result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
+
+  // services  View
+  app.post(`${basePath}/subCategoryList`, [
+    validator.check('categoryId').isNumeric().trim()
+      .withMessage('INVALID: $[1], servicesId')
+  ], (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.subCategoryListCtrl(data, (result) => {
+        this.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
+
+  // services  View
+  app.post(`${basePath}/updateStatus`, [
+    validator.check('id').isNumeric().trim()
+      .withMessage('INVALID: $[1], id'),
+    validator.check('tableName').isLength({ min: 3, max: 50 }).trim()
+      .withMessage('INVALID: $[1], tableName'),
+    validator.check('status').isNumeric().trim()
+      .withMessage('INVALID: $[1], status')
+  ], (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      this.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.updateStatusCtrl(data, (result) => {
         this.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })

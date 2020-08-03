@@ -96,4 +96,25 @@ Class CouponController extends Controller
         $responseData   = Defaults::encode($response);
         return $responseData;
     }
+
+       public function deleteCoupon(request $request)
+    {
+        $response   = new Response();
+        $rules      = [
+                       'id'           => 'required',
+                      ];
+        $validator  = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $data                       = $validator->messages();
+            $response->error            = Common::error_true;
+            $response->errorMessage     = $data->first();
+
+        } else {
+
+            $couponService  = new CouponService();
+            $response                   = $couponService->deleteCoupon($request);
+        }
+        $responsedata = Defaults::encode($response);
+        return $responsedata;
+    } 
 }

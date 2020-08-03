@@ -10,6 +10,8 @@ module.exports = function () {
   const serviceGroupMapping = 'ServiceGroupMapping'
   const serviceImage = 'ServiceImage'
   const bannerads = 'Banner'
+  const serviceCategoryTitle = 'ServiceCategoryTitle'
+  const provider = 'Provider'
 
   require('dotenv').config({ path: './../.env' })
   var config = {
@@ -318,12 +320,12 @@ module.exports = function () {
         })
     })
   }
-    // banner ads Page Select
+  // banner ads Page Select
   this.bannerAdsPageView = () => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(bannerads).select('Id as id','Image_path as image','Title as type','Description as categoryId', 'Url as webUrl')
+      knex(bannerads).select('Id as id', 'Image_path as image', 'Title as type', 'Description as categoryId', 'Url as webUrl')
         .where('Status', 'Active')
         .then((result) => {
           if (result.length) {
@@ -340,6 +342,87 @@ module.exports = function () {
           err.data = null
           resolve(err)
         }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  // services Title
+  this.subCategoryServiceTitle = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceCategoryTitle)
+        .where(data)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  // find Rating for subcategory
+  this.rating = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(provider).avg('Rating as totalRating').sum('Provider.Id as totalReview')
+        .leftJoin('ProviderService', 'ProviderService.ProviderId', `Provider.Id`)
+        .where(data)
+        .then((result) => {
+          if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = false
+            output.data = result
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  // SubCategory View
+  this.subCategoryServiceView = (subCategoryId) => {
+    var data = { Id: subCategoryId }
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(serviceSubCategory)
+        .where(data)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
           knex.destroy()
         })
     })

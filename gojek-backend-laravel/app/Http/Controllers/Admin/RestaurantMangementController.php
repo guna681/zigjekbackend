@@ -86,7 +86,7 @@ Class RestaurantMangementController extends Controller
                       'costForTwo' => 'required',
                       'preparationTime' => 'required',
                       'addressLineOne' => 'required',
-                      'addressLineTwo' => 'required',
+                      // 'addressLineTwo' => 'required',
                       'area'           => 'required',
                       'city'           => 'required',
                       'isRestaurant'   => 'required',

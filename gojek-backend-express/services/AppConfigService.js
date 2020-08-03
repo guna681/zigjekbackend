@@ -29,6 +29,15 @@ module.exports = function () {
             done(null, result.result)
           }
         })
+      },
+      currency: function (done) {
+        appConfigRepository.currencySymbol( (result) => {
+          if (result.error) {
+            done(true, null)
+          } else {
+            done(null, result.result)
+          }
+        })
       }
     }, function (err, result) {
       var response = {}
