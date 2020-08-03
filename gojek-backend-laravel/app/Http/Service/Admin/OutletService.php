@@ -115,7 +115,8 @@ Class OutletService
         $outlets->commission         = $results->restaurantCommission;
         $outlets->totalAmount            = $results->totalAmount;
         $outlets->balanceAmount            = $results->balanceAmount;
-
+        $outlets->packingCharge     = $results->packingCharge;
+        $outlets->cuisine           = $results->cuisine;
         return $outlets;
     }
 

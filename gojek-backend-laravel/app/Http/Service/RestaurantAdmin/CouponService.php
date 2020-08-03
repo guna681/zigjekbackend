@@ -83,5 +83,22 @@ Class  CouponService{
         }
 
         return $data;
-    }  
+    } 
+
+    public function deleteCoupon($arg)
+    {
+        $couponRepostitory      = new CouponRepostitory();
+        $coupon                 = $couponRepostitory->couponDelete($arg);
+        $data                   = new DataService();
+        if ($coupon) {
+            $data->error        = Common::error_false;
+            $data->errorMessage = __('validation.sucess');
+
+        } else {
+            $data->error        = Common::error_true;
+            $data->errorMessage = __('validation.failure');
+        }
+
+        return $data;
+    }    
 }

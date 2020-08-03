@@ -95,6 +95,8 @@ Route::post('trackOrders','RestaurantAdmin\OrderManagementController@trackOrders
 Route::get('couponList/{page}','RestaurantAdmin\CouponController@listCoupon')->middleware('auth:restaurant');
 Route::post('addCoupon','RestaurantAdmin\CouponController@addCoupon')->middleware('auth:restaurant');
 Route::post('editCoupon','RestaurantAdmin\CouponController@editCoupon')->middleware('auth:restaurant');
+Route::post('deleteCoupon','RestaurantAdmin\CouponController@deleteCoupon')->middleware('auth:restaurant');
+
 
 Route::post('markReady','RestaurantAdmin\OrderManagementController@markReady')->middleware('auth:restaurant');
 Route::post('dishesEnableDisable','RestaurantAdmin\OrderManagementController@dishesEnableDisable')->middleware('auth:restaurant');

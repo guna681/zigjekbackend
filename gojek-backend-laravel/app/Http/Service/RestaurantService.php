@@ -16,6 +16,7 @@ use App\Http\Repository\UserRepository;
 use App\Http\Service\AppconfigService;
 use App\Http\Repository\OrderRepostitory;
 use App\Http\Repository\SettingRepostitory;
+use App\Http\Repository\CouponRepostitory;
 use App\Http\Utility\Constant;
 use App\Restaurant;
 use App\Outlets;
@@ -58,6 +59,7 @@ Class RestaurantService
                 $oulet                          = array();
                 foreach ($restaurants as $outlets) {
                     $outletRepostitory      = new OutletsRepostitory();
+                    $couponRepostitory      = new CouponRepostitory();
                     $query                  = $outletRepostitory->getOutlets($outlets->id, $data->address[0]); 
                     $shortDescription = $restaurants[0]->discountPerscentage."%off". " |"."Use coupon"." ".$restaurants[0]->couponName; 
                     $longDescription = $restaurants[0]->discountPerscentage."%off up to ₹100". " |"."Use coupon"." ".$restaurants[0]->couponName;
@@ -66,6 +68,18 @@ Class RestaurantService
                     $query->shortDescription           = $shortDescription;
                     $query->longDescription           = $longDescription;
                     $query->couponEnabledForRestaurant = $restaurants[0]->couponStatus;
+                    $coupon                  = $couponRepostitory->getOutletCoupon($outlets->id); 
+
+                     $listCoupon = array();
+                    foreach ($coupon as $couponlist) {
+                    $couponData                 = (object)array();
+                    $longDescription = $couponlist->discountPerscentage."%off up to ₹".$couponlist->maxDiscount. " |"."Use coupon"." ".$couponlist->couponName;
+                    $couponData->couponName           = $couponlist->couponName;
+                    $couponData->description           = $longDescription;
+                    $couponData->couponEnabledForRestaurant = $couponlist->couponStatus;
+                    array_push($listCoupon, $couponData);
+                    }
+                    $query->coupon           = $listCoupon;
                 } else {
                    $query->couponEnabledForRestaurant = "0"; 
                 }

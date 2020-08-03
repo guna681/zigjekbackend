@@ -91,6 +91,7 @@ Route::post('updateOutlet','Admin\OutletController@updateOutlet');
 //Menu module
 //cuisines
 Route::get('listCuisines/{page}','Admin\MenuController@listCuisines');
+Route::get('listCuisines','Admin\MenuController@listAllCuisines');
 Route::Post('getCuisine','Admin\MenuController@getCuisine');
 Route::Post('addCuisines','Admin\MenuController@addCuisines');
 Route::Post('updateCuisines','Admin\MenuController@updateCuisines');

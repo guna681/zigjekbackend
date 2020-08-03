@@ -62,7 +62,7 @@ Class CouponRepostitory{
     {
         $outletId  = Auth::guard('restaurant')->user()->id;
         $perPage = Constant::PERPAGE;
-        $data=Coupon::where(['outletId'=>$outletId])->paginate($perPage, ['*'], 'page', $arg->page);         
+        $data=Coupon::where(['outletId'=>$outletId, 'isDeleted'=>'0'])->paginate($perPage, ['*'], 'page', $arg->page);         
         return $data;
     }
 
@@ -113,6 +113,23 @@ Class CouponRepostitory{
                   // ->where('Coupon.status','1')
                   ->paginate($perPage, ['*'], 'page', $arg->page);
         return $data;
+    }
+
+      public static function getOutletCoupon($outletId)
+    {
+        $data=Coupon::where(['outletId'=>$outletId,'couponStatus'=>'1'])->get();         
+        return $data;
     } 
+
+     public static function couponDelete($arg)
+    {
+        if ($arg->outletId) {
+        $outletId = $arg->outletId;
+        } else {
+        $outletId  = Auth::guard('restaurant')->user()->id; 
+        }
+        $update=Coupon::where(['id'=>$arg->id])->update(['couponName' => $arg->couponName,'isDeleted' => '1']);         
+        return $update;
+    }      
 
 }

@@ -559,7 +559,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(users)
-        .select('Id', 'FirstName', 'LastName', 'Image', 'Email', 'Mobile', 'Password', 'Rating')
+        .select('Id', 'FirstName', 'LastName', 'Image', 'Email', 'Mobile', 'Password', 'Rating', 'ExtCode')
         .where(data)
         .then((result) => {
           if (result.length > 0) {
