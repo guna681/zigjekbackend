@@ -43,6 +43,7 @@ module.exports = function () {
   }
 
   this.mobileValidation = (mobile, callback) => {
+    if (process.env.ISTWILIO == '0') {
     var response = {}
     userService.checkUserExists(mobile, (result) => {
       if (result.error) {
@@ -55,6 +56,45 @@ module.exports = function () {
       }
       callback(response)
     })
+    } else {
+          var response = {}
+    var name = 'user'
+    userService.checkUserExists(mobile, async (result) => {
+      var authtyperesult = await appConfigService.authTypeChecking(name)
+      if (result.error) {
+        if (authtyperesult.error) {
+          response.error = true
+          response.msg = 'OOPS'
+        } else {
+          if (authtyperesult.data['Value'] === 'OTP') {
+            common.sendOtpMobile(mobile.number, mobile.ext)
+            response.error = false
+            response.msg = result.msg
+          } else {
+            common.sendOtpMobile(mobile.number, mobile.ext)
+            response.error = false
+            response.msg = result.msg
+          }
+        }
+      } else {
+        if (authtyperesult.error) {
+          response.error = true
+          response.msg = 'OOPS'
+        } else {
+          if (authtyperesult.data['Value'] === 'OTP') {
+            common.sendOtpMobile(mobile.number, mobile.ext)
+            response.error = false
+            response.msg = result.msg
+          } else {
+            response.error = false
+            response.msg = result.msg
+          }
+        }
+      }
+      callback(response)
+    })
+
+    }
   }
 
   this.twilioMobileValidation = (mobile, callback) => {
