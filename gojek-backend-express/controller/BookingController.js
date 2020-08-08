@@ -109,7 +109,11 @@ module.exports = function () {
 
             if (!providerWallet.error) {
               providerWalletInfo.type = 'debit'
-              providerWalletInfo.description = 'Credit to wallet ' + result.data[0].rideName
+              if (result.data[0].rideName == null) {
+              providerWalletInfo.description = 'Credit to wallet Service'
+              } else {
+              providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
+              }
               providerTnx = await transactionService.createTransaction(providerWalletInfo)
             }
           } else if (result.data[0].paymentMode === 'wallet') {
@@ -134,7 +138,11 @@ module.exports = function () {
               providerWalletInfo.amount = result.data[0].providerEarning
               walletService.creditWalletService(providerWalletInfo)
               providerWalletInfo.type = 'credit'
+              if (result.data[0].rideName == null) {
+              providerWalletInfo.description = 'Credit to wallet Service'
+              } else {
               providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
+              }
               providerTnx = await transactionService.createTransaction(providerWalletInfo)
               if (!providerTnx.error) {
                 providerTnxStatus = {}
@@ -156,7 +164,11 @@ module.exports = function () {
               providerWalletInfo.amount = result.data[0].providerEarning
               walletService.creditWalletService(providerWalletInfo)
               providerWalletInfo.type = 'credit'
+              if (result.data[0].rideName == null) {
+              providerWalletInfo.description = 'Credit to wallet Service'
+              } else {
               providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
+              }
               providerTnx = transactionService.createTransaction(providerWalletInfo)
 
               if (!providerTnx.error) {
