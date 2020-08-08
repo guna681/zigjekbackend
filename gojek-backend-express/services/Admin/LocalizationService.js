@@ -282,30 +282,27 @@ module.exports = function () {
       callback(err)
     }
   }
-  this.adminCountryUpdateService = async (data, callback) => {
+  this.adminCountryInsertService = async (data, callback) => {
     var response = {}
     try {
-      var countrydata = { data: {
-        CountryName: data.CountryName,
-        ShortCode: data.ShortCode,
-        CurrenyName: data.CurrenyName,
-        CurrencyShortCode: data.CurrencyShortCode,
-        CurrencySymbol: data.CurrencySymbol,
-        CurrenyValue: data.CurrenyValue,
-        CountryFlagImage: data.CountryFlagImage,
-        IsDefault: data.IsDefault,
-        IsActive: data.IsActive
-      },
-      where: {
-        Id: data.Id
+      var country = {
+        countryName: data.CountryName,
+        isoCode: data.ShortCode,
+        currencyCode: data.CurrenyName,
+        // CurrencyShortCode: data.CurrencyShortCode,
+        currencySymbol: data.CurrencySymbol,
+        currencyValues: data.CurrenyValue,
+        // CountryFlagImage: data.CountryFlagImage,
+        status: data.IsActive
       }
-      }
-      var adminUCountryData = await localizationRepository.adminCountryUpdate(countrydata)
-      if (adminUCountryData.error === false) {
+      console.log(country)
+      var adminICountryData = await localizationRepository.adminCountryInsert(country) 
+      console.log(adminICountryData)
+      if (adminICountryData.error === false) {
         response.error = false
-        response.data = adminUCountryData.data
+        response.data = adminICountryData.data[0]
         response.msg = 'VALID'
-      } else if (adminUCountryData.errno === DUPLICATEERRCODE) {
+      } else if (adminICountryData.errno === DUPLICATEERRCODE) {
         response.error = true
         response.msg = 'EXIST: $[1],Country Name'
       } else {
