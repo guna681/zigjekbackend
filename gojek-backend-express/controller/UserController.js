@@ -12,7 +12,6 @@ module.exports = function () {
   const PushNotification = require('../thirdParty/pushNotification')
   const RatingService = require('../services/RatingServices')
   require('dotenv').config({ path: './../.env' })
-
   var ratingService = new RatingService()
   var pushNotification = new PushNotification()
   var trackingService = new TrackingService()
@@ -68,7 +67,7 @@ module.exports = function () {
         } else {
           if (authtyperesult.data['Value'] === 'OTP') {
             common.sendOtpMobile(mobile.number, mobile.ext)
-            response.error = false
+            response.error = true
             response.msg = result.msg
           } else {
             common.sendOtpMobile(mobile.number, mobile.ext)
@@ -77,10 +76,10 @@ module.exports = function () {
           }
         }
       } else {
-        if (authtyperesult.error) {
-          response.error = true
-          response.msg = 'OOPS'
-        } else {
+        // if (authtyperesult.error) {
+        //   response.error = true
+        //   response.msg = 'OOPS'
+        // } else {
           if (authtyperesult.data['Value'] === 'OTP') {
             common.sendOtpMobile(mobile.number, mobile.ext)
             response.error = false
@@ -89,7 +88,7 @@ module.exports = function () {
             response.error = false
             response.msg = result.msg
           }
-        }
+        // }
       }
       callback(response)
     })
@@ -188,12 +187,7 @@ module.exports = function () {
   this.otpValidate = async (req, callback) => {
     var response = {}
     var data = req
-    // var otpVerifynumber = await this.otpVerify(data.mobile, data.countryCode, data.otp)
-    // if (otpVerifynumber.error) {
-    //   response.error = true
-    //   response.msg = 'OTP_VERIFY'
-    //   callback(response)
-    // } else {
+    if (process.env.ISTWILIO == '0') {
     userService.verifyOTP(data, (result) => {
       if (result.error) {
         response.error = true
@@ -205,8 +199,33 @@ module.exports = function () {
       }
       callback(response)
     })
-    // }
+   
+} else {
+   var otpVerifynumber = await common.otpVerify(data.mobile, data.countryCode, data.otp)
+    if (otpVerifynumber.error) {
+      response.error = true
+      response.msg = 'OTP_VERIFY'
+      callback(response)
+    } else {
+      //  response.error = false
+      // response.msg = 'OTP'
+      // callback(response)
+      data.otp = '1234'
+    userService.verifyOTP(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+    }
   }
+
+}
 
   this.pwdValidate = (req, callback) => {
     var response = {}
