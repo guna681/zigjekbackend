@@ -7,6 +7,7 @@ module.exports = function () {
   const TransactionServices = require('../services/TransactionServices')
   const ProviderVehicleService = require('../services/ProviderVehicleService')
   const PushNotification = require('../thirdParty/pushNotification')
+  const ProviderRespository = require('../repository/ProviderRespository')
   const Common = require('../Utils/common')
   const UserService = require('../services/UserService')
   const RatingService = require('../services/RatingServices')
@@ -25,6 +26,7 @@ module.exports = function () {
   var providerVehicleService = new ProviderVehicleService()
   var common = new Common()
   var userService = new UserService()
+  var providerRespository = new ProviderRespository()
 
   this.providerAppSetting = (callback) => {
     var response = {}
@@ -148,7 +150,15 @@ module.exports = function () {
     var response = {}
     var data = req
     if (process.env.ISTWILIO == '1') {
-
+            var condition = {}
+      condition.Mobile = data.mobile
+      condition.ExtCode = data.countryCode
+      var provider = await providerRespository.fetchProvider(condition)
+      if (provider.result[0].Status == 'reject') {
+        response.error = true
+        response.msg = 'blocked'
+      callback(response)
+      } else {
     var otpVerifynumber = await common.otpVerify(data.mobile, data.countryCode, data.otp)
     if (otpVerifynumber.error) {
         // response.error = true
@@ -177,7 +187,17 @@ module.exports = function () {
       callback(response)
     })
     }
+      }
   } else {
+         var condition = {}
+      condition.Mobile = data.mobile
+      condition.ExtCode = data.countryCode
+          var provider = await providerRespository.fetchProvider(condition)
+      if (provider.result[0].Status == 'reject') {
+        response.error = true
+        response.msg = 'blocked'
+      callback(response)
+      } else {
        providerService.providerOtpVerify(data, (result) => {
       if (result.error) {
         response.error = true
@@ -189,6 +209,7 @@ module.exports = function () {
       }
       callback(response)
     })
+      }
   }
   }
 

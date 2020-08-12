@@ -13,6 +13,11 @@ module.exports = function () {
   }
 
   this.sendPushNotificationByDeviceType = (deviceInfo, content, sound) => {
+    if (content.type == undefined) {
+       var type = ''
+    } else {
+        var type = content.type
+    }
     var response = {}
     return new Promise(function (resolve) {
       try {
@@ -24,7 +29,8 @@ module.exports = function () {
             'data': {
               'title': content.title,
               'body': content.body,
-              'data': content.data
+              'data': content.data,
+              'type': type
             },
             'android': {
               'priority': 'high'
@@ -46,12 +52,14 @@ module.exports = function () {
             'token': deviceInfo.token,
             'notification': {
               'title': content.title,
-              'body': content.body
+              'body': content.body,
+              'type': type
             },
             'data': {
               'title': content.title,
               'body': content.body,
-              'data': content.data
+              'data': content.data,
+              'type': type
             },
             'android': {
               'priority': 'high'
