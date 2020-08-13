@@ -154,7 +154,20 @@ module.exports = function () {
       condition.Mobile = data.mobile
       condition.ExtCode = data.countryCode
       var provider = await providerRespository.fetchProvider(condition)
-      if (provider.result[0].Status == 'reject') {
+      if (provider.result != []) {
+         providerService.providerOtpVerify(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+     } else {
+if (provider.result[0].Status == 'reject') {
         response.error = true
         response.msg = 'blocked'
       callback(response)
@@ -188,11 +201,25 @@ module.exports = function () {
     })
     }
       }
+      }
   } else {
          var condition = {}
       condition.Mobile = data.mobile
       condition.ExtCode = data.countryCode
           var provider = await providerRespository.fetchProvider(condition)
+      if (provider.result != []) {
+ providerService.providerOtpVerify(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+      } else {
       if (provider.result[0].Status == 'reject') {
         response.error = true
         response.msg = 'blocked'
@@ -209,6 +236,7 @@ module.exports = function () {
       }
       callback(response)
     })
+      }
       }
   }
   }
