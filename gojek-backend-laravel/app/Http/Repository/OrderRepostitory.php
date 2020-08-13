@@ -107,6 +107,8 @@ Class OrderRepostitory{
                                 ->where(['id' => $cart->cartId])
                                 // ->where(['userId' => $cart->userId])
                                 ->first();
+                    $updateCart=Cart::Where('id',$cart->cartId)->update(['orderId'=>$orders->id]);
+
                                 
                     $dishlist = $this->getDishesList($carts->dishId);
                    

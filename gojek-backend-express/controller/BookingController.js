@@ -188,6 +188,7 @@ module.exports = function () {
           content.body = 'Please try after sometime'
         }
         if (userToken.error === false) {
+          content.type = data.type
           pushNotification.sendPushNotificationByDeviceType(userToken.data, content)
         }
         response.error = false

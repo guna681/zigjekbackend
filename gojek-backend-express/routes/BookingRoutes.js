@@ -116,7 +116,10 @@ module.exports = function (server, validator) {
     validator.check('bookingNo')
       .isLength({ min: 1, max: 11 }).withMessage('INVALID: $[1],Booking No'),
     validator.check('action')
-      .isIn(['accept', 'reject']).withMessage('INVALID_FIELDNAME')
+      .isIn(['accept', 'reject']).withMessage('INVALID_FIELDNAME'),
+    validator.check('type')
+      .optional()
+      .isLength({ min: 1, max: 50 }).withMessage('INVALID: $[1],type')
   ], server.auth, (request, response) => {
     const error = validator.validation(request)
     const lang = request.headers.lang
@@ -139,7 +142,10 @@ module.exports = function (server, validator) {
     validator.check('bookingNo')
       .isLength({ min: 1, max: 11 }).withMessage('INVALID: $[1],Booking No.'),
     validator.check('action')
-      .isIn(['arrive', 'pickup', 'drop', 'complete', 'cancel']).withMessage('INVALID_FIELDNAME')
+      .isIn(['arrive', 'pickup', 'drop', 'complete', 'cancel']).withMessage('INVALID_FIELDNAME'),
+    validator.check('type')
+      .optional()
+      .isLength({ min: 1, max: 50 }).withMessage('INVALID: $[1],type')
   ], server.auth, (request, response) => {
     const error = validator.validation(request)
     const lang = request.headers.lang

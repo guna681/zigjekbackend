@@ -392,7 +392,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(booking)
-        .update({ ProviderRejectedIds: knex.raw('JSON_MERGE(ProviderRejectedIds, "?")', [providerId.toSting()]) })
+        .update({ ProviderRejectedIds: knex.raw('JSON_MERGE(ProviderRejectedIds, "?")', [providerId.toSting()]),orderStatus: 'rejected' })
         .where('Id', bookingId)
         .then((result) => {
           if (result[0] > 0) {

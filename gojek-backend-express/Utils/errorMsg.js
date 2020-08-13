@@ -409,6 +409,11 @@ module.exports = {
       'ar': 'تم إنشاء طلب السحب بنجاح',
       'es': 'La solicitud de retiro se ha creado con éxito',
       'pt': 'O pedido de retirada foi criado com sucesso'
+    }, 'blocked': {
+      'default': 'Your account is blocked.Please contact admin',
+      'ar': 'تم إنشاء طلب السحب بنجاح',
+      'es': 'La solicitud de retiro se ha creado con éxito',
+      'pt': 'O pedido de retirada foi criado com sucesso'
     }
   },
   SUCCESS: {
