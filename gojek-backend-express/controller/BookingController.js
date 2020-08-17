@@ -189,6 +189,7 @@ module.exports = function () {
         }
         if (userToken.error === false) {
           content.type = data.type
+          content.orderId = JSON.stringify(bookingId)
           pushNotification.sendPushNotificationByDeviceType(userToken.data, content)
         }
         response.error = false
@@ -272,6 +273,7 @@ module.exports = function () {
         content.data = 'incoming_booking'
         content.title = 'Booking Alert'
         content.body = 'You have new booking request'
+        content.orderId = JSON.stringify(bookingId)
         var providerToken = await providerService.getProivderMessageToken(providerId)
         pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default')
         providerService.providerLocationStatusUpdate(providerId, blockProviderStatus)
@@ -360,6 +362,7 @@ module.exports = function () {
         content.data = 'incoming_booking'
         content.title = 'Booking Alert'
         content.body = 'You have new booking request'
+        content.orderId = JSON.stringify(bookingId)
         var providerToken = await providerService.getProivderMessageToken(providerId)
         pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default')
         providerService.providerLocationStatusUpdate(providerId, blockProviderStatus)

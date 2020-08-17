@@ -1426,9 +1426,11 @@ module.exports = function (app, validator) {
   app.post(`${basePath}/staticPagesAdd`, [
     validator.check('PageName').isLength({ min: 1, max: 45 }).trim()
       .withMessage('INVALID: $[1],PageName'),
-    validator.check('Url').isLength({ min: 1, max: 255 }).trim()
+    validator.check('Url').isLength({ min: 1, max: 255 }).optional()
       .withMessage('INVALID: $[1],Url'),
-    validator.check('HtmlContent').trim().withMessage('INVALID: $[1],HtmlContent')
+    validator.check('HtmlContent').optional().withMessage('INVALID: $[1],HtmlContent'),
+    validator.check('Type').isLength({ min: 1, max: 255 }).optional()
+      .withMessage('INVALID: $[1],Type'),
   ], app.adminauth, (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
@@ -1501,9 +1503,11 @@ module.exports = function (app, validator) {
   app.post(`${basePath}/staticPagesEdit`, [
     validator.check('PageName').isLength({ min: 1, max: 45 }).trim()
       .withMessage('INVALID: $[1],PageName'),
-    validator.check('Url').trim().isLength({ min: 1, max: 255 })
+    validator.check('Url').isLength({ min: 1, max: 255 }).optional()
       .withMessage('INVALID: $[1],Url'),
-    validator.check('HtmlContent').trim().withMessage('INVALID: $[1],HtmlContent')
+    validator.check('HtmlContent').optional().withMessage('INVALID: $[1],HtmlContent'),
+     validator.check('Type').isLength({ min: 1, max: 45 }).trim()
+      .withMessage('INVALID: $[1],Type'),
   ], app.adminauth, (req, res) => {
     const lang = req.headers.lang
     const error = validator.validation(req)
