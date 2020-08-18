@@ -44,10 +44,10 @@ Class OrderManagementRepostitory
         $perPage = Constant::PERPAGE;
         $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.Status as orderStatus','Booking.created_at','Users.Mobile','Users.Email','Booking.updated_at')
                           ->leftjoin('Users','Booking.userId','=','Users.id')
-                          ->where('Booking.Status','=','unassigned')
+                          // ->where('Booking.Status','=','unassigned')
                           ->where('outletId',$outletId)
                           ->where('Booking.RideName','food Delivery')
-                          ->whereNotIn('Booking.Status', ['completed','cancelled'])
+                          // ->whereNotIn('Booking.Status', ['completed','cancelled'])
                           ->orderby('Booking.id', 'DESC')
                           ->paginate($perPage, ['*'], 'page', $pageNumber);
 
