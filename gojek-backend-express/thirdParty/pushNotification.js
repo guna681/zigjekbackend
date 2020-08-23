@@ -18,6 +18,11 @@ module.exports = function () {
     } else {
         var type = content.type
     }
+    if (content.orderId == undefined) {
+       var orderId = ''
+    } else {
+        var orderId = content.orderId
+    }
     var response = {}
     return new Promise(function (resolve) {
       try {
@@ -30,7 +35,8 @@ module.exports = function () {
               'title': content.title,
               'body': content.body,
               'data': content.data,
-              'type': type
+              'type': type,
+              'orderId': orderId
             },
             'android': {
               'priority': 'high'
@@ -53,13 +59,15 @@ module.exports = function () {
             'notification': {
               'title': content.title,
               'body': content.body,
-              'type': type
+              'type': type,
+              'orderId': orderId
             },
             'data': {
               'title': content.title,
               'body': content.body,
               'data': content.data,
-              'type': type
+              'type': type,
+              'orderId': orderId
             },
             'android': {
               'priority': 'high'

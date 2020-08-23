@@ -380,7 +380,8 @@ module.exports = function () {
       var staticdata = {
         PageName: data.PageName,
         Url: data.Url,
-        HtmlContent: data.HtmlContent
+        HtmlContent: data.HtmlContent,
+        Type: data.Type
       }
       var staticPagesIData = await serviceTypeRepository.staticPagesAdd(staticdata)
       if (staticPagesIData.error === false) {
