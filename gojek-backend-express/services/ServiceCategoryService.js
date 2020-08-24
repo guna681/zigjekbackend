@@ -15,13 +15,14 @@ module.exports = function () {
         var serviceCategory = await serviceRepository.fetchServiceCategory()
         var appsliderPSelectSData = await serviceRepository.bannerAdsPageView()
         serviceTitle.result.map(element => {
+            if (element.Id == 4) {
           var title = {}
           var category = []
           title.title = element.Title
           title.color = element.Color
           serviceCategory.result.filter(categories => {
             var list = {}
-            if (element.Id === categories.TitleId) {
+            if (element.Id) {
               list.id = categories.Id
               list.name = categories.Name
               list.icon = categories.Icon
@@ -33,6 +34,7 @@ module.exports = function () {
           })
           title.data = category
           services.push(title)
+        }
         })
 
         var data = {}

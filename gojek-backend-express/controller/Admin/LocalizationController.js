@@ -7,6 +7,7 @@ module.exports = function () {
   var common = new Common();
 
   this.adminCountryInsertCtrl = (req, callback) => {
+    console.log(req)
     var response = {}
     localizationService.adminCountryInsertService(req, (result) => {
       if (result.error) {

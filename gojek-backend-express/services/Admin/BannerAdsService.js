@@ -12,7 +12,8 @@ module.exports = function () {
         Description: data.Description,
         Image_path: data.Image_path,
         Url: data.Url,
-        Status: data.Status
+        Status: data.Status,
+        hasSubCategory: data.hasSubCategory
       }
       var appsliderInsertData = await bannerAdsRepository.bannerAdsAdd(appsliderdata)
       if (appsliderInsertData.error === false) {
@@ -98,7 +99,8 @@ module.exports = function () {
         Description: data.Description,
         Image_path: data.Image_path,
         Url: '',
-        Status: data.Status
+        Status: data.Status,
+        hasSubCategory: data.hasSubCategory
       }
       }
       var appsliderdata = {

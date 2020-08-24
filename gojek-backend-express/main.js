@@ -98,5 +98,6 @@ app.use(function (req, res, next) {
 })
 
 http.listen(process.env.PORT, function () {
+  console.log(process.env.PORT,'***')
   console.log('Server is running on ' + process.env.PORT + '!')
 })

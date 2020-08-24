@@ -11,16 +11,18 @@ module.exports = function () {
     var response = {}
     try {
       var country = {
-        CountryName: data.CountryName,
-        ShortCode: data.ShortCode,
-        CurrenyName: data.CurrenyName,
-        CurrencyShortCode: data.CurrencyShortCode,
-        CurrencySymbol: data.CurrencySymbol,
-        CurrenyValue: data.CurrenyValue,
-        CountryFlagImage: data.CountryFlagImage,
-        IsActive: data.IsActive
+        countryName: data.CountryName,
+        isoCode: data.ShortCode,
+        currencyCode: data.CurrenyName,
+        // CurrencyShortCode: data.CurrencyShortCode,
+        currencySymbol: data.CurrencySymbol,
+        currencyValues: data.CurrenyValue,
+        // CountryFlagImage: data.CountryFlagImage,
+        status: data.IsActive
       }
+      console.log(country,'*')
       var adminICountryData = await localizationRepository.adminCountryInsert(country) 
+      console.log(adminICountryData,'**&*&*&*&*&&................******')
       if (adminICountryData.error === false) {
         response.error = false
         response.data = adminICountryData.data[0]

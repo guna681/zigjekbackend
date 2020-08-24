@@ -509,6 +509,8 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(serviceCategory)
+        .where('Status', '1')
+        .where('Type', 'SERVICE')
         .where('HasSubCategory', '1')
         .then((result) => {
           if (result) {

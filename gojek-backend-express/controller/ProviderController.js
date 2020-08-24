@@ -11,6 +11,7 @@ module.exports = function () {
   const UserService = require('../services/UserService')
   const RatingService = require('../services/RatingServices')
   const PaymentHelper = require('../thirdParty/paymentHelper')
+  require('dotenv').config({ path: './../.env' })
 
   var paymentHelper = new PaymentHelper()
   var ratingService = new RatingService()
@@ -62,6 +63,7 @@ module.exports = function () {
   this.providerMobileValidation = (req, callback) => {
     var response = {}
     var name = 'provider'
+    if (process.env.ISTWILIO == '0') {
     providerService.checkProviderExsist(req, async (result) => {
       var authtyperesult = await appConfigService.authTypeChecking(name)
       if (result.error) {
@@ -79,6 +81,7 @@ module.exports = function () {
           }
         }
       } else {
+        console.log()
         if (authtyperesult.error) {
           response.error = true
           response.msg = 'OOPS'
@@ -97,16 +100,71 @@ module.exports = function () {
       }
       callback(response)
     })
+  } else {
+
+        providerService.checkProviderExsist(req, async (result) => {
+      var authtyperesult = await appConfigService.authTypeChecking(name)
+      if (result.error) {
+        if (authtyperesult.error) {
+          response.error = true
+          response.msg = 'OOPS'
+        } else {
+          if (authtyperesult.data['Value'] === 'OTP') {
+            // this.sendOtpMobile(req.number, req.ext)
+            common.sendOtpMobile(req.number, req.ext)
+            response.error = true
+            response.msg = result.msg
+          } else {
+            // common.sendOtpMobile(req.number, req.ext)
+            response.error = true
+            response.msg = result.msg
+          }
+        }
+      } else {
+        if (authtyperesult.error) {
+          response.error = true
+          response.msg = 'OOPS'
+        } else {
+          if (authtyperesult.data['Value'] === 'OTP') {
+            // this.sendOtpMobile(req.number, req.ext)
+            common.sendOtpMobile(req.number, req.ext)
+            response.error = false
+            response.msg = result.msg
+            response.data = result.data
+          } else {
+            // common.sendOtpMobile(req.number, req.ext)
+            response.error = false
+            response.msg = result.msg
+            response.data = result.data
+          }
+        }
+      }
+      callback(response)
+    })
+
+  }
   }
 
   this.providerOtpValidation = async (req, callback) => {
     var response = {}
     var data = req
-    // var otpVerifynumber = await this.otpVerify(data.mobile, data.countryCode, data.otp)
-    // if (otpVerifynumber.error) {
-    //   response.error = true
-    //   response.msg = 'OTP_VERIFY'
-    // } else {
+    var otpVerifynumber = await common.otpVerify(data.mobile, data.countryCode, data.otp)
+    if (otpVerifynumber.error) {
+        // response.error = true
+        // response.msg = 'OTP'
+        providerService.providerOtpVerify(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+    } else {
+      data.otp = '1234'
     providerService.providerOtpVerify(data, (result) => {
       if (result.error) {
         response.error = true
@@ -118,7 +176,7 @@ module.exports = function () {
       }
       callback(response)
     })
-    // }
+    }
   }
 
   this.providerOtpRecall = async (req, callback) => {

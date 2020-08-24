@@ -146,7 +146,7 @@ module.exports = function () {
     var offset = (page - 1) * limit
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      knex(provider).select().limit(limit).offset(offset)
+      knex(provider).select().where('IsActive', 'yes').limit(limit).offset(offset)
         .then((result) => {
           if (result.length) {
             output.error = false

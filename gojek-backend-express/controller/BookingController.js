@@ -8,6 +8,7 @@ module.exports = function () {
   const Common = require('../Utils/common')
   const PaymentHelper = require('../thirdParty/paymentHelper')
   const PushNotification = require('../thirdParty/pushNotification')
+  const AdminAppConfigRepository = require('../repository/Admin/AdminAppConfigRepository')
 
   var pushNotification = new PushNotification()
   var paymentHelper = new PaymentHelper()
@@ -18,6 +19,8 @@ module.exports = function () {
   var walletService = new WalletService()
   var transactionService = new TransactionService()
   var common = new Common()
+  var adminAppConfigRepository = new AdminAppConfigRepository();
+
 
   this.getAvailabeRide = (req, callback) => {
     var data = req
@@ -59,6 +62,7 @@ module.exports = function () {
         response.error = true
         response.msg = result.msg
       } else {
+        console.log(result)
         var providerUnblock
         var providerWalletInfo
         var providerTnxStatus
@@ -104,12 +108,17 @@ module.exports = function () {
             providerWalletInfo = {}
             providerWalletInfo.userId = providerId
             providerWalletInfo.userType = 'provider'
-            providerWalletInfo.amount = result.data[0].providerEarning
+            var appconfigPSelectSData = await adminAppConfigRepository.appConfigPageView()
+            providerWalletInfo.amount = appconfigPSelectSData.data[18].Value
             var providerWallet = await walletService.debitWalletService(providerWalletInfo)
 
             if (!providerWallet.error) {
               providerWalletInfo.type = 'debit'
-              providerWalletInfo.description = 'Credit to wallet ' + result.data[0].rideName
+              if (result.data[0].rideName == null) {
+              providerWalletInfo.description = 'Credit to wallet Service'
+              } else {
+              providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
+              }
               providerTnx = await transactionService.createTransaction(providerWalletInfo)
             }
           } else if (result.data[0].paymentMode === 'wallet') {
@@ -119,7 +128,11 @@ module.exports = function () {
             userWalletInfo.amount = result.data[0].estimation
             var userWallet = await walletService.debitWalletService(userWalletInfo)
             userWalletInfo.type = 'debit'
-            userWalletInfo.description = 'Paid by wallet - ' + result.data[0].rideName
+            if (result.data[0].rideName == null) {
+              providerWalletInfo.description = 'Credit to wallet Service'
+              } else {
+              providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
+              }
             var userTnx = await transactionService.createTransaction(userWalletInfo)
             if (!userTnx.error) {
               var userTnxStatus = {}
@@ -134,7 +147,11 @@ module.exports = function () {
               providerWalletInfo.amount = result.data[0].providerEarning
               walletService.creditWalletService(providerWalletInfo)
               providerWalletInfo.type = 'credit'
+              if (result.data[0].rideName == null) {
+              providerWalletInfo.description = 'Credit to wallet Service'
+              } else {
               providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
+              }
               providerTnx = await transactionService.createTransaction(providerWalletInfo)
               if (!providerTnx.error) {
                 providerTnxStatus = {}
