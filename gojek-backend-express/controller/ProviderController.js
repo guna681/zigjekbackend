@@ -149,7 +149,9 @@ module.exports = function () {
     var response = {}
     var data = req
     var otpVerifynumber = await common.otpVerify(data.mobile, data.countryCode, data.otp)
+    console.log(otpVerifynumber)
     if (otpVerifynumber.error) {
+      console.log('IN')
         // response.error = true
         // response.msg = 'OTP'
         providerService.providerOtpVerify(data, (result) => {
@@ -164,12 +166,16 @@ module.exports = function () {
       callback(response)
     })
     } else {
+      console.log('OUt')
       data.otp = '1234'
     providerService.providerOtpVerify(data, (result) => {
+      console.log(result,'***')
       if (result.error) {
+        console.log('in','@')
         response.error = true
         response.msg = result.msg
       } else {
+        console.log('OUT','@')
         response.error = false
         response.msg = result.msg
         response.data = result.data
@@ -182,6 +188,7 @@ module.exports = function () {
   this.providerOtpRecall = async (req, callback) => {
     var response = {}
     var data = req
+    if (process.env.ISTWILIO == '0') {
     // var otpResendMobile = await this.sendOtpMobile(data.mobile, data.countryCode)
     var otpResendMobile = false
     if (otpResendMobile.error) {
@@ -192,7 +199,20 @@ module.exports = function () {
       response.msg = 'OTP_SENT'
     }
     callback(response)
+  } else {
+        // var otpResendMobile = await this.sendOtpMobile(data.mobile, data.countryCode)
+        common.sendOtpMobile(req.mobile, req.countryCode)
+    var otpResendMobile = false
+    if (otpResendMobile.error) {
+      response.error = true
+      response.msg = 'OTP_FAIL'
+    } else {
+      response.error = false
+      response.msg = 'OTP_SENT'
+    }
+    callback(response)
   }
+}
 
   this.registerProvider = (req, callback) => {
     var response = {}
@@ -238,6 +258,8 @@ module.exports = function () {
   this.providerForgotPwdOtp = (req, callback) => {
     var response = {}
     var data = req
+        var name = 'provider'
+    if (process.env.ISTWILIO == '0') {
     providerService.providerForgotOtp(data, (result) => {
       if (result.error) {
         response.error = true
@@ -248,6 +270,22 @@ module.exports = function () {
       }
       callback(response)
     })
+  } else {
+    // providerService.checkProviderExsist(req, async (result) => {
+      // var authtyperesult = await appConfigService.authTypeChecking(name)
+    providerService.providerForgotOtp(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        common.sendOtpMobile(req.mobile, req.countryCode)
+        response.error = false
+        response.msg = result.msg
+      }
+      callback(response)
+    })
+  // })
+  }
   }
 
   this.updateProviderPwd = (req, callback) => {

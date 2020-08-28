@@ -412,6 +412,34 @@ module.exports = function () {
     })
   }
 
+    this.updateCodType = (codType, bookingId) => {
+      console.log('%%%^^^^^^^%%%%%%')
+      console.log(codType,'@',bookingId)
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(booking)
+        .update('PaymentMode', codType )
+        .where('Id', bookingId)
+        .then((result) => {
+          console.log(result)
+          if (result[0] > 0) {
+            output.error = false
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = false
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
   this.fetchUserBookingPendingFeedback = (userId) => {
     var output = {}
     return new Promise(function (resolve) {
