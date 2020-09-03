@@ -452,7 +452,7 @@ Class  CartService{
 
         $appConfigRepostitory = new AppConfigRepostitory();
         $appconfigdata = $appConfigRepostitory->getAppConfig();
-        $deliverycharge = floatval($appconfigdata[0]->Value);
+        $deliverycharge = floatval($appconfigdata[17]->Value);
         $currencyRepostitory    = new CurrencyRepostitory();
         $currency               = $currencyRepostitory->getCurrency();
         $cartRepostitory        = new CartRepostitory();

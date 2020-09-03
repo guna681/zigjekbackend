@@ -6,6 +6,7 @@ module.exports = {
         Name varchar(255) DEFAULT NULL,        
         Coupon varchar(255) DEFAULT NULL,        
         Status varchar(255) DEFAULT NULL,
+        Description varchar(255) DEFAULT NULL,
         Threshold INT NOT NULL DEFAULT '0',
         MinValueToRedeem INT NOT NULL DEFAULT '0',
         MaxValueToRedeem INT NOT NULL DEFAULT '0',

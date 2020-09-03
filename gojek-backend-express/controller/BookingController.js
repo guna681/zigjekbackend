@@ -10,7 +10,6 @@ module.exports = function () {
   const PushNotification = require('../thirdParty/pushNotification')
   const AdminAppConfigRepository = require('../repository/Admin/AdminAppConfigRepository')
 
-
   var pushNotification = new PushNotification()
   var paymentHelper = new PaymentHelper()
   var bookingService = new BookingService()
@@ -58,11 +57,13 @@ module.exports = function () {
   this.providerBookingStatusCtrl = (req, callback) => {
     var response = {}
     var data = req
+    // console.log(data,'***')
     bookingService.providerBookingUpdateService(data, async (result) => {
       if (result.error) {
         response.error = true
         response.msg = result.msg
       } else {
+        console.log(result)
         var providerUnblock
         var providerWalletInfo
         var providerTnxStatus
@@ -97,7 +98,10 @@ module.exports = function () {
           content.data = 'payment_completed'
           content.title = 'Payment recieved'
           content.body = 'We have recieved your payment'
+    console.log(data,'%%%%%%')
           providerService.updateProviderTripCountService(providerId)
+          var updateCod = await bookingService.codeTypeUpdate(data.codType, bookingId)
+          console.log(updateCod,'***')
         } else if (data.action === 'drop') {
           providerUnblock = 'active'
           providerService.providerLocationStatusUpdate(providerId, providerUnblock, () => {})
@@ -128,7 +132,11 @@ module.exports = function () {
             userWalletInfo.amount = result.data[0].estimation
             var userWallet = await walletService.debitWalletService(userWalletInfo)
             userWalletInfo.type = 'debit'
-            userWalletInfo.description = 'Paid by wallet - ' + result.data[0].rideName
+            if (result.data[0].rideName == null) {
+              providerWalletInfo.description = 'Credit to wallet Service'
+              } else {
+              providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
+              }
             var userTnx = await transactionService.createTransaction(userWalletInfo)
             if (!userTnx.error) {
               var userTnxStatus = {}
@@ -182,6 +190,23 @@ module.exports = function () {
                 providerTnxStatus.transactId = providerTnx.Id
                 transactionService.editTransaction(providerTnx)
               }
+            }
+          } else if (data.codType === 'cardOnDelivery') {
+             providerWalletInfo = {}
+            providerWalletInfo.userId = providerId
+            providerWalletInfo.userType = 'provider'
+            var appconfigPSelectSData = await adminAppConfigRepository.appConfigPageView()
+            providerWalletInfo.amount = appconfigPSelectSData.data[18].Value
+            var providerWallet = await walletService.debitWalletService(providerWalletInfo)
+
+            if (!providerWallet.error) {
+              providerWalletInfo.type = 'debit'
+              if (result.data[0].rideName == null) {
+              providerWalletInfo.description = 'Credit to wallet Service'
+              } else {
+              providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
+              }
+              providerTnx = await transactionService.createTransaction(providerWalletInfo)
             }
           }
         } else if (data.action === 'cancel') {

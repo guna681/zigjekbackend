@@ -16,7 +16,6 @@ module.exports = function () {
         var appsliderPSelectSData = await serviceRepository.bannerAdsPageView()
         serviceTitle.result.map(element => {
             if (element.Id == 4) {
-
           var title = {}
           var category = []
           title.title = element.Title

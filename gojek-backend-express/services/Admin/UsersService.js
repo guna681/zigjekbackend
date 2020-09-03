@@ -20,7 +20,7 @@ module.exports = function () {
           j.Mobile = resultdata['mobile']
           j.Email = resultdata['email']
         })
-      }
+      } 
         var result = []
         result.push({ data: usersListSData.data }, { Count: usersCount.data[0].count })
         response.error = false
@@ -44,12 +44,16 @@ module.exports = function () {
       var usersCount = await usersRepository.usersListCount()
       var usersListSData = await usersRepository.usersPushNotificationListView(data)
       if (usersListSData.error === false && usersCount.error === false) {
+            if (process.env.SECURECHANGER == '1') {  
         usersListSData.data.forEach((j, index) => {
           var resultdata = common.secureChangerList(j.Email, j.Mobile)
           j.Mobile = resultdata['mobile']
           j.Email = resultdata['email']
           resresult.push({ Id: j.Id, FirstName: j.FirstName, LastName: j.LastName, Image: j.Image, Mobile: j.Mobile })
         })
+      } else {
+        var resresult = usersListSData.data
+      }
         var result = []
         result.push({ data: resresult }, { Count: usersCount.data[0].count })
         response.error = false
@@ -73,12 +77,16 @@ module.exports = function () {
       var usersSDCount = await this.usersListCount()
       var usersSDListSData = await this.usersPushNotificationSearchDataListView(data)
       if (usersSDListSData.error === false && usersSDCount.error === false) {
+            if (process.env.SECURECHANGER == '1') {  
         usersSDListSData.data.forEach((j, index) => {
           var resultdata = this.secureChangerList(j.Email, j.Mobile)
           j.Mobile = resultdata['mobile']
           j.Email = resultdata['email']
           resresult.push({ Id: j.Id, FirstName: j.FirstName, LastName: j.LastName, Image: j.Image, Mobile: j.Mobile })
         })
+      } else {
+        var resresult = usersSDListSData.data
+      }
         var result = []
         result.push({ data: resresult }, { Count: usersSDCount.data[0].count })
         response.error = false

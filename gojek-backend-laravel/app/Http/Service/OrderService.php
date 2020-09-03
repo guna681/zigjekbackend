@@ -58,7 +58,7 @@ Class  OrderService
         $orders->addressType       = $paymentAddress->type;
         $orders->orderStatus       = Constant::UNASSIGNED;
         $orders->orderSuggestions  = $arg->orderSuggestions;
-        $orders->deliverycharge    = $appconfigdata[0]->Value;
+        $orders->ProviderEarning    = $appconfigdata[17]->Value;
         
         $orderId                = $orderRepostitory->addOrder($orders);
         

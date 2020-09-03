@@ -20,7 +20,7 @@ module.exports = function () {
           j.Mobile = resultdata['mobile']
           j.Email = resultdata['email']
         })
-      }
+    }
         var result = []
         result.push({ data: providersListSData.data }, { Count: providersCount.data[0].count })
         response.error = false
@@ -147,7 +147,7 @@ module.exports = function () {
       var providersCount = await providersRepository.providersPushNotificationListCount(data)
       var providersListSData = await providersRepository.providersPushNotificationListView(data)
       if (providersListSData.error === false && providersCount.error === false) {
-            if (process.env.SECURECHANGER == '1') {
+            if (process.env.SECURECHANGER == '1') {  
         providersListSData.data.forEach((j, index) => {
           var resultdata = common.secureChangerList(j.Email, j.Mobile)
           j.Mobile = resultdata['mobile']
@@ -161,7 +161,7 @@ module.exports = function () {
             Longitude: j.Longitude,
             Bearing: j.Bearing })
         })
-      }
+    }
         var result = []
         result.push({ data: providersListSData.data }, { Count: providersCount.data[0].count })
         response.error = false
