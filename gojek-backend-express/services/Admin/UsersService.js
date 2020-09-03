@@ -14,11 +14,13 @@ module.exports = function () {
       var usersCount = await usersRepository.usersListCount()
       var usersListSData = await usersRepository.usersListView(data)
       if (usersListSData.error === false && usersCount.error === false) {
+            if (process.env.SECURECHANGER == '1') {
         usersListSData.data.forEach((j, index) => {
           var resultdata = common.secureChangerList(j.Email, j.Mobile)
           j.Mobile = resultdata['mobile']
           j.Email = resultdata['email']
         })
+      }
         var result = []
         result.push({ data: usersListSData.data }, { Count: usersCount.data[0].count })
         response.error = false

@@ -511,6 +511,7 @@ module.exports = function () {
       knex(serviceCategory)
         .where('Status', '1')
         .where('Type', 'SERVICE')
+        .where('HasSubCategory', '1')
         .then((result) => {
           if (result) {
             output.error = false

@@ -108,7 +108,6 @@ module.exports = function () {
       providerData.Status = 'pending'
 
       var otp = await providerRespository.updateProviderOtpState(providerData, 'verified')
-
       if (otp.error) {
         response.error = true
         response.msg = 'OTP'
@@ -301,7 +300,7 @@ module.exports = function () {
       var otp = {}
       otp.Mobile = data.mobile
       otp.ExtCode = data.countryCode
-      otp.OTP = data.otp
+      otp.OTP = '1234'
       otp.Type = 'resetPwd'
       var condition = {}
       condition.Status = 'verified'

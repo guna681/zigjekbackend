@@ -58,6 +58,60 @@ module.exports = function () {
     })
   }
 
+      this.fetchProviderDetails = (req) => {
+
+    var output = {}
+    if (req.CategoryId) {
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+        knex(provider).select('*')
+        .leftJoin(providerService, 'ProviderService.ProviderId', 'Provider.Id')
+        .where({ 'Provider.Id': req.providerId })
+        .then((result) => {
+          console.log(result)
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+    } else {
+          return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(provider)
+        .where({ Id: req.providerId })
+        .select()
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+    }
+
+  }
+
   this.fetchProvider = (data) => {
     var output = {}
     return new Promise(function (resolve) {

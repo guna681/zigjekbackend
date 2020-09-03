@@ -8,6 +8,8 @@ module.exports = function () {
   const Common = require('../Utils/common')
   const PaymentHelper = require('../thirdParty/paymentHelper')
   const PushNotification = require('../thirdParty/pushNotification')
+  const AdminAppConfigRepository = require('../repository/Admin/AdminAppConfigRepository')
+
 
   var pushNotification = new PushNotification()
   var paymentHelper = new PaymentHelper()
@@ -18,6 +20,8 @@ module.exports = function () {
   var walletService = new WalletService()
   var transactionService = new TransactionService()
   var common = new Common()
+  var adminAppConfigRepository = new AdminAppConfigRepository();
+
 
   this.getAvailabeRide = (req, callback) => {
     var data = req
@@ -104,7 +108,8 @@ module.exports = function () {
             providerWalletInfo = {}
             providerWalletInfo.userId = providerId
             providerWalletInfo.userType = 'provider'
-            providerWalletInfo.amount = result.data[0].providerEarning
+            var appconfigPSelectSData = await adminAppConfigRepository.appConfigPageView()
+            providerWalletInfo.amount = appconfigPSelectSData.data[18].Value
             var providerWallet = await walletService.debitWalletService(providerWalletInfo)
 
             if (!providerWallet.error) {
