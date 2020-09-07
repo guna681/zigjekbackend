@@ -1,5 +1,5 @@
 module.exports = {
-    'up': `CREATE TABLE Service (
+  'up': `CREATE TABLE Service (
   Id int(11) NOT NULL AUTO_INCREMENT,
   CategoryId int(11) DEFAULT NULL,
   SubCategoryId int(11) DEFAULT NULL,
@@ -18,5 +18,5 @@ module.exports = {
   Duration varchar(50) DEFAULT NULL,
   PRIMARY KEY (Id)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1`,
-    'down': 'DROP TABLE Service'
+  'down': 'DROP TABLE Service'
 }

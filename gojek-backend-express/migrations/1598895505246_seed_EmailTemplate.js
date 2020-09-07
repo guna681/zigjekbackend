@@ -1,6 +1,6 @@
 module.exports = {
-  'up': `INSERT INTO EmailTemplate (Id, KeyWord, Type, Template , CreateAt, UpdateAt , Variables) VALUES
-        (1, 'WELCOME', 'user', '<html>
+  'up': `INSERT INTO EmailTemplate (KeyWord, Type, Template , CreateAt, UpdateAt , Variables) VALUES
+        ('WELCOME', 'user', '<html>
 <head>
 	<title>Welcome</title>
 </head>
@@ -9,7 +9,7 @@ module.exports = {
 </h1>
 </body>
 </html>' '2019-01-30 18:19:53', '2019-02-07 09:52:23', '["firstname", "lastname"]'),
-        (2, 'PROVIDER', 'provider', '<!DOCTYPE html>
+        ('PROVIDER', 'provider', '<!DOCTYPE html>
 <html>
 <head>
 	<title>Page Title</title>
@@ -20,7 +20,7 @@ module.exports = {
 <p>This is a paragraph.</p>
 </body>
 </html>' '2019-01-30 18:19:53', '2019-02-07 09:52:23', '["firstname", "lastname"]'),
-        (3, 'INVOICE', 'user', '<body bgcolor="dimgray">
+        ('INVOICE', 'user', '<body bgcolor="dimgray">
 <table align="center" border="6" cellpadding="1" cellspacing="3" width="300" style="border-collapse: collapse;">
 <br>
  <tr>

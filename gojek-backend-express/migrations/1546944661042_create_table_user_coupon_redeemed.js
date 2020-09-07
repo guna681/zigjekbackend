@@ -4,7 +4,7 @@ module.exports = {
         UserId bigint(20) DEFAULT NULL,
         CouponCode int(11) DEFAULT NULL,
         RedeemedAt timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-        CreateAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        CreateAt timestamp DEFAULT CURRENT_TIMESTAMP,
         UpdateAt timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (Id)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8`,

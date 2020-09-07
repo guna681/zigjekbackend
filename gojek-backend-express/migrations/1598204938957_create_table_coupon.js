@@ -1,5 +1,5 @@
 module.exports = {
-    'up': `CREATE TABLE Coupon (
+  'up': `CREATE TABLE Coupon (
     Id bigint(20) NOT NULL AUTO_INCREMENT,
     couponName varchar(255) NOT NULL,
     couponCode varchar(255) NOT NULL,
@@ -15,5 +15,5 @@ module.exports = {
     created_at timestamp NOT DEFAULT CURRENT_TIMESTAMP,                
     updated_at timestamp NOT DEFAULT CURRENT_TIMESTAMP,
     )ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
-    "down": `DROP TABLE Coupon`
+  'down': `DROP TABLE Coupon`
 }

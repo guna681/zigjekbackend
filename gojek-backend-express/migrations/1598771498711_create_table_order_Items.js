@@ -1,5 +1,5 @@
 module.exports = {
-    'up': `CREATE TABLE order_Items (
+  'up': `CREATE TABLE order_Items (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   orderId int(10) unsigned NOT NULL,
   dishId int(11) NOT NULL,
@@ -11,5 +11,5 @@ module.exports = {
   updated_at timestamp NULL DEFAULT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
-    'down': 'DROP TABLE order_Items'
+  'down': 'DROP TABLE order_Items'
 }

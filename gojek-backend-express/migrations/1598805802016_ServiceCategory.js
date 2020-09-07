@@ -1,5 +1,5 @@
 module.exports = {
-    'up': `CREATE TABLE ServiceCategory (
+  'up': `CREATE TABLE ServiceCategory (
   Id int(11) unsigned NOT NULL AUTO_INCREMENT,
   TitleId int(50) DEFAULT NULL,
   Name varchar(50) DEFAULT NULL,
@@ -12,8 +12,8 @@ module.exports = {
   DisplayType varchar(45) DEFAULT NULL,
   DisplayDescription varchar(100) DEFAULT NULL,
   UpdateAt timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  CreateAt timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  CreateAt timestamp DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (Id)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8`,
-    'down': 'DROP TABLE ServiceCategory'
+  'down': 'DROP TABLE ServiceCategory'
 }

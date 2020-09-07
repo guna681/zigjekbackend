@@ -1,5 +1,5 @@
 module.exports = {
-    'up': `CREATE TABLE Provider (
+  'up': `CREATE TABLE Provider (
   Id bigint(20) NOT NULL AUTO_INCREMENT,
   FirstName varchar(255) NOT NULL,
   LastName varchar(255) NOT NULL,
@@ -39,11 +39,11 @@ module.exports = {
   TripCount int(11) DEFAULT '0',
   IsDeliveryOpt tinyint(1) NOT NULL DEFAULT '0',
   Type varchar(50) DEFAULT NULL,
-  CreateAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CreateAt timestamp DEFAULT CURRENT_TIMESTAMP,
   UpdateAt timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (Id),
   UNIQUE KEY Email (Email),
   UNIQUE KEY Mobile (Mobile)
 ) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8`,
-    'down': 'DROP TABLE Provider'
+  'down': 'DROP TABLE Provider'
 }

@@ -11,7 +11,7 @@ module.exports = {
     Color varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
     Status varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
     IsActive varchar(45) DEFAULT NULL,
-    CreateAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CreateAt timestamp DEFAULT CURRENT_TIMESTAMP,
     UpdateAt timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (Id)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,

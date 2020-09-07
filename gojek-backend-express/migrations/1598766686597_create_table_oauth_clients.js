@@ -1,5 +1,5 @@
 module.exports = {
-    'up': `CREATE TABLE oauth_clients (
+  'up': `CREATE TABLE oauth_clients (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   user_id bigint(20) DEFAULT NULL,
   name varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -13,5 +13,5 @@ module.exports = {
   PRIMARY KEY (id),
   KEY oauth_clients_user_id_index (user_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
-    'down': 'DROP TABLE oauth_clients'
+  'down': 'DROP TABLE oauth_clients'
 }

@@ -4,7 +4,7 @@ module.exports = {
         UserId bigint(20) DEFAULT NULL,
         PaymentType varchar(45) DEFAULT NULL,
         Data varchar(45) DEFAULT NULL,
-        CreateAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        CreateAt timestamp DEFAULT CURRENT_TIMESTAMP,
         UpdateAt timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (Id)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8`,

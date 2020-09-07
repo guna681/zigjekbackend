@@ -1,5 +1,5 @@
 module.exports = {
-    'up': `CREATE TABLE Users (
+  'up': `CREATE TABLE Users (
   Id bigint(20) NOT NULL AUTO_INCREMENT,
   FirstName varchar(255) NOT NULL,
   LastName varchar(255) NOT NULL,
@@ -31,5 +31,5 @@ module.exports = {
   UNIQUE KEY Email (Email),
   UNIQUE KEY WalletId (WalletId)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8`,
-    'down': 'DROP TABLE Users'
+  'down': 'DROP TABLE Users'
 }

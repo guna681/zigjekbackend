@@ -1,5 +1,5 @@
 module.exports = {
-    'up': `CREATE TABLE Outlet_MenuCategories (
+  'up': `CREATE TABLE Outlet_MenuCategories (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   restaurantId int(10) unsigned DEFAULT NULL,
   outletId int(10) unsigned NOT NULL,
@@ -15,5 +15,5 @@ module.exports = {
   KEY outlet_menucategories_outletid_index (outletId),
   CONSTRAINT outlet_menucategories_outletid_foreign FOREIGN KEY (outletId) REFERENCES Outlets (id) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
-    'down': 'DROP TABLE Outlet_MenuCategories'
+  'down': 'DROP TABLE Outlet_MenuCategories'
 }

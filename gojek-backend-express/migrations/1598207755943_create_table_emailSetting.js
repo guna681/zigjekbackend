@@ -9,5 +9,5 @@ module.exports = {
     created_at timestamp NOT DEFAULT CURRENT_TIMESTAMP,                
     updated_at timestamp NOT DEFAULT CURRENT_TIMESTAMP,
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
-    "down": `DROP TABLE EmailSetting`
+  'down': `DROP TABLE EmailSetting`
 }

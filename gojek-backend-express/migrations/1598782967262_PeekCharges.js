@@ -1,5 +1,5 @@
 module.exports = {
-    'up': `CREATE TABLE PeekCharges (
+  'up': `CREATE TABLE PeekCharges (
   Id bigint(20) NOT NULL AUTO_INCREMENT,
   Name varchar(50) DEFAULT NULL,
   Type varchar(50) DEFAULT NULL,
@@ -11,9 +11,9 @@ module.exports = {
   MinAmount decimal(10,2) DEFAULT NULL,
   MaxAmount decimal(10,2) DEFAULT NULL,
   Status varchar(255) DEFAULT NULL,
-  CreateAt timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  CreateAt timestamp DEFAULT CURRENT_TIMESTAMP,
   UpdateAt timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
-    'down': 'DROP TABLE PeekCharges'
+  'down': 'DROP TABLE PeekCharges'
 }

@@ -1,5 +1,5 @@
 module.exports = {
-    'up': `CREATE TABLE Restaurant (
+  'up': `CREATE TABLE Restaurant (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   name varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   email varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -19,5 +19,5 @@ module.exports = {
   averageRating int(11) DEFAULT '0',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
-    'down': 'DROP TABLE Restaurant'
+  'down': 'DROP TABLE Restaurant'
 }

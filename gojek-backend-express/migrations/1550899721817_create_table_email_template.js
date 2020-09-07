@@ -4,10 +4,10 @@ module.exports = {
 	KeyWord varchar(50) DEFAULT NULL,
 	Type varchar(45) DEFAULT NULL,
 	Template longtext,
-	CreateAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CreateAt timestamp DEFAULT CURRENT_TIMESTAMP,
 	UpdateAt timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	Variables json DEFAULT NULL,
 	PRIMARY KEY (Id)
-  ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;`,
+  ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;`,
   'down': `DROP TABLE EmailTemplate`
 }

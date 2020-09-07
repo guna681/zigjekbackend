@@ -1,5 +1,5 @@
 module.exports = {
-    'up': `CREATE TABLE ServiceAddOns (
+  'up': `CREATE TABLE ServiceAddOns (
   Id int(11) NOT NULL AUTO_INCREMENT,
   CategroyId int(11) DEFAULT NULL,
   SubCategoryId int(11) DEFAULT NULL,
@@ -13,5 +13,5 @@ module.exports = {
   Status tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1`,
-    'down': 'DROP TABLE ServiceAddOns'
+  'down': 'DROP TABLE ServiceAddOns'
 }

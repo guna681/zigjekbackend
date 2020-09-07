@@ -1,6 +1,6 @@
 module.exports = {
-  'up': `INSERT INTO EmailSetting (id, templateName, template, Token , key , status , default, CreateAt, UpdateAt) VALUES
-        (1, 'Default', '<!-- meta --><meta charset="UTF-8"><meta name="content" content="width=device-width, initial-scale=1">
+  'up': `INSERT INTO EmailSetting (templateName, template, Token , key , status , default, CreateAt, UpdateAt) VALUES
+        ('Default', '<!-- meta --><meta charset="UTF-8"><meta name="content" content="width=device-width, initial-scale=1">
 <p> </p>
 
 <div style="height:auto; width:100%">
@@ -23,7 +23,7 @@ module.exports = {
 <p>Thank You.</p>
 </div>
 </div>', '##userName##', 'signup', '1', '1', '2017-10-30 18:28:08', '2017-10-30 18:28:08'),
-(2, 'Default', '<!-- meta --><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><!-- css -->
+('Default', '<!-- meta --><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><!-- css -->
 <style type="text/css">/* @media only screen and (max-width:768px){
 .order-list-address{
        overflow-x:auto; 

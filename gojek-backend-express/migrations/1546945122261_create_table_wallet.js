@@ -6,7 +6,7 @@ module.exports = {
     CurrencyId bigint(20) DEFAULT NULL,
     Secret varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
     Balance decimal(10,2) NOT NULL DEFAULT '0.00',
-    CreateAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CreateAt timestamp DEFAULT CURRENT_TIMESTAMP,
     UpdateAt timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (Id)
   ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;`,

@@ -1,5 +1,5 @@
 module.exports = {
-    'up': `CREATE TABLE ServiceCategoryBanner (
+  'up': `CREATE TABLE ServiceCategoryBanner (
   Id int(11) unsigned NOT NULL AUTO_INCREMENT,
   CategoryId int(11) DEFAULT NULL,
   SubCategoryId int(11) DEFAULT NULL,
@@ -10,5 +10,5 @@ module.exports = {
   Status int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (Id)
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8`,
-    'down': 'DROP TABLE ServiceCategoryBanner'
+  'down': 'DROP TABLE ServiceCategoryBanner'
 }

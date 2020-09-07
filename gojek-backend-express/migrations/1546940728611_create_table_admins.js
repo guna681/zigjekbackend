@@ -7,7 +7,7 @@ module.exports = {
         Email varchar(255) DEFAULT NULL,
         Password varchar(255) DEFAULT NULL,
         Roles int(11) DEFAULT NULL,
-        CreateAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        CreateAt timestamp DEFAULT CURRENT_TIMESTAMP,
         UpdateAt timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (Id)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8`,

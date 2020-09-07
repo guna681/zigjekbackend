@@ -1,5 +1,5 @@
 module.exports = {
-      'up': `CREATE TABLE Dishes (
+  'up': `CREATE TABLE Dishes (
     id bigint(20) NOT NULL AUTO_INCREMENT,
     outletId INT(10) NOT NULL,
     name varchar(255) NOT NULL,
@@ -20,5 +20,5 @@ module.exports = {
     updated_at timestamp NOT DEFAULT CURRENT_TIMESTAMP,
     isCustomisation TINYINT(11) NOT '0',
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
-    "down": `DROP TABLE Dishes`
+  'down': `DROP TABLE Dishes`
 }

@@ -1,5 +1,5 @@
 module.exports = {
-    'up': `CREATE TABLE oauth_access_tokens (
+  'up': `CREATE TABLE oauth_access_tokens (
   id varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   user_id bigint(20) DEFAULT NULL,
   client_id int(10) unsigned NOT NULL,
@@ -12,5 +12,5 @@ module.exports = {
   PRIMARY KEY (id),
   KEY oauth_access_tokens_user_id_index (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
-    'down': 'DROP TABLE oauth_access_tokens'
+  'down': 'DROP TABLE oauth_access_tokens'
 }
