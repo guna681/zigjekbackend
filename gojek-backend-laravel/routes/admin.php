@@ -159,3 +159,18 @@ Route::post('outletSearch','Admin\SearchController@outletSearch');
 /* coupon */
 Route::get('restaurantCouponList/{page}','RestaurantAdmin\CouponController@restaurantCouponList');
 Route::post('editCoupon','RestaurantAdmin\CouponController@editCoupon');
+
+Route::post('listPayStaffBookDetails','Admin\DeliveryStaffManagementController@listPayStaffBookDetails');
+Route::post('listBookDetails','Admin\DeliveryStaffManagementController@listBookDetails');
+Route::get('listPayStaffDetails','Admin\DeliveryStaffManagementController@listPayStaffDetails');	
+Route::post('getPayStaff','Admin\DeliveryStaffManagementController@getPayStaff');	
+Route::post('listSearchPayStaffDetails','Admin\DeliveryStaffManagementController@listSearchPayStaffDetails');
+Route::get('getTransactionStaff','Admin\DeliveryStaffManagementController@getTransactionStaff');
+Route::post('PayStaffSearch','Admin\SearchController@PayStaffSearch');
+
+Route::post('payOutletSearch','Admin\SearchController@payOutletSearch');
+Route::get('listPayOutlet','Admin\OutletsOrderController@listPayOutlet');	
+Route::post('getPayOutlet','Admin\OutletsOrderController@getPayOutlet');	
+Route::post('listSearchPayOutlet','Admin\OutletsOrderController@listSearchPayOutlet');
+Route::post('getPayOutletByRestaurant','Admin\OutletsOrderController@listPayOutletByResturat');	
+Route::get('getTransactionOutlet','Admin\OutletsOrderController@getTransactionOutlet');	
