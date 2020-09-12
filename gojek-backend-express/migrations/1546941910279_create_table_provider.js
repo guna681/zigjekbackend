@@ -35,7 +35,7 @@ module.exports = {
     SocialToken varchar(255) DEFAULT NULL,
     StripeAccountID varchar(255) DEFAULT NULL,  
     Language varchar(255) DEFAULT NULL,                  
-    CreateAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CreateAt timestamp DEFAULT CURRENT_TIMESTAMP,
     UpdateAt timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (Id),
     UNIQUE KEY Email (Email),

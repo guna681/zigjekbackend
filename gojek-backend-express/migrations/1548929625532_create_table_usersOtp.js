@@ -5,10 +5,10 @@ module.exports = {
         Ext varchar(5) DEFAULT NULL,
         OTP int(4) DEFAULT NULL,
         Type varchar(50) DEFAULT NULL,
-        Status varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'pending',
-        CreateAt timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+        Status varchar(10) CHARACTER SET utf8mb4  DEFAULT 'pending',
+        CreateAt timestamp DEFAULT CURRENT_TIMESTAMP,
         UpdateAt timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (Id)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci`,
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4`,
   'down': `DELETE FROM UserOtp`
 }

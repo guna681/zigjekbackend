@@ -70,7 +70,7 @@ module.exports = function () {
             response.error = true
             response.msg = result.msg
           } else {
-            common.sendOtpMobile(mobile.number, mobile.ext)
+            // common.sendOtpMobile(mobile.number, mobile.ext)
             response.error = false
             response.msg = result.msg
           }
@@ -172,6 +172,7 @@ module.exports = function () {
     var response = {}
     var mobile = req.mobile
     var ext = req.countryCode
+    if (process.env.ISTWILIO == '0') {
     // var otpResendMobile = await common.sendOtpMobile(mobile, ext)
     var otpResendMobile = false
     if (otpResendMobile) {
@@ -182,7 +183,20 @@ module.exports = function () {
       response.msg = 'OTP_SENT'
     }
     callback(response)
-  }
+  } else {
+        common.sendOtpMobile(req.mobile, req.countryCode)
+    // var otpResendMobile = await common.sendOtpMobile(mobile, ext)
+    var otpResendMobile = false
+    if (otpResendMobile) {
+      response.error = true
+      response.msg = 'OTP_FAIL'
+    } else {
+      response.error = false
+      response.msg = 'OTP_SENT'
+    }
+    callback(response)
+}
+}
 
   this.otpValidate = async (req, callback) => {
     var response = {}
@@ -247,6 +261,7 @@ module.exports = function () {
   this.forgotPwdOtp = (req, callback) => {
     var response = {}
     var data = req
+    if (process.env.ISTWILIO == '0') {
     userService.generateForgotOtp(data, (result) => {
       if (result.error) {
         response.error = true
@@ -257,7 +272,21 @@ module.exports = function () {
       }
       callback(response)
     })
+  } else {
+        userService.generateForgotOtp(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        common.sendOtpMobile(req.mobile, req.countryCode)
+        response.error = false
+        response.msg = result.msg
+      }
+      callback(response)
+    })
+
   }
+}
 
   this.UpdatePwd = (req, callback) => {
     var response = {}
@@ -1045,7 +1074,7 @@ module.exports = function () {
     var response = {}
     try {
       var providerId = req.providerId
-      providerService.getProviderProfileViewService(providerId, (result) => {
+      providerService.getProviderProfileViewService(req, (result) => {
         if (result.error) {
           response.error = true
           response.msg = result.msg

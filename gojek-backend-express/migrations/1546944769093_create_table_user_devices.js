@@ -13,7 +13,7 @@ module.exports = {
     Latitude float(10,6) DEFAULT NULL,
     Longitude float(10,6) DEFAULT NULL,
     SocketId varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-    CreateAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CreateAt timestamp DEFAULT CURRENT_TIMESTAMP,
     UpdateAt timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (Id),
     UNIQUE KEY DeviceId_UNIQUE (DeviceId)

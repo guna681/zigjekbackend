@@ -7,7 +7,6 @@ module.exports = function () {
   const TransactionServices = require('../services/TransactionServices')
   const ProviderVehicleService = require('../services/ProviderVehicleService')
   const PushNotification = require('../thirdParty/pushNotification')
-  const ProviderRespository = require('../repository/ProviderRespository')
   const Common = require('../Utils/common')
   const UserService = require('../services/UserService')
   const RatingService = require('../services/RatingServices')
@@ -26,7 +25,6 @@ module.exports = function () {
   var providerVehicleService = new ProviderVehicleService()
   var common = new Common()
   var userService = new UserService()
-  var providerRespository = new ProviderRespository()
 
   this.providerAppSetting = (callback) => {
     var response = {}
@@ -83,6 +81,7 @@ module.exports = function () {
           }
         }
       } else {
+        console.log()
         if (authtyperesult.error) {
           response.error = true
           response.msg = 'OOPS'
@@ -116,7 +115,7 @@ module.exports = function () {
             response.error = true
             response.msg = result.msg
           } else {
-            common.sendOtpMobile(req.number, req.ext)
+            // common.sendOtpMobile(req.number, req.ext)
             response.error = true
             response.msg = result.msg
           }
@@ -133,7 +132,7 @@ module.exports = function () {
             response.msg = result.msg
             response.data = result.data
           } else {
-            common.sendOtpMobile(req.number, req.ext)
+            // common.sendOtpMobile(req.number, req.ext)
             response.error = false
             response.msg = result.msg
             response.data = result.data
@@ -149,31 +148,10 @@ module.exports = function () {
   this.providerOtpValidation = async (req, callback) => {
     var response = {}
     var data = req
-    if (process.env.ISTWILIO == '1') {
-            var condition = {}
-      condition.Mobile = data.mobile
-      condition.ExtCode = data.countryCode
-      var provider = await providerRespository.fetchProvider(condition)
-      if (provider.result != []) {
-         providerService.providerOtpVerify(data, (result) => {
-      if (result.error) {
-        response.error = true
-        response.msg = result.msg
-      } else {
-        response.error = false
-        response.msg = result.msg
-        response.data = result.data
-      }
-      callback(response)
-    })
-     } else {
-if (provider.result[0].Status == 'reject') {
-        response.error = true
-        response.msg = 'blocked'
-      callback(response)
-      } else {
     var otpVerifynumber = await common.otpVerify(data.mobile, data.countryCode, data.otp)
+    console.log(otpVerifynumber)
     if (otpVerifynumber.error) {
+      console.log('IN')
         // response.error = true
         // response.msg = 'OTP'
         providerService.providerOtpVerify(data, (result) => {
@@ -188,11 +166,16 @@ if (provider.result[0].Status == 'reject') {
       callback(response)
     })
     } else {
+      console.log('OUt')
+      data.otp = '1234'
     providerService.providerOtpVerify(data, (result) => {
+      console.log(result,'***')
       if (result.error) {
+        console.log('in','@')
         response.error = true
         response.msg = result.msg
       } else {
+        console.log('OUT','@')
         response.error = false
         response.msg = result.msg
         response.data = result.data
@@ -200,50 +183,12 @@ if (provider.result[0].Status == 'reject') {
       callback(response)
     })
     }
-      }
-      }
-  } else {
-         var condition = {}
-      condition.Mobile = data.mobile
-      condition.ExtCode = data.countryCode
-          var provider = await providerRespository.fetchProvider(condition)
-      if (provider.result != []) {
- providerService.providerOtpVerify(data, (result) => {
-      if (result.error) {
-        response.error = true
-        response.msg = result.msg
-      } else {
-        response.error = false
-        response.msg = result.msg
-        response.data = result.data
-      }
-      callback(response)
-    })
-      } else {
-      if (provider.result[0].Status == 'reject') {
-        response.error = true
-        response.msg = 'blocked'
-      callback(response)
-      } else {
-       providerService.providerOtpVerify(data, (result) => {
-      if (result.error) {
-        response.error = true
-        response.msg = result.msg
-      } else {
-        response.error = false
-        response.msg = result.msg
-        response.data = result.data
-      }
-      callback(response)
-    })
-      }
-      }
-  }
   }
 
   this.providerOtpRecall = async (req, callback) => {
     var response = {}
     var data = req
+    if (process.env.ISTWILIO == '0') {
     // var otpResendMobile = await this.sendOtpMobile(data.mobile, data.countryCode)
     var otpResendMobile = false
     if (otpResendMobile.error) {
@@ -254,7 +199,20 @@ if (provider.result[0].Status == 'reject') {
       response.msg = 'OTP_SENT'
     }
     callback(response)
+  } else {
+        // var otpResendMobile = await this.sendOtpMobile(data.mobile, data.countryCode)
+        common.sendOtpMobile(req.mobile, req.countryCode)
+    var otpResendMobile = false
+    if (otpResendMobile.error) {
+      response.error = true
+      response.msg = 'OTP_FAIL'
+    } else {
+      response.error = false
+      response.msg = 'OTP_SENT'
+    }
+    callback(response)
   }
+}
 
   this.registerProvider = (req, callback) => {
     var response = {}
@@ -300,6 +258,8 @@ if (provider.result[0].Status == 'reject') {
   this.providerForgotPwdOtp = (req, callback) => {
     var response = {}
     var data = req
+        var name = 'provider'
+    if (process.env.ISTWILIO == '0') {
     providerService.providerForgotOtp(data, (result) => {
       if (result.error) {
         response.error = true
@@ -310,6 +270,22 @@ if (provider.result[0].Status == 'reject') {
       }
       callback(response)
     })
+  } else {
+    // providerService.checkProviderExsist(req, async (result) => {
+      // var authtyperesult = await appConfigService.authTypeChecking(name)
+    providerService.providerForgotOtp(data, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        common.sendOtpMobile(req.mobile, req.countryCode)
+        response.error = false
+        response.msg = result.msg
+      }
+      callback(response)
+    })
+  // })
+  }
   }
 
   this.updateProviderPwd = (req, callback) => {

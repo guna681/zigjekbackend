@@ -602,6 +602,26 @@ module.exports = function () {
     })
   }
 
+    this.codeTypeUpdate = (codType, bookingId) => {
+      console.log(codType);
+    var response = {}
+    return new Promise(async function (resolve) {
+      try {
+        var booking = await bookingRepository.updateCodType(codType, bookingId)
+        console.log(booking,'OUT')
+        if (booking.error) {
+          response.error = true
+        } else {
+          response.error = false
+        }
+        resolve(response)
+      } catch (err) {
+        err.error = true
+        resolve(err)
+      }
+    })
+  }
+
   this.getUserBookingFeedback = (userId) => {
     var response = {}
     return new Promise(async function (resolve) {

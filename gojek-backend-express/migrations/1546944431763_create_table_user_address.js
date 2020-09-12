@@ -9,7 +9,7 @@ module.exports = {
         latitude float(10,6) NOT NULL,
         longitude float(10,6) NOT NULL,
         AddressType varchar(255) NOT NULL,
-        CreateAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        CreateAt timestamp DEFAULT CURRENT_TIMESTAMP,
         UpdateAt timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (Id)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8`,

@@ -14,7 +14,7 @@ module.exports = {
     CommissionPercentage decimal(10,2) DEFAULT NULL,
     WaitingCharge decimal(10,2) DEFAULT NULL,
     Capacity int(1) DEFAULT NULL,
-    CreateAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CreateAt timestamp DEFAULT CURRENT_TIMESTAMP,
     UpdateAt timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     ShortDesc varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
     LongDesc varchar(255) DEFAULT NULL,

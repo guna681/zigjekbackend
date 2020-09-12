@@ -6,15 +6,16 @@ module.exports = {
         Name varchar(255) DEFAULT NULL,        
         Coupon varchar(255) DEFAULT NULL,        
         Status varchar(255) DEFAULT NULL,
+        Description varchar(255) DEFAULT NULL,
         Threshold INT NOT NULL DEFAULT '0',
         MinValueToRedeem INT NOT NULL DEFAULT '0',
         MaxValueToRedeem INT NOT NULL DEFAULT '0',
         RedeemableType varchar(255),
         ValidFrom date NOT NULL,
         ValidTo date NOT NULL,
-        CreateAt timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+        CreateAt timestamp DEFAULT CURRENT_TIMESTAMP,
         UpdateAt timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY(Id)
-        ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;`,
+        ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;`,
   'down': `DROP TABLE CouponCode`
 }
