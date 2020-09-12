@@ -135,6 +135,32 @@ module.exports = function () {
     })
   }
 
+    this.getBookingInfo = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(booking)
+        .where(data)
+        .orderBy('CreateAt', 'desc')
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
   this.fetchBookingUsingState = (data, status, limit) => {
     var output = {}
     return new Promise(function (resolve) {
@@ -256,6 +282,32 @@ module.exports = function () {
         .where(conditon)
         .whereNot('Status', 'cancelled')
         .update(data)
+        .then((result) => {
+          if (result > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.updateBookingEarning = (conditon, data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(outlet)
+        .where(conditon)
+        .update({ totalAmount: knex.raw('?? + ?', ['totalAmount', data.outletEarning]), balanceAmount: knex.raw('?? + ?', ['balanceAmount', data.outletEarning]) })
         .then((result) => {
           if (result > 0) {
             output.error = false

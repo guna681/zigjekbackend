@@ -17,6 +17,7 @@ use App\Orders;
 use App\DeliveryStaff;
 use App\Http\Service\AppconfigService;
 use DB;
+use Carbon\Carbon;
 use App\Http\Utility\Constant;
 Class OrderManagementRepostitory
 {
@@ -259,13 +260,15 @@ public function updateOrderViewStatus($arg)
 
     
     public function getPayOutletViaOrder(){
-        $data=Outlets::select('Outlets.id','Outlets.name','Outlets.image','Outlets.city','Outlets.state','Outlets.country','Outlets.zipcode','Outlets.contactNumber','Outlets.totalAmount','Restaurant.name as restaurantName')
-                    ->selectRAW('SUM(Orders.outletEarnings) as balanceAmount')
+        $data=Outlets::select('Outlets.id','Outlets.name','Outlets.image','Outlets.city','Outlets.state','Outlets.country','Outlets.zipcode','Outlets.contactNumber','Outlets.balanceAmount','Restaurant.name as restaurantName')
+                    // ->selectRAW('SUM(Booking.outletEarnings) as balanceAmount')
                     ->join('Restaurant','Restaurant.id','=','Outlets.restaurantId')
-                    ->join('Orders','Orders.outletId','=','Outlets.id')
-                    ->where('Orders.orderStatus','delivered')
-                    ->where('Orders.paid_outlet',0)
-                    ->havingRaw('SUM(Orders.outletEarnings) > 0.00')
+                    // ->join('Booking','Booking.outletId','=','Outlets.id')
+                    // ->where('Booking.Status','completed')
+                    // ->where('Booking.Type','delivery')
+                    // ->where('Booking.paid_outlet',0)
+                    // ->havingRaw('SUM(Booking.outletEarnings) > 0.00')
+                    ->orderby('Outlets.balanceAmount', 'DESC')
                     ->groupBy('Outlets.id')
                     ->paginate(10);
         return $data;
@@ -313,13 +316,13 @@ public function updateOrderViewStatus($arg)
         }
        
         $data=Outlets::select('Outlets.id','Outlets.name','Outlets.image','Outlets.city','Outlets.state','Outlets.country','Outlets.zipcode','Outlets.contactNumber','Outlets.totalAmount','Restaurant.name as restaurantName')
-                    ->selectRAW('SUM(Orders.outletEarnings) as balanceAmount')
+                    ->selectRAW('SUM(Booking.outletEarnings) as balanceAmount')
                     ->join('Restaurant','Restaurant.id','=','Outlets.restaurantId')
-                    ->join('Orders','Orders.outletId','=','Outlets.id')
-                    ->where('Orders.orderStatus','delivered')
-                    ->where('Orders.paid_outlet',0)
-                    ->whereBetween('Orders.updated_at',[$fromDate,$tillDate])
-                    ->havingRaw('SUM(Orders.outletEarnings) > 0.00')
+                    ->join('Booking','Booking.outletId','=','Outlets.id')
+                    ->where('Booking.orderStatus','delivered')
+                    ->where('Booking.paid_outlet',0)
+                    ->whereBetween('Booking.updated_at',[$fromDate,$tillDate])
+                    ->havingRaw('SUM(Booking.outletEarnings) > 0.00')
                     ->groupBy('Outlets.id')
                     ->paginate(10);
         return $data;

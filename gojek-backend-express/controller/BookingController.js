@@ -9,6 +9,8 @@ module.exports = function () {
   const PaymentHelper = require('../thirdParty/paymentHelper')
   const PushNotification = require('../thirdParty/pushNotification')
   const AdminAppConfigRepository = require('../repository/Admin/AdminAppConfigRepository')
+  const BookingRepository = require('../repository/BookingRepository')
+
 
   var pushNotification = new PushNotification()
   var paymentHelper = new PaymentHelper()
@@ -18,6 +20,7 @@ module.exports = function () {
   var appConfigService = new AppConfigService()
   var walletService = new WalletService()
   var transactionService = new TransactionService()
+  var bookingRepository = new BookingRepository()
   var common = new Common()
   var adminAppConfigRepository = new AdminAppConfigRepository();
 
@@ -95,13 +98,26 @@ module.exports = function () {
           content.title = 'Trip has started'
           content.body = 'Your trip has been started. Have a safe journey'
         } else if (data.action === 'complete') {
+          if (data.type == 'delivery') {
+             var condition = {}
+      condition.Id = data.bookingNo
+      var booking = await bookingService.getBookingInfo(condition)
+        var bookingInfo = booking.data[0]
+        var outletEarning = bookingInfo.TotalAmount - bookingInfo.ProviderEarning
+
+          var earningCondition = {}
+        earningCondition.id = bookingInfo.outletId
+        var earningData = {}
+        earningData.outletEarning = outletEarning
+
+        var booking = await bookingRepository.updateBookingEarning(earningCondition, earningData)
+
+          }
           content.data = 'payment_completed'
           content.title = 'Payment recieved'
           content.body = 'We have recieved your payment'
-    console.log(data,'%%%%%%')
           providerService.updateProviderTripCountService(providerId)
           var updateCod = await bookingService.codeTypeUpdate(data.codType, bookingId)
-          console.log(updateCod,'***')
         } else if (data.action === 'drop') {
           providerUnblock = 'active'
           providerService.providerLocationStatusUpdate(providerId, providerUnblock, () => {})

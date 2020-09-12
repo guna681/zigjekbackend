@@ -344,24 +344,24 @@ public function listPayOutlet()
         return $data;
     }
 
-    public function reportSearchData($arg)
-    {
-        $data       = new DataService();
-        $orderManagementRepostitory  = new OrderManagementRepostitory();
-            $countData = $orderManagementRepostitory->getOrderReportsData($arg); 
-            if ($countData) {
-                $data->error        = Common::error_false;
-                $data->errorMessage = __('validation.sucess');
-                $data->results = $countData;
-            } else {
-                $data->error        = Common::error_true;
-                $data->errorMessage = __('validation.failure');
+    // public function reportSearchData($arg)
+    // {
+    //     $data       = new DataService();
+    //     $orderManagementRepostitory  = new OrderManagementRepostitory();
+    //         $countData = $orderManagementRepostitory->getOrderReportsData($arg); 
+    //         if ($countData) {
+    //             $data->error        = Common::error_false;
+    //             $data->errorMessage = __('validation.sucess');
+    //             $data->results = $countData;
+    //         } else {
+    //             $data->error        = Common::error_true;
+    //             $data->errorMessage = __('validation.failure');
     
-            }  
+    //         }  
 
-        return $data;
+    //     return $data;
 
-    }    
+    // }    
 
 
 }
