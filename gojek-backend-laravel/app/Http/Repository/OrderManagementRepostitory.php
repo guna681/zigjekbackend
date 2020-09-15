@@ -260,7 +260,7 @@ public function updateOrderViewStatus($arg)
 
     
     public function getPayOutletViaOrder(){
-        $data=Outlets::select('Outlets.id','Outlets.name','Outlets.image','Outlets.city','Outlets.state','Outlets.country','Outlets.zipcode','Outlets.contactNumber','Outlets.balanceAmount','Restaurant.name as restaurantName')
+        $data=Outlets::select('Outlets.id','Outlets.name','Outlets.image','Outlets.city','Outlets.state','Outlets.country','Outlets.zipcode','Outlets.contactNumber','Outlets.balanceAmount','Restaurant.name as restaurantName','Outlets.email')
                     // ->selectRAW('SUM(Booking.outletEarnings) as balanceAmount')
                     ->join('Restaurant','Restaurant.id','=','Outlets.restaurantId')
                     // ->join('Booking','Booking.outletId','=','Outlets.id')

@@ -324,10 +324,9 @@ Class DeliveryStaffRepostitory
 
  public function listPayStaffBookDetails($request)
     {
-        $data = Orders::select('Booking.id','Booking.ProviderEarning','Booking.deliveryCharge','Booking.OrderReferenceId','Booking.status','Booking.Type','Booking.ProviderEarning')
+        $data = Orders::select('Booking.id','Booking.ProviderEarning','Booking.deliveryCharge','Booking.OrderReferenceId','Booking.status','Booking.Type','Booking.ProviderEarning','Booking.TotalAmount')
         ->leftjoin('Provider','Provider.id','=','Booking.ProviderId')
                                ->where('Booking.ProviderId','=',$request->deliveryStaffId)
-                               ->where('Booking.Status','completed')
                                ->where('Booking.Status','completed')
                                ->paginate(10);
         return $data;
@@ -335,8 +334,9 @@ Class DeliveryStaffRepostitory
     
     public function listBookDetails($request)
     {
-        $data = Orders::select('Booking.id','Booking.netAmount','Booking.adminServiceCharge','Booking.OrderReferenceId')
-        ->leftjoin('Outlets','Outlets.id','=','Booking.outletId')
+        $data = Orders::select('Booking.id','Booking.netAmount','Booking.adminServiceCharge','Booking.OrderReferenceId','Booking.TotalAmount','Booking.ProviderEarning')
+                               ->leftjoin('Outlets','Outlets.id','=','Booking.outletId')
+                               ->where('Booking.Status','completed')
                                ->where('Booking.outletId','=',$request->outletId)
                                ->paginate(10);
         return $data;
