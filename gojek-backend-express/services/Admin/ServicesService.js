@@ -155,7 +155,8 @@ module.exports = function () {
         IsFixedPricing: data.isFixedPricing,
         PricePerHour: data.pricePerHour,
         DisplayType: data.displayType,
-        DisplayDescription: data.displayDescription
+        DisplayDescription: data.displayDescription,
+        DeliveryType: data.DeliveryType
       }
       const serviceCategory = 'ServiceCategory'
       var categorydata = {
@@ -236,7 +237,8 @@ module.exports = function () {
         IsFixedPricing: data.isFixedPricing,
         PricePerHour: data.pricePerHour,
         DisplayType: data.displayType,
-        DisplayDescription: data.displayDescription
+        DisplayDescription: data.displayDescription,
+        DeliveryType: data.DeliveryType
       }
       var categorydata = {
         table: { serviceCategory: 'ServiceCategory' },
