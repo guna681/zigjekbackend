@@ -163,7 +163,7 @@ module.exports = function () {
         })
     }
         var result = []
-        result.push({ data: providersListSData.data }, { Count: providersCount.data[0].count })
+        result.push({ data: providersListSData.data }, { /*Count: providersCount.data[0].count*/ Count:providersListSData.data.length })
         response.error = false
         response.data = result
         response.msg = 'VALID'
