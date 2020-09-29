@@ -16,6 +16,7 @@
     "bluebird": "^3.5.5",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "db-migrate-mysql": "^2.1.1",
     "dotenv": "^6.2.0",
     "express": "^4.17.1",
     "express-validator": "^5.3.1",
@@ -27,12 +28,14 @@
     "multer": "^1.4.2",
     "multi-string-replace": "^1.0.0",
     "mysql-migrations": "^1.0.6",
-    "mysql2": "^1.6.5",
+    "mysql2": "^1.7.0",
     "needle": "^2.3.3",
     "nodemailer": "^5.1.1",
     "nodemon": "^1.19.1",
     "pm2": "^3.5.1",
     "s2-geometry": "^1.2.10",
+    "sequelize": "^6.3.5",
+    "sequelize-auto": "^0.5.4",
     "socket.io": "^2.2.0",
     "standard": "^12.0.1",
     "stripe": "^7.8.0",
@@ -41,6 +44,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "sequelize-cli": "^6.2.0"
   }
 }

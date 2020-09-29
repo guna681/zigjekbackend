@@ -361,4 +361,27 @@ module.exports = function () {
       callback(err)
     }
   }
+  this.provideBlockStatusUpdate =async(data,callback)=>{
+    var response={}
+    try{
+      const result={}
+      result.status=data.status
+      result.where=data.Id
+      var providerblockstatus=await providersRepository.providerBlockStatusUpdate(result)
+      if(providerblockstatus.error==false){
+        response.error=false
+        response.msg='VALID'
+      } else{
+        response.error=true
+        response.msg='FAILED'
+      }
+      callback(response)
+    }
+    catch(err){
+      err.error=true
+      err.msg='OOPS'
+      callback(err)
+    }
+    }
+  }
 }
