@@ -146,6 +146,7 @@ module.exports = function () {
     try {
       var providersCount = await providersRepository.providersPushNotificationListCount(data)
       var providersListSData = await providersRepository.providersPushNotificationListView(data)
+      providersCount=await providersRepository.providersPushNotificationListCount1(data)
       if (providersListSData.error === false && providersCount.error === false) {
             if (process.env.SECURECHANGER == '1') {  
         providersListSData.data.forEach((j, index) => {
