@@ -200,7 +200,7 @@ module.exports = function () {
       callback(response)
     })
   }
-  //Provider block status update
+  
   this.providerBlockStatusUpdate=(req,callback)=>{
     var response={}
     providerService.providerBlockStatusUpdate(req,(result)=>{
