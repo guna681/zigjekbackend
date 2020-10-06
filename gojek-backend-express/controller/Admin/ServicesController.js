@@ -180,7 +180,20 @@ module.exports = function () {
       callback(response)
     })
   }
-
+  this.categoryListCtrl2 = (callback) =>{
+    var response ={}
+    servicesService.categoryListService2((result)=>{
+      if(result.error){
+        response.error=true
+        response.msg=result.msg
+      } else {
+        response.error=false
+        response.msg=result.msg
+        response.data=result.data
+      }
+      callback(response)
+    })
+  }
   this.subCategoryViewCtrl = (data, callback) => {
     var response = {}
     servicesService.subCategoryViewService(data, (result) => {

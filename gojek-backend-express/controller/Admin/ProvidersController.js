@@ -200,6 +200,7 @@ module.exports = function () {
       callback(response)
     })
   }
+<<<<<<< HEAD
 
     this.disableProviderCtrl = (req, callback) => {
     var response = {}
@@ -211,10 +212,23 @@ module.exports = function () {
         response.error = false
         response.msg = result.msg
         response.data = result.data
+=======
+  
+  this.providerBlockStatusUpdate=(req,callback)=>{
+    var response={}
+    providerService.providerBlockStatusUpdate(req,(result)=>{
+      if(result.error){
+        response.error=true
+        response.msg=result.msg
+      } else{
+        response.error=false
+        response.msg=result.msg
+>>>>>>> main/master
       }
       callback(response)
     })
   }
+<<<<<<< HEAD
 
   this.deleteProviderCtrl = (req, callback) => {
     var response = {}
@@ -231,4 +245,6 @@ module.exports = function () {
     })
   }
 
+=======
+>>>>>>> main/master
 }

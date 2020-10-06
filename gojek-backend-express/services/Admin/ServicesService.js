@@ -550,6 +550,26 @@ module.exports = function () {
       callback(err)
     }
   }
+  //category view with and without sub category
+  this.categoryListService2=async(callback)=>{
+    var response ={}
+    try{
+      var appsliderData=await servicesRepository.categoryListService2()
+      if(appsliderData.error===false){
+        response.error = false
+        response.data = appsliderData.data
+        response.msg = 'VALID'
+      } else {
+        response.error= true
+        response.msg='FAILED'
+      }
+      callback(response)
+    } catch(err){
+      err.error=true
+      err.msg='OOPS'
+      callback(err)
+    }
+  }
   // sub Category view
   this.subCategoryViewService = async (data, callback) => {
     var response = {}

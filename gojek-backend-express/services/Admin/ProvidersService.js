@@ -146,6 +146,7 @@ module.exports = function () {
     try {
       var providersCount = await providersRepository.providersPushNotificationListCount(data)
       var providersListSData = await providersRepository.providersPushNotificationListView(data)
+      providersCount=await providersRepository.providersPushNotificationListCount1(data)
       if (providersListSData.error === false && providersCount.error === false) {
             if (process.env.SECURECHANGER == '1') {  
         providersListSData.data.forEach((j, index) => {
@@ -360,6 +361,7 @@ module.exports = function () {
       callback(err)
     }
   }
+<<<<<<< HEAD
 
     this.disableProviderService = async (data, callback) => {
     var response = {}
@@ -403,4 +405,29 @@ module.exports = function () {
     }
   } 
 
+=======
+  this.provideBlockStatusUpdate =async(data,callback)=>{
+    var response={}
+    try{
+      const result={}
+      result.status=data.status
+      result.where=data.Id
+      var providerblockstatus=await providersRepository.providerBlockStatusUpdate(result)
+      if(providerblockstatus.error==false){
+        response.error=false
+        response.msg='VALID'
+      } else{
+        response.error=true
+        response.msg='FAILED'
+      }
+      callback(response)
+    }
+    catch(err){
+      err.error=true
+      err.msg='OOPS'
+      callback(err)
+    }
+    }
+  }
+>>>>>>> main/master
 }
