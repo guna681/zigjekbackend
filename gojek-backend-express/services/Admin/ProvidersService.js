@@ -360,4 +360,47 @@ module.exports = function () {
       callback(err)
     }
   }
+
+    this.disableProviderService = async (data, callback) => {
+    var response = {}
+    try {
+      var providervehicledocdetailsData = await providersRepository.disableProvider(data)
+      if (providervehicledocdetailsData.error === false) {
+        response.error = false
+        response.data = providervehicledocdetailsData.data
+        response.msg = 'VALID'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
+
+
+  this.deleteProviderService = async (data, callback) => {
+    var response = {}
+    try {
+      var providervehicledocdetailsData = await providersRepository.deleteProvider(data)
+      if (providervehicledocdetailsData.error === false) {
+        response.error = false
+        response.data = providervehicledocdetailsData.data
+        response.msg = 'VALID'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      console.log(err)
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  } 
+
 }

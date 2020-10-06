@@ -200,4 +200,35 @@ module.exports = function () {
       callback(response)
     })
   }
+
+    this.disableProviderCtrl = (req, callback) => {
+    var response = {}
+    providerService.disableProviderService(req, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
+  this.deleteProviderCtrl = (req, callback) => {
+    var response = {}
+    providerService.deleteProviderService(req, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }
+
 }

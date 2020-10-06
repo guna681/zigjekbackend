@@ -11,6 +11,7 @@ module.exports = function () {
   const serviceAddoOns = 'ServiceAddOns'
   const service = 'Service'
   const serviceAddOns = 'ServiceAddOns'
+  const admin = 'Admin'
 
   require('dotenv').config({ path: './../.env' })
   var config = {
@@ -301,7 +302,7 @@ module.exports = function () {
     })
   }
 
-  this.updateBookingEarning = (conditon, data) => {
+  this.updateOutletEarning = (conditon, data) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
@@ -318,6 +319,87 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+    this.updateAdminEarning = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(admin)
+        .where('Roles','1')
+        .update({ totalAmount: knex.raw('?? + ?', ['totalAmount', data.adminEarning]), balanceAmount: knex.raw('?? + ?', ['balanceAmount', data.adminEarning]) })
+        .then((result) => {
+          if (result > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+      this.updateBookingEarning = (data) => {
+        console.log(data)
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(booking)
+        .where('Id',data.id)
+        .update({ outletEarnings: data.outletEarning, adminServiceCharge: data.adminEarning })
+        .then((result) => {
+          if (result > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+   this.selectOutlet = (data) => {
+     console.log(data,'***')
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(outlet)
+        .where('id', data)
+        .then((result) => {
+          // console.log(result)
+          if (result) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          console.log(err)
           err.error = true
           resolve(err)
         })
@@ -465,8 +547,6 @@ module.exports = function () {
   }
 
     this.updateCodType = (codType, bookingId) => {
-      console.log('%%%^^^^^^^%%%%%%')
-      console.log(codType,'@',bookingId)
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
@@ -474,7 +554,6 @@ module.exports = function () {
         .update('PaymentMode', codType )
         .where('Id', bookingId)
         .then((result) => {
-          console.log(result)
           if (result[0] > 0) {
             output.error = false
           } else {

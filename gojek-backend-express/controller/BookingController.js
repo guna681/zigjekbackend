@@ -66,7 +66,7 @@ module.exports = function () {
         response.error = true
         response.msg = result.msg
       } else {
-        console.log(result)
+        // console.log(result)
         var providerUnblock
         var providerWalletInfo
         var providerTnxStatus
@@ -98,21 +98,48 @@ module.exports = function () {
           content.title = 'Trip has started'
           content.body = 'Your trip has been started. Have a safe journey'
         } else if (data.action === 'complete') {
-          if (data.type == 'delivery') {
+          console.log('complete',data.type)
+          // if (data.type == 'delivery') {
+          // console.log('delivery')
              var condition = {}
       condition.Id = data.bookingNo
       var booking = await bookingService.getBookingInfo(condition)
         var bookingInfo = booking.data[0]
-        var outletEarning = bookingInfo.TotalAmount - bookingInfo.ProviderEarning
+        if (bookingInfo.RideName == 'Food Delivery') {
+        var adminCommission = await bookingRepository.selectOutlet(bookingInfo.outletId)
+        console.log(adminCommission.result[0].restaurantCommission,'****')
+
+        var adminEarning = bookingInfo.TotalAmount/adminCommission.result[0].restaurantCommission
+        console.log(adminEarning,'adminEarning', bookingInfo.ProviderEarning)
+        var sum = +bookingInfo.ProviderEarning + +adminEarning
+        console.log(sum,'sum')
+        var outletEarning = bookingInfo.TotalAmount - sum
+// console.log(outletEarning,'outletEarning')
+// console.log(adminEarning,'adminEarning')
 
           var earningCondition = {}
         earningCondition.id = bookingInfo.outletId
         var earningData = {}
         earningData.outletEarning = outletEarning
 
-        var booking = await bookingRepository.updateBookingEarning(earningCondition, earningData)
+        var adminEarningData = {}
+        adminEarningData.adminEarning = adminEarning
+        console.log(adminEarningData,'adminEarning')
+        
+        var booking = await bookingRepository.updateOutletEarning(earningCondition, earningData)
+        console.log(booking,'booking')
+        var updateBookingEarningData = {}
+        updateBookingEarningData.id = data.bookingNo
+        updateBookingEarningData.outletEarning = outletEarning
+        updateBookingEarningData.adminEarning = adminEarning
+        var updateadminEarning = await bookingRepository.updateAdminEarning(adminEarningData)
+        console.log(updateadminEarning,'updateadminEarning')
 
-          }
+        var updateBookingEarning = await bookingRepository.updateBookingEarning(updateBookingEarningData)
+        }
+        
+
+          // }
           content.data = 'payment_completed'
           content.title = 'Payment recieved'
           content.body = 'We have recieved your payment'
@@ -129,7 +156,7 @@ module.exports = function () {
             providerWalletInfo.userId = providerId
             providerWalletInfo.userType = 'provider'
             var appconfigPSelectSData = await adminAppConfigRepository.appConfigPageView()
-            providerWalletInfo.amount = appconfigPSelectSData.data[18].Value
+            providerWalletInfo.amount = appconfigPSelectSData.data[17].Value
             var providerWallet = await walletService.debitWalletService(providerWalletInfo)
 
             if (!providerWallet.error) {

@@ -334,10 +334,11 @@ Class DeliveryStaffRepostitory
     
     public function listBookDetails($request)
     {
-        $data = Orders::select('Booking.id','Booking.netAmount','Booking.adminServiceCharge','Booking.OrderReferenceId','Booking.TotalAmount','Booking.ProviderEarning')
+        $data = Orders::select('Booking.id','Booking.netAmount','Booking.adminServiceCharge','Booking.OrderReferenceId','Booking.TotalAmount','Booking.ProviderEarning','Booking.adminServiceCharge','Booking.outletEarnings')
                                ->leftjoin('Outlets','Outlets.id','=','Booking.outletId')
                                ->where('Booking.Status','completed')
                                ->where('Booking.outletId','=',$request->outletId)
+                               ->orderBy('Booking.id', 'DESC')
                                ->paginate(10);
         return $data;
     }

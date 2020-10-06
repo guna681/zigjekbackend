@@ -90,4 +90,34 @@ module.exports = function () {
       callback(response)
     })
   }
+
+  this.disableUserCtrl = (req, callback) => {
+    var response = {}
+    usersService.disableUserService(req, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  } 
+
+  this.deleteUserCtrl = (req, callback) => {
+    var response = {}
+    usersService.deleteUserService(req, (result) => {
+      if (result.error) {
+        response.error = true
+        response.msg = result.msg
+      } else {
+        response.error = false
+        response.msg = result.msg
+        response.data = result.data
+      }
+      callback(response)
+    })
+  }  
 }

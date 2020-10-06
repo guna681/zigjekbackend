@@ -30,7 +30,8 @@ module.exports = function () {
           rideType.iconPassive = element.IconPassive
           rideType.iconActive = element.IconActive
           rideType.priceValue = common.getFareEstimation(element.BaseCharge, element.MinCharge, geoDistance.result.distance)
-          rideType.priceText = element.CurrencyType + ' ' + rideType.priceValue
+          // rideType.priceText = element.CurrencyType + ' ' + rideType.priceValue
+          rideType.priceText = process.env.CURRENCY + ' ' + rideType.priceValue
           rideType.waitingCharge = element.WaitingCharge
           rideType.capacity = element.Capacity
           rideType.shortDesc = element.ShortDesc
@@ -973,6 +974,7 @@ module.exports = function () {
         service.DestinyLong = data.longitude
         service.PaymentMode = data.paymentMode
         var serviceCollection = serviceList.map((element) => {
+          console.log(element)
           var pricing = serviceData.result.filter((services) => services.id === element.serviceId)
           element.price = element.qty * pricing[0].price
           total += element.price
