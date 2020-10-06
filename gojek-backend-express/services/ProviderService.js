@@ -1770,6 +1770,8 @@ module.exports = function () {
         response.error = true
         response.msg = 'NO_DATA'
       } else {
+          var provider = { ProviderId: providerId }
+      var providerSerivce = await providerRespository.fetchProviderServiceInfo(provider)
         var profile = providerProfile.result.map((element) => {
           var data = {}
           data.id = element.Id
@@ -1782,7 +1784,8 @@ module.exports = function () {
           data.rating = element.Rating
           data.latitude = element.Latitude
           data.longitude = element.Longitude
-          data.about = 'Best in class service is 100 % customer satisfaction.'
+          // data.about = 'Best in class service is 100 % customer satisfaction.'
+          data.about = providerSerivce.data[0].QuickPitch
           return data
         })
         response.error = false

@@ -1074,7 +1074,7 @@ module.exports = function () {
     var response = {}
     try {
       var providerId = req.providerId
-      providerService.getProviderProfileViewService(req, (result) => {
+      providerService.getProviderProfileViewService(providerId, (result) => {
         if (result.error) {
           response.error = true
           response.msg = result.msg

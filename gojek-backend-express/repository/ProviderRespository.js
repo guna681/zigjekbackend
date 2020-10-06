@@ -40,6 +40,7 @@ module.exports = function () {
         .where({ Id: providerId })
         .select()
         .then((result) => {
+          
           if (result.length > 0) {
             output.error = false
             output.result = result
@@ -1215,6 +1216,7 @@ module.exports = function () {
         .then((result) => {
           if (result.length > 0) {
             output.error = false
+            output.data = result
           } else {
             output.error = true
           }

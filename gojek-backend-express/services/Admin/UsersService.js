@@ -261,4 +261,44 @@ tr:nth-child(even) {
       callback(err)
     }
   }
+  this.disableUserService = async (data, callback) => {
+    var response = {}
+    try {
+      var usersData = await usersRepository.disableUser(data)
+      if (usersData.error === false) {
+        response.error = false
+        response.msg = 'VALID'
+        // response.data = usersData.data
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  } 
+
+  this.deleteUserService = async (data, callback) => {
+    var response = {}
+    try {
+      var usersData = await usersRepository.deleteUser(data)
+      if (usersData.error === false) {
+        response.error = false
+        response.msg = 'VALID'
+        // response.data = usersData.data
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
+  
 }

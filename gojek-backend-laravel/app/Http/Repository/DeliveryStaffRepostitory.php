@@ -11,7 +11,7 @@ use App\DeliveryStaffFields;
 use App\DeliveryStaffFieldsLang;
 use App\Http\Service\AppconfigService;
 use App\Http\Utility\Constant;
-
+use Carbon\Carbon;
 use DB;
 
 
@@ -321,5 +321,136 @@ Class DeliveryStaffRepostitory
         DB::commit();
         return true;
     }
+
+ public function listPayStaffBookDetails($request)
+    {
+        $data = Orders::select('Booking.id','Booking.ProviderEarning','Booking.deliveryCharge','Booking.OrderReferenceId','Booking.status','Booking.Type','Booking.ProviderEarning','Booking.TotalAmount')
+        ->leftjoin('Provider','Provider.id','=','Booking.ProviderId')
+                               ->where('Booking.ProviderId','=',$request->deliveryStaffId)
+                               ->where('Booking.Status','completed')
+                               ->paginate(10);
+        return $data;
+    }
+    
+    public function listBookDetails($request)
+    {
+        $data = Orders::select('Booking.id','Booking.netAmount','Booking.adminServiceCharge','Booking.OrderReferenceId','Booking.TotalAmount','Booking.ProviderEarning','Booking.adminServiceCharge','Booking.outletEarnings')
+                               ->leftjoin('Outlets','Outlets.id','=','Booking.outletId')
+                               ->where('Booking.Status','completed')
+                               ->where('Booking.outletId','=',$request->outletId)
+                               ->orderBy('Booking.id', 'DESC')
+                               ->paginate(10);
+        return $data;
+    }
+    
+    // public function listPayStaffDetails($deliveryOpt=null)
+    // {
+
+    //     if($deliveryOpt == 1){
+    //         $data = DeliveryStaff::select('Provider.id','Provider.Mobile','Provider.Email','Provider.tripStatus','Provider.status','Provider.latitude','Provider.longitude','Provider.totalAmount','Wallet.Balance')
+    //                             ->selectRAW('CONCAT(Provider.FirstName,Provider.LastName) as staffName')                       
+    //                             ->join('Wallet','Wallet.userTypeId','=','Provider.id')
+    //                            ->join('Booking','Booking.ProviderId','=','Provider.id')
+    //                           ->where('Booking.Status','completed')
+    //                            ->where('Booking.paid_outlet',0)
+    //                            ->where('Wallet.userType','provider')
+    //                            ->where('Provider.status','verified')
+    //                            ->where('Provider.isDeliveryOpt','1')
+    //                            ->where('Provider.type','taxi')
+    //                            ->groupBy('Provider.id')
+    //                         //    ->where('Wallet.balance','>',0.00)
+    //                            ->paginate(10);
+    //     }else{
+    //         $data = DeliveryStaff::select('Provider.id','Provider.Mobile','Provider.Email','Provider.tripStatus','Provider.status','Provider.latitude','Provider.longitude','Provider.totalAmount','Wallet.Balance')
+    //                             ->selectRAW('CONCAT(Provider.FirstName,Provider.LastName) as staffName')                       
+    //                             ->join('Wallet','Wallet.userTypeId','=','Provider.id')
+    //                            ->join('Booking','Booking.ProviderId','=','Provider.id')
+    //                           ->where('Booking.Status','completed')
+    //                            ->where('Booking.paid_outlet',0)
+    //                            ->where('Wallet.userType','provider')
+    //                            ->where('Provider.status','verified')
+    //                            ->where('Provider.isDeliveryOpt','0')
+    //                            ->groupBy('Provider.id')
+    //                         //    ->where('Wallet.balance','>',0.00)
+    //                            ->paginate(10);
+    //     }
+        
+    //     return $data;
+    // }
+
+        public function listPayStaffDetails($deliveryOpt=null)
+    {
+
+            $data = DeliveryStaff::select('Provider.id','Provider.Mobile','Provider.Email','Provider.tripStatus','Provider.status','Provider.latitude','Provider.longitude','Provider.totalAmount','Wallet.Balance','Provider.isDeliveryOpt','Provider.type')
+                                ->selectRAW('CONCAT(Provider.FirstName,Provider.LastName) as staffName')                       
+                                ->join('Wallet','Wallet.userTypeId','=','Provider.id')
+                               ->join('Booking','Booking.ProviderId','=','Provider.id')
+                              ->where('Booking.Status','completed')
+                               ->where('Booking.paid_outlet',0)
+                               ->where('Wallet.userType','provider')
+                               ->where('Provider.status','verified')
+                               // ->where('Provider.isDeliveryOpt','1')
+                               // ->where('Provider.type','taxi')
+                               ->groupBy('Provider.id')
+                            //    ->where('Wallet.balance','>',0.00)
+                               ->paginate(10);
+        
+        
+        return $data;
+    }
+
+    public function listSearchPayStaffDetails($option)
+    {
+        switch($option)
+        {
+            case 1:
+                $fromDate = Carbon::now()->startOfMonth();
+                $tillDate = Carbon::now()->endOfMonth();
+              
+
+            case 2:
+                $fromDate = Carbon::now()->startOfWeek();
+                $tillDate = Carbon::now()->endOfWeek();
+            break;
+        }
+        $data = DeliveryStaff::select('Provider.id','Provider.Mobile','Provider.Email','Provider.tripStatus','Provider.status','Provider.latitude','Provider.longitude','Provider.totalAmount','Wallet.Balance','Wallet.id as wallet_id')
+                                ->selectRAW('CONCAT(Provider.FirstName,Provider.LastName) as staffName')                       
+                                ->join('Wallet','Wallet.userTypeId','=','Provider.id')
+                               ->join('Booking','Booking.ProviderId','=','Provider.id')
+                               ->where('Booking.status','completed')
+                               ->where('Booking.paid_provider',0)
+                               ->where('Wallet.userType','provider')
+                               ->whereBetween('Booking.updated_at',[$fromDate,$tillDate])
+                               ->where('Provider.status','verified')
+                               ->groupBy('Provider.id','Wallet.id')
+                            //    ->where('Wallet.balance','>',0.00)
+                               ->paginate(10);
+        return $data;
+    }
+
+    public function PayOutStaffOrder($data)
+    {
+
+        $data = Orders::Where('Orders.deliveryStaffId', $data->id)
+                               ->where('Orders.orderStatus','delivered')
+                               ->where('Orders.paid_provider',0)
+                               ->when($data->option, function ($q) use ($data) {
+                                switch($data->option)
+                                {
+                                    case 1:
+                                        $fromDate = Carbon::now()->startOfWeek();
+                                        $tillDate = Carbon::now()->endOfWeek();
+                                    break;
+                        
+                                    case 2:
+                                        $fromDate = Carbon::now()->startOfMonth();
+                                        $tillDate = Carbon::now()->startOfMonth();
+                                    break;
+                                }
+                                  return $q->whereBetween('Orders.updated_at',[$fromDate,$tillDate]);
+                                 })
+                               ->update(['paid_provider' => 1]);
+        return $data;
+    }    
 
 }

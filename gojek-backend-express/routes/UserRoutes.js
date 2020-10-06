@@ -965,7 +965,7 @@ module.exports = function (server, validator) {
       .isNumeric().withMessage('INVALID: $[1],ProviderId')
   ], server.auth, function (request, response) {
     var body = request.body
-    body.auth = request.params.auth
+    // body.auth = request.params.auth
     const lang = request.headers.lang || 'default'
     const error = validator.validation(request)
     if (error.array().length) {

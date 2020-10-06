@@ -44,6 +44,7 @@ Class OrderRepostitory{
             $orders->DiscountAmount      = $data->discount;
             $orders->CouponCode          = $data->couponName;
             $orders->orderReferenceId    = $data->orderRefferenceId;
+            $orders->ProviderEarning     = $data->ProviderEarning;
             // if ($data->paymentType = 10) {
             // $orders->PaymentMode       = 'cash';
             // } else {

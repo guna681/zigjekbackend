@@ -150,6 +150,10 @@ Class RestaurantService
             $data->banners          = $offerBanners;
             $data->totalPage        = ceil(count($listRestaurants)/15);
             $menuItems = array_slice( $listRestaurants, $request->page_offset , 15 );
+            usort($menuItems , function($a, $b) {
+            // Will sort in descending order, for ascending, switch sides
+            return $a->time - $b->time;
+            });
             $data->listRestaurants  = $menuItems;
         } else {
             $data->error           = Common::error_true;
