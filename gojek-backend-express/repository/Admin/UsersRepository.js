@@ -196,4 +196,57 @@ module.exports = function () {
         })
     })
   }
+
+  this.disableUser = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(users)
+        .where('Id',data.Id)
+        .update('isDisable',data.isDisable)
+        .then((result) => {
+          if (result) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  } 
+
+  this.deleteUser = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(users)
+        .where('Id',data.Id)
+        .update('isDeleted',data.isDeleted)
+        .then((result) => {
+          if (result) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
 }

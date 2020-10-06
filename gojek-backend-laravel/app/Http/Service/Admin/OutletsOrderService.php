@@ -296,6 +296,73 @@ Class OutletsOrderService
 
     }
 
+public function listPayOutlet()
+    {
+        $orderManagementRepostitory = new OrderManagementRepostitory();
+        $orders     = $orderManagementRepostitory->getPayOutletViaOrder();
+        $data       = new DataService();
+        if ($orders) {
+            $data->error        = Common::error_false;
+            $data->errorMessage = __('validation.sucess');
+            $data->listOrders   = $orders;
+        } else {
+            $data->error        = Common::error_true;
+            $data->errorMessage = __('validation.failure');
+        }
+        return $data;
+    }
+    
+    public function listSearchPayOutlet($arg)
+    {
+        $orderManagementRepostitory = new OrderManagementRepostitory();
+        $orders     = $orderManagementRepostitory->getPayOutletViaOrderSearch($arg->option);
+        $data       = new DataService();
+        if ($orders) {
+            $data->error        = Common::error_false;
+            $data->errorMessage = __('validation.sucess');
+            $data->listOrders   = $orders;
+        } else {
+            $data->error        = Common::error_true;
+            $data->errorMessage = __('validation.failure');
+        }
+        return $data;
+    }
+
+    public function listPayOutletByResturat($request)
+    {
+        $orderManagementRepostitory = new OutletsRepostitory();
+        $orders     = $orderManagementRepostitory->listPayOutletByResturat($request->RestaurantId);
+        $data       = new DataService();
+        if ($orders) {
+            $data->error        = Common::error_false;
+            $data->errorMessage = __('validation.sucess');
+            $data->listOrders   = $orders;
+        } else {
+            $data->error        = Common::error_true;
+            $data->errorMessage = __('validation.failure');
+        }
+        return $data;
+    }
+
+    // public function reportSearchData($arg)
+    // {
+    //     $data       = new DataService();
+    //     $orderManagementRepostitory  = new OrderManagementRepostitory();
+    //         $countData = $orderManagementRepostitory->getOrderReportsData($arg); 
+    //         if ($countData) {
+    //             $data->error        = Common::error_false;
+    //             $data->errorMessage = __('validation.sucess');
+    //             $data->results = $countData;
+    //         } else {
+    //             $data->error        = Common::error_true;
+    //             $data->errorMessage = __('validation.failure');
+    
+    //         }  
+
+    //     return $data;
+
+    // }    
+
 
 }
 

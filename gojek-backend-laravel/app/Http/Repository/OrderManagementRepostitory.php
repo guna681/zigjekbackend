@@ -17,6 +17,7 @@ use App\Orders;
 use App\DeliveryStaff;
 use App\Http\Service\AppconfigService;
 use DB;
+use Carbon\Carbon;
 use App\Http\Utility\Constant;
 Class OrderManagementRepostitory
 {
@@ -256,6 +257,76 @@ public function updateOrderViewStatus($arg)
     //     $result = DB::select($sql);
     //     return $result;
     // }
+
+    
+    public function getPayOutletViaOrder(){
+        $data=Outlets::select('Outlets.id','Outlets.name','Outlets.image','Outlets.city','Outlets.state','Outlets.country','Outlets.zipcode','Outlets.contactNumber','Outlets.balanceAmount','Restaurant.name as restaurantName','Outlets.email')
+                    // ->selectRAW('SUM(Booking.outletEarnings) as balanceAmount')
+                    ->join('Restaurant','Restaurant.id','=','Outlets.restaurantId')
+                    // ->join('Booking','Booking.outletId','=','Outlets.id')
+                    // ->where('Booking.Status','completed')
+                    // ->where('Booking.Type','delivery')
+                    // ->where('Booking.paid_outlet',0)
+                    // ->havingRaw('SUM(Booking.outletEarnings) > 0.00')
+                    ->orderby('Outlets.balanceAmount', 'DESC')
+                    ->groupBy('Outlets.id')
+                    ->paginate(10);
+        return $data;
+    }
+
+    public function PayOutOutletOrder($data){
+        $data=Orders::where('Orders.outletId',$data->id)
+                    ->where('Orders.orderStatus','delivered')
+                    ->where('Orders.paid_outlet',0)
+                    ->when($data->option, function ($q) use ($data) {
+                        switch($data->option)
+                        {
+                            case 1:
+                                $fromDate = Carbon::now()->startOfWeek();
+                                $tillDate = Carbon::now()->endOfWeek();
+                            break;
+                
+                            case 2:
+                                $fromDate = Carbon::now()->startOfMonth();
+                                $tillDate = Carbon::now()->startOfMonth();
+                            break;
+                        }
+                          return $q->whereBetween('Orders.updated_at',[$fromDate,$tillDate]);
+                         })
+                    ->update(['paid_outlet' => 1]);
+        return $data;
+    }
+
+    public function getPayOutletViaOrderSearch($option){
+        
+        switch($option)
+        {
+            case 1:
+                
+                $fromDate = Carbon::now()->startOfMonth();
+                $tillDate = Carbon::now()->endOfMonth();
+            break;
+            
+         
+
+            case 2:
+                $fromDate = Carbon::now()->startOfWeek();
+                $tillDate = Carbon::now()->endOfWeek();
+            break;
+        }
+       
+        $data=Outlets::select('Outlets.id','Outlets.name','Outlets.image','Outlets.city','Outlets.state','Outlets.country','Outlets.zipcode','Outlets.contactNumber','Outlets.totalAmount','Restaurant.name as restaurantName')
+                    ->selectRAW('SUM(Booking.outletEarnings) as balanceAmount')
+                    ->join('Restaurant','Restaurant.id','=','Outlets.restaurantId')
+                    ->join('Booking','Booking.outletId','=','Outlets.id')
+                    ->where('Booking.orderStatus','delivered')
+                    ->where('Booking.paid_outlet',0)
+                    ->whereBetween('Booking.updated_at',[$fromDate,$tillDate])
+                    ->havingRaw('SUM(Booking.outletEarnings) > 0.00')
+                    ->groupBy('Outlets.id')
+                    ->paginate(10);
+        return $data;
+    }
 
     public function getPayOutlet(){
 		$data=Outlets::select('Outlets.id','Outlets.name','Outlets.image','Outlets.city','Outlets.state','Outlets.country','Outlets.zipcode','Outlets.contactNumber','Outlets.balanceAmount','Outlets.totalAmount','Restaurant.name as restaurantName')

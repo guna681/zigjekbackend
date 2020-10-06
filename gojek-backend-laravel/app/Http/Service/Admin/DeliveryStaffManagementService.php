@@ -143,6 +143,81 @@ Class DeliveryStaffManagementService
     }
 
 
+  public function listPayStaffBookDetails($request)
+    {
+        $deliveryStaffRepostitory = new DeliveryStaffRepostitory();
+        $staff  = $deliveryStaffRepostitory->listPayStaffBookDetails($request);
+        $data   = new DataService();
+        if($staff){
+            $data->error            = Common::error_false;
+            $data->errorMessage     = __('validation.sucess');
+            $data->listPayStaffDetails = $staff;
+        }else{
+            $data->error            = Common::error_true;
+            $data->errorMessage     = __('validation.failure');
+        }
+
+        return $data;
+
+    }
+
+    public function listBookDetails($request)
+    {
+        $deliveryStaffRepostitory = new DeliveryStaffRepostitory();
+        $staff  = $deliveryStaffRepostitory->listBookDetails($request);
+        $data   = new DataService();
+        if($staff){
+            $data->error            = Common::error_false;
+            $data->errorMessage     = __('validation.sucess');
+            $data->listPayStaffDetails = $staff;
+        }else{
+            $data->error            = Common::error_true;
+            $data->errorMessage     = __('validation.failure');
+        }
+
+        return $data;
+
+    }
+    
+
+   public function listPayStaffDetails($deliveryOpt=null)
+    {
+        $deliveryStaffRepostitory = new DeliveryStaffRepostitory();
+        $staff  = $deliveryStaffRepostitory->listPayStaffDetails($deliveryOpt);
+        $data   = new DataService();
+        if($staff){
+            $data->error            = Common::error_false;
+            $data->errorMessage     = __('validation.sucess');
+            $data->listPayStaffDetails = $staff;
+        }else{
+            $data->error            = Common::error_true;
+            $data->errorMessage     = __('validation.failure');
+        }
+
+        return $data;
+
+    }
+
+
+    public function listSearchPayStaffDetails($arg)
+    {
+        $deliveryStaffRepostitory = new DeliveryStaffRepostitory();
+        $staff  = $deliveryStaffRepostitory->listSearchPayStaffDetails($arg->option);
+        $data   = new DataService();
+        if($staff){
+            $data->error            = Common::error_false;
+            $data->errorMessage     = __('validation.sucess');
+            $data->listPayStaffDetails = $staff;
+        }else{
+            $data->error            = Common::error_true;
+            $data->errorMessage     = __('validation.failure');
+        }
+
+        return $data;
+
+    }   
+
+
 
 
 }

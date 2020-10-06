@@ -109,5 +109,42 @@ Class SearchService
         }
 
         return $data;
-    }   
+    }
+
+
+    public function payOutletSearch($request)
+    {
+        $searchRepostitory       = new SearchRepostitory();
+        $searchOrderData          = $searchRepostitory->payOutletSearch($request);
+        $data                    = new DataService();
+        if ($searchOrderData) {
+            $data->error         = Common::error_false;
+            $data->errorMessage  = __('validation.sucess');
+            $data->listOrders         = $searchOrderData;
+        } else {
+            $data->error         = Common::error_true;
+            $data->errorMessage  = __('validation.failure');
+            $data->listOrders         = $searchOrderData;
+        }
+
+        return $data;
+    }  
+
+    public function PayStaffSearch($request)
+    {
+        $searchRepostitory       = new SearchRepostitory();
+        $searchOrderData          = $searchRepostitory->PayStaffSearch($request);
+        $data                    = new DataService();
+        if ($searchOrderData) {
+            $data->error         = Common::error_false;
+            $data->errorMessage  = __('validation.sucess');
+            $data->listPayStaffDetails         = $searchOrderData;
+        } else {
+            $data->error         = Common::error_true;
+            $data->errorMessage  = __('validation.failure');
+            $data->listPayStaffDetails         = $searchOrderData;
+        }
+
+        return $data;
+    }        
 }

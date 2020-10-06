@@ -2782,16 +2782,6 @@ module.exports = function (app, validator) {
     }
   })
 
-  app.get(`${basePath}/categoryList2`,(req,res)=>{
-    const lang=req.headers.lang
-    const error =validator.validation(req)
-    if(error.array().length){
-      errorHandler.requestHandler(error.array(),true,lang,(message) => {
-        return res.send(message)
-      })
-    }
-  })
-
   // SubCategory  View
   app.post(`${basePath}/subCategoryView`, [
     validator.check('subCategoryId').isNumeric().trim()
@@ -3012,22 +3002,94 @@ module.exports = function (app, validator) {
       })
     }
   })
-  //Provider Enable and Disable
-  app.post(`${basePath}/ProviderBlockStatus`,app.adminauth,(req,res)=>{
-    const lang=req.headers.lang
-    const error=validator.validation(req)
-    var id=req.body
-    if(error.array().length){
-      errorHandler.requestHandler(error.array(),true,lang,(message)=>{
+
+ app.post(`${basePath}/disableUser`, [
+    validator.check('Id').trim().isLength({ min: 1 })
+      .withMessage('INVALID: $[1],id'),
+    validator.check('isDisable').trim().isLength({ min: 1 })
+      .withMessage('INVALID: $[1],isDisable')
+  ], app.adminauth, (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
         return res.send(message)
       })
-    } else{
-      providersController.providerBlockStatusUpdate(id,(result)=>{
-        errorHandler.ctrlHandler([result],result.error,lang,(message)=>{
+    } else {
+      usersController.disableUserCtrl(data, (result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })
       })
     }
   })
+
+ app.post(`${basePath}/deleteUser`, [
+    validator.check('Id').trim().isLength({ min: 1 })
+      .withMessage('INVALID: $[1],id'),
+    validator.check('isDeleted').trim().isLength({ min: 1 })
+      .withMessage('INVALID: $[1],isDisable')
+  ], app.adminauth, (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      usersController.deleteUserCtrl(data, (result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })  
+
+ app.post(`${basePath}/disableProvider`, [
+    validator.check('Id').trim().isLength({ min: 1 })
+      .withMessage('INVALID: $[1],id'),
+    validator.check('isDisable').trim().isLength({ min: 1 })
+      .withMessage('INVALID: $[1],isDisable')
+  ], app.adminauth, (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      providersController.disableProviderCtrl(data, (result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
+
+  app.post(`${basePath}/deleteProvider`, [
+    validator.check('Id').trim().isLength({ min: 1 })
+      .withMessage('INVALID: $[1],id'),
+    validator.check('isDeleted').trim().isLength({ min: 1 })
+      .withMessage('INVALID: $[1],isDisable')
+  ], app.adminauth, (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var data = req.body
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      providersController.deleteProviderCtrl(data, (result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  }) 
+
 
 }

@@ -221,5 +221,38 @@ class SearchRepostitory{
 
         return $data;
     }
+
+    public function payOutletSearch($request)
+    {
+        $perPage = Constant::PERPAGE;
+        $path    = url('/').'/images/';
+        $data    = Outlets::select('Outlets.id','Outlets.name','Outlets.image','Outlets.city','Outlets.state','Outlets.country','Outlets.zipcode','Outlets.contactNumber','Outlets.balanceAmount','Outlets.totalAmount','Restaurant.name as restaurantName')
+                          ->join('Restaurant','Restaurant.id','=','Outlets.restaurantId')
+                          ->where('Outlets.name','LIKE','%'.$request->key.'%')
+                          ->orwhere('Restaurant.name','LIKE','%'.$request->key.'%')
+                          ->orwhere('Outlets.balanceAmount','LIKE','%'.$request->key.'%')
+                          ->orwhere('Outlets.contactNumber','LIKE','%'.$request->key.'%')
+                          ->paginate($perPage, ['*'], 'page', $request->pageNumber);
+
+        return $data;
+    }
+
+    public function PayStaffSearch($request)
+    {
+        $perPage = Constant::PERPAGE;
+        $path    = url('/').'/images/';
+        $data    = DeliveryStaff::select('DeliveryStaff.id','DeliveryStaff.name as staffName','DeliveryStaff.mobileNumber','DeliveryStaff.email','DeliveryStaff.tripStatus','DeliveryStaff.status','DeliveryStaff.latitude','DeliveryStaff.longitude','DeliveryStaff.totalAmount','Wallet.balance as balanceAmount')
+        ->join('Wallet','Wallet.userTypeId','=','DeliveryStaff.id')
+        ->where('Wallet.userType','provider')
+        ->where('DeliveryStaff.status','1')
+        ->where('Wallet.balance','>',0.00)
+                          ->where('DeliveryStaff.name','LIKE','%'.$request->key.'%')
+                          ->orwhere('DeliveryStaff.mobileNumber','LIKE','%'.$request->key.'%')
+                          ->orwhere('Wallet.balance','LIKE','%'.$request->key.'%')
+                          ->orwhere('DeliveryStaff.email','LIKE','%'.$request->key.'%')
+                          ->paginate($perPage, ['*'], 'page', $request->pageNumber);
+
+        return $data;
+    }    
           
 }

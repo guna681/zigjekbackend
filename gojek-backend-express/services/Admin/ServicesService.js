@@ -155,7 +155,8 @@ module.exports = function () {
         IsFixedPricing: data.isFixedPricing,
         PricePerHour: data.pricePerHour,
         DisplayType: data.displayType,
-        DisplayDescription: data.displayDescription
+        DisplayDescription: data.displayDescription,
+        DeliveryType: data.DeliveryType
       }
       const serviceCategory = 'ServiceCategory'
       var categorydata = {
@@ -236,7 +237,8 @@ module.exports = function () {
         IsFixedPricing: data.isFixedPricing,
         PricePerHour: data.pricePerHour,
         DisplayType: data.displayType,
-        DisplayDescription: data.displayDescription
+        DisplayDescription: data.displayDescription,
+        DeliveryType: data.DeliveryType
       }
       var categorydata = {
         table: { serviceCategory: 'ServiceCategory' },
@@ -777,9 +779,10 @@ module.exports = function () {
         Status: data.status,
         Limit: '5',
         SlashPrice: data.slashPrice,
-        CurrencyType: '$',
+        CurrencyType: process.env.CURRENCY,
         Description: data.description,
-        Duration: data.duration
+        Duration: data.duration,
+        commission:data.commission
       }
       var appsliderData = await servicesRepository.addServices(resData)
       if (appsliderData.error === false) {
@@ -825,7 +828,8 @@ module.exports = function () {
         Status: data.status,
         SlashPrice: data.slashPrice,
         Description: data.description,
-        Duration: data.duration
+        Duration: data.duration,
+        commission:data.commission
       }
       var servicesdata = {
         table: { service: 'Service' },

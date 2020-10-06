@@ -144,5 +144,44 @@ Class SearchController extends Controller
         return $responsedata;
 
     }
+
+
+    public function payOutletSearch(request $request)
+    {
+        
+        $response       = new Response();
+        $rules          = ['key' => 'required','pageNumber' => 'required'];
+        $validator      = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $data                   = $validator->messages();
+            $response->error        = Common::error_true;
+            $response->errorMessage = $data->first();
+        } else {
+            $searchService            = new SearchService();
+            $response               = $searchService->payOutletSearch($request);
+        }
+        $responsedata   = Defaults::encode($response);
+        return $responsedata;
+
+    }
+ 
+    public function PayStaffSearch(request $request)
+    {
+        
+        $response       = new Response();
+        $rules          = ['key' => 'required','pageNumber' => 'required'];
+        $validator      = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $data                   = $validator->messages();
+            $response->error        = Common::error_true;
+            $response->errorMessage = $data->first();
+        } else {
+            $searchService            = new SearchService();
+            $response               = $searchService->PayStaffSearch($request);
+        }
+        $responsedata   = Defaults::encode($response);
+        return $responsedata;
+
+    }      
       
 }
