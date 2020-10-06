@@ -498,4 +498,29 @@ module.exports = function () {
       })
     })
   }
+  //Block status of provider
+  this.providerBlockStatusUpdate = (data){
+    var output={}
+    return new Promise(function(resolve){
+      var knex=new knex(config)
+      knex(provider).where('Id',data.where)
+      .update('IsBlocked',data.status)
+      .then((result)=>{
+        if(result){
+          output.error=false
+          output.data=result
+        } else{
+          output.error=true
+        }
+        resolve(output)
+      })
+      .catch((err)=>{
+        err.error=true
+        err.data=null
+        resolve(err)
+      }).finally(()=>{
+        knex.destroy()
+      })
+    })
+  }
 }

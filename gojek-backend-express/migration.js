@@ -1,4 +1,4 @@
-var mysql = require('mysql2')
+var mysql = require('mysql')
 var migration = require('mysql-migrations')
 var path = require('path')
 require('dotenv').config({ path: './../.env' })

@@ -200,4 +200,18 @@ module.exports = function () {
       callback(response)
     })
   }
+  
+  this.providerBlockStatusUpdate=(req,callback)=>{
+    var response={}
+    providerService.providerBlockStatusUpdate(req,(result)=>{
+      if(result.error){
+        response.error=true
+        response.msg=result.msg
+      } else{
+        response.error=false
+        response.msg=result.msg
+      }
+      callback(response)
+    })
+  }
 }
