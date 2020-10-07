@@ -23,6 +23,7 @@ module.exports = function (app, validator) {
   const PeekChargesCtrl = require('../controller/Admin/peekChargesCtrl')
   const WalletController = require('../controller/Admin/WalletController')
   const ServicesController = require('../controller/Admin/ServicesController')
+  const SortController = require('../controller/Admin/SortController')
 
   var adminAppConfigCtrl = new AdminAppConfigCtrl()
   var adminAuthController = new AdminAuthController()
@@ -45,7 +46,7 @@ module.exports = function (app, validator) {
   var walletController = new WalletController()
   var errorHandler = new ErrorHandler()
   var servicesController = new ServicesController()
-
+  var sortController= new SortController()
   // admin login route
   app.post(`${basePath}/login`, [
     validator.check('Email').isEmail()
@@ -1927,7 +1928,25 @@ module.exports = function (app, validator) {
       })
     }
   })
-
+  // Common sort view
+  app.get(`${basePath}/commonSortViewPage/:page`,app.adminauth,(req,res)=>{
+    const lang =req.headers.lang
+    const error =validator.validation(req)
+    var limit = 10
+    var data = JSON.parse(req.params.page)
+    var page = {typename:data.typename,sort:data.sort,page:data.page,limit:limit,type:data.type,IsDeliveryOpt:data.IsDeliveryOpt}
+    if(error.arrya().length){
+      errorHandler.requestHandler(error.array(),true,lang,(message)=>{
+        return res.send(message)
+      })
+    } else {
+      sortController.commonSortViewCtrl(page,(result)=>{
+        errorHandler.ctrlHandler([result],result.error,lang,(message)=>{
+          return res.send(message)
+        })
+      })
+    }
+  })
   // get users and providers list in html content
   app.get(`${basePath}/getUsersProviderList`, (req, res) => {
     const lang = req.headers.lang
