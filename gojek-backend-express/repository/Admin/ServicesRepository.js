@@ -534,7 +534,7 @@ module.exports = function () {
   this.CategoryListView2 =() => {
     var output = {}
     return new Promise(function(resolve){
-      var knex=new knex(config)
+      var knex=new Knex(config)
       knex(serviceCategory)
       .where('Status','1')
       .where('Type','SERVICE')
