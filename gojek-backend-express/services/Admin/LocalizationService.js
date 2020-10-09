@@ -318,6 +318,46 @@ module.exports = function () {
       callback(err)
     }
   }
+  this.adminCountryUpdateService = async (data, callback) => {
+    var response = {}
+    try {
+      var data1 = {
+        countryName: data.CountryName,
+        isoCode: data.ShortCode,
+        currencyCode: data.CurrenyName,
+        // CurrencyShortCode: data.CurrencyShortCode,
+        currencySymbol: data.CurrencySymbol,
+        currencyValues: data.CurrenyValue,
+        // CountryFlagImage: data.CountryFlagImage,
+        status: data.IsActive
+      }
+      var where={
+        id:data.Id
+      }
+      console.log(country)
+      var country=Object();
+      country.data=data1;
+      country.where=where;
+      var adminICountryData = await localizationRepository.adminCountryUpdate(country) 
+      console.log(adminICountryData)
+      if (adminICountryData.error === false) {
+        response.error = false
+        response.data = adminICountryData.data[0]
+        response.msg = 'VALID'
+      } else if (adminICountryData.errno === DUPLICATEERRCODE) {
+        response.error = true
+        response.msg = 'EXIST: $[1],Country Name'
+      } else {
+        response.error = true
+        response.msg = 'FAILED'
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
   this.adminStateUpdateService = async (data, callback) => {
     var response = {}
     try {
