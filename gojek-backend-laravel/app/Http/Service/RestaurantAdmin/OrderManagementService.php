@@ -245,7 +245,7 @@ die;
             $ordersData->orderId          = $orders->Id;
             $ordersData->orderReferenceId = $orders->orderReferenceId;
             $ordersData->netAmount        = $orders->netAmount;
-            switch ($orders->Status) {
+            switch ($orders->orderStatus   ) {
                     case "accepted":
                     $ordersData->orderStatus = "accepted";
                     break;

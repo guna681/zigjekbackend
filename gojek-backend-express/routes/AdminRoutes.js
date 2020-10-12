@@ -1935,7 +1935,7 @@ module.exports = function (app, validator) {
     var limit = 10
     var data = JSON.parse(req.params.page)
     var page = {typename:data.typename,sort:data.sort,page:data.page,limit:limit,type:data.type,IsDeliveryOpt:data.IsDeliveryOpt}
-    if(error.arrya().length){
+    if(error.array().length){
       errorHandler.requestHandler(error.array(),true,lang,(message)=>{
         return res.send(message)
       })
