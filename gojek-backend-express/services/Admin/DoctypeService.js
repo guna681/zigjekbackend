@@ -55,7 +55,11 @@ module.exports = function () {
   this.admindocTypeViewPageService = async (data, callback) => {
     var response = {}
     try {
-      var doctypecount = await doctypeRepository.admindocTypeViewPageListcount()
+      if(!data.type)
+      {
+        data.type="all"
+      }
+      var doctypecount = await doctypeRepository.admindocTypeViewPageListcount(data.type)
       var doctypePSelectSData = await doctypeRepository.admindocTypePageView(data)
       var result = []
       if (doctypePSelectSData.error === false && doctypecount.error === false) {

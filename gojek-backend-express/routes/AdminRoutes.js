@@ -567,7 +567,7 @@ module.exports = function (app, validator) {
         return res.send(message)
       })
     } else {
-      doctypeController.adminDocTypeSelectCtrl((result) => {
+      doctypeController.adminDocTypeSelectCtrl(data,(result) => {
         errorHandler.ctrlHandler([result], result.error, lang, (message) => {
           return res.send(message)
         })
@@ -579,7 +579,7 @@ module.exports = function (app, validator) {
     const lang = req.headers.lang
     const error = validator.validation(req)
     var limit = 10
-    var page = { page: req.params.page, limit: limit }
+    var page = { page: req.params.page, limit: limit,type:req.params.type }
     if (error.array().length) {
       errorHandler.requestHandler(error.array(), true, lang, (message) => {
         return res.send(message)
