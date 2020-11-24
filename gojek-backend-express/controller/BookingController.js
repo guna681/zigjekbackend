@@ -306,6 +306,8 @@ module.exports = function () {
         }
       ]
       var waitingList = await bookingService.getBookingWaitlist(type, status)
+      console.log('waitingList-test',waitingList);
+     
       if (waitingList.error) {
         response.error = true
         response.msg = waitingList.msg
@@ -323,8 +325,9 @@ module.exports = function () {
         var mergeProviderBlockList = blockList.concat(assignedList)
         let providerBlockList = (List) => List.filter((key, value) => List.indexOf(key) === value)
         bookingService.changeBookingStatus(bookingId, bookingProcess)
-
+       
         providerList = await providerService.getActiveProviderByCellId(source, neighbouringCellID, rideType, activeProviderStatus, weights, providerBlockList(mergeProviderBlockList))
+       
         if (providerList.error) {
           content.data = 'booking_cancelled'
           content.title = 'Booking Cancelled'
@@ -367,7 +370,203 @@ module.exports = function () {
     }
   }
 
+
+  this.taxiBookingDefaultHandler = async () => {
+    var response = {}
+       return new Promise(async function (resolve) {
+    try {
+      var content = {}
+      const bookingProcess = 'processing'
+      const bookingAssigned = 'assigned'
+      const bookingCancel = 'cancelled'
+      const blockProviderStatus = 'blocked'
+      const activeProviderStatus = 'active'
+      const type = ['taxi']
+      var status = ['waiting']
+      var providerList
+      var providerId=326
+      var UserId=334
+      var userDeviceInfo
+      var providerInfo
+      var providerDetails = null
+      const weights = [
+        {
+          key: 'distance',
+          value: -5
+        },
+        {
+          key: 'duration',
+          value: -4
+        },
+        {
+          key: 'review',
+          value: 7
+        },
+        {
+          key: 'tripCount',
+          value: -3
+        }
+      ]
+      var waitingList = await bookingService.getDefaultBookingWaitlist(type, status,UserId) // new function
+      // console.log('waitingList',waitingList);
+      if (waitingList.error) {
+        response.error = true
+        response.msg = waitingList.msg
+      } else {
+        var booking = waitingList.data[0]
+        var bookingId = booking.id
+        var cellId = booking.cellId
+        var blockList = booking.blockList === null ? [] : booking.blockList
+        var assignedList = booking.assignedList === null ? [] : booking.assignedList
+        var rideType = booking.rideId
+        var source = [booking.lat + ',' + booking.lng]
+        var neighbouringS2CellID = await common.getNeighborsUsingS2Key(booking.lat, booking.lng)
+        var neighbouringCellID = neighbouringS2CellID.key
+        neighbouringCellID.push(cellId)
+        var mergeProviderBlockList = blockList.concat(assignedList)
+        let providerBlockList = (List) => List.filter((key, value) => List.indexOf(key) === value)
+        bookingService.changeBookingStatus(bookingId, bookingProcess)
+
+        providerList = await providerService.getDefaultDeliveryProviderByCellId(source, activeProviderStatus, weights,providerId,0) // new function
+        console.log('providerList',providerList);
+        if (providerList.error) {
+          // content.data = 'booking_cancelled'
+          // content.title = 'Booking Cancelled'
+          // content.body = 'Sorry we dont have service at your location. Please try after some time'
+          // userDeviceInfo = await userService.getUserDeviceToken(waitingList.data[0].userId)
+          // pushNotification.sendPushNotificationByDeviceType(userDeviceInfo.data, content)
+          // bookingService.changeBookingStatus(bookingId, bookingCancel)
+          // providerService.releaseProviderService(assignedList)
+          // response.error = true
+          // response.msg = providerList.msg
+        } else {
+          var providerId = providerList.data[0].ProviderId
+          providerInfo = await providerService.getProviderInfo(providerId)
+          if (!providerInfo.error) {
+            providerDetails = providerInfo.data
+          }
+        }
+        var assign = await bookingService.updateProviderInBooking(bookingId, providerId, providerDetails)
+        content.data = 'incoming_booking'
+        content.title = 'Booking Alert'
+        content.body = 'You have new booking request'
+        content.orderId = JSON.stringify(bookingId)
+        var providerToken = await providerService.getProivderMessageToken(providerId)
+        pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default')
+        providerService.providerLocationStatusUpdate(providerId, blockProviderStatus)
+        bookingService.changeBookingStatus(bookingId, bookingAssigned)
+        var providerUnblockList = assignedList.indexOf(providerId)
+        if (providerUnblockList > -1) {
+          assignedList.splice(providerList, 1)
+        }
+        providerService.releaseProviderService(assignedList)
+        response.error = false
+        response.msg = assign.msg
+      }
+      resolve(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      // callback(err)
+    }
+  });
+  }
+
+
+  this.deliveryBookingDefaultHandler = async () => {
+    var response = {}
+    return new Promise(async function (resolve) {
+    try {
+      var content = {}
+      const bookingProcess = 'processing'
+      const bookingAssigned = 'assigned'
+      const blockProviderStatus = 'blocked'
+      const activeProviderStatus = 'active'
+      const bookingUnassigned = 'unassigned'
+      const type = ['delivery']
+      var status = ['waiting', 'unassigned']
+      var providerList
+      var providerId=326
+      var UserId=334
+      var providerInfo
+      var providerDetails = null
+      const weights = [
+        {
+          key: 'distance',
+          value: -5
+        },
+        {
+          key: 'duration',
+          value: -4
+        },
+        {
+          key: 'review',
+          value: 7
+        },
+        {
+          key: 'tripCount',
+          value: -3
+        }
+      ]
+      var waitingList = await bookingService.getDefaultBookingWaitlist(type, status,UserId) // new function
+      // console.log('waitingList',waitingList);
+      if (waitingList.error) {
+        response.error = true
+        response.msg = waitingList.msg
+      } else {
+        var booking = waitingList.data[0]
+        var bookingId = booking.id
+        var assignedList = booking.assignedList === null ? [] : booking.assignedList
+        var source = [booking.lat + ',' + booking.lng]
+        bookingService.changeBookingStatus(bookingId, bookingProcess)
+
+        providerList = await providerService.getDefaultDeliveryProviderByCellId(source, activeProviderStatus, weights,providerId,1) // new function
+        // console.log('providerList',providerList);
+        if (providerList.error) {
+          bookingService.changeBookingStatus(bookingId, bookingUnassigned)
+          providerService.releaseProviderService(assignedList)
+          response.error = true
+          response.msg = providerList.msg
+        } else {
+          providerId = providerList.data[0].ProviderId
+          providerInfo = await providerService.getProviderInfo(providerId)
+          if (!providerInfo.error) {
+            providerDetails = providerInfo.data
+          }
+        }
+        var assign = await bookingService.updateProviderInBooking(bookingId, providerId, providerDetails)
+        console.log('providerList',assign);
+        content.data = 'incoming_booking'
+        content.title = 'Booking Alert'
+        content.body = 'You have new booking request'
+        content.orderId = JSON.stringify(bookingId)
+        var providerToken = await providerService.getProivderMessageToken(providerId)
+        pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default')
+        providerService.providerLocationStatusUpdate(providerId, blockProviderStatus)
+        bookingService.changeBookingStatus(bookingId, bookingAssigned)
+        var providerUnblockList = assignedList.indexOf(providerId)
+        if (providerUnblockList > -1) {
+          assignedList.splice(providerList, 1)
+        }
+        providerService.releaseProviderService(assignedList)
+        response.error = false
+        response.msg = assign.msg
+      }
+      resolve(response);
+      // callback(response)
+    } catch (err) {
+      console.log(err);
+      err.error = true
+      err.msg = 'OOPS'
+      resolve(err);
+      // callback(err)
+    }
+  });
+  }
+
+  
   this.deliveryBookingHandler = async (callback) => {
+    
     var response = {}
     try {
       var content = {}
@@ -401,6 +600,7 @@ module.exports = function () {
         }
       ]
       var waitingList = await bookingService.getBookingWaitlist(type, status)
+      console.log('delivery-test',waitingList);
       if (waitingList.error) {
         response.error = true
         response.msg = waitingList.msg
@@ -477,6 +677,7 @@ module.exports = function () {
     var bookingStatus = ['assigned', 'accepted', 'pickedup', 'arrived', 'dropped']
     try {
       var booking = await bookingService.getProviderBooking(data.auth.Id, bookingStatus, type)
+      console.log(booking);
       if (booking.error || (booking.data.type === 'services' && booking.data.status === 'accepted')) {
         response.error = true
         response.msg = 'NO_BOOKING'
@@ -522,4 +723,89 @@ module.exports = function () {
       callback(err)
     }
   }
+
+    this.providerOngoingBookingCtrl1 = async (req, callback) => {
+    var response = {}
+    var data = req
+    var type = data.auth.Type
+    var bookingStatus = ['assigned', 'accepted', 'pickedup', 'arrived', 'dropped']
+    try {
+      var booking = await bookingService.getProviderBooking1(data.auth.Id, bookingStatus, type)
+      if (booking.error || (booking.data.type === 'services' && booking.data.status === 'accepted')) {
+        response.error = true
+        response.msg = 'NO_BOOKING'
+      } else {
+        this.formdatedata = typeof this.formdatedata === 'undefined' ? null : this.formdatedata
+        var bookingInfo = booking.data
+        var status = bookingInfo.status
+        var userId = bookingInfo.userId
+        var userInfo = await userService.getUserBookingInfo(userId)
+        if (bookingStatus.includes(status)) {
+          if (userInfo.error) {
+            bookingInfo.userInfo = null
+          } else {
+            delete bookingInfo.userId
+            if (bookingInfo.paymentMode === 'wallet' || booking.data.paymentMode === 'card') {
+              // console.log('2')
+              bookingInfo.estimation = '0.00'
+            }
+            if (bookingInfo.type === 'delivery' && ['assigned', 'accepted', 'pickedup'].includes(bookingInfo.status)) {
+              console.log('1')
+              var outletInfo = await bookingService.getOutletInfo(bookingInfo.outletId)
+              bookingInfo.displayName = outletInfo.error ? userInfo.data.firstName + ' ' + userInfo.data.lastName : outletInfo.data.name
+              userInfo.data.mobile = outletInfo.error ? userInfo.data.mobile : outletInfo.data.contactNumber
+            } else {
+              console.log('0')
+              console.log(bookingInfo,'bookingInfo')
+
+              if (bookingInfo.paymentMode === 'wallet' || bookingInfo.paymentMode === 'Card') {
+              console.log('2')
+              bookingInfo.estimation = '0.00'
+            }
+              bookingInfo.displayName = userInfo.data.firstName + ' ' + userInfo.data.lastName
+            }
+            if (bookingInfo.type === 'services') {
+              var serviceType = await bookingService.getServiceTypeInfo(bookingInfo.serviceCategoryId)
+              bookingInfo.serviceType = serviceType.error ? null : serviceType.data.Name
+            }
+            bookingInfo.userInfo = userInfo.data
+          }
+        } else {
+          bookingInfo.userInfo = userInfo.error ? null : userInfo.data
+        }
+        console.log(bookingInfo,'******')
+        var bookResponse = bookingInfo
+        response.error = false
+        response.msg = booking.msg
+        response.data = bookResponse
+      }
+      callback(response)
+    } catch (err) {
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+  }
+
+  this.checkBookingCtrl = async(req, callback) => {
+    var data = req
+    var response = {}
+    try {
+
+      var bookingType = await bookingService.checkBookingService(data)
+      if (bookingType.error) {
+        response.error = true
+        response.msg = bookingType.msg
+      } else {
+        response.error = false
+        response.msg = bookingType.msg
+      }
+      callback(response)
+    } catch (err) {
+       err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
+
+  }   
 }

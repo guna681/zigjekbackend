@@ -111,6 +111,11 @@ class UserRepository
         return $data;
     }
 
+    public  function getUserDevices($data){
+        $data=UserDevices::select('GCMId')->where('UserId',$data)->first();
+        return $data;
+    }
+
 
     public function putUdid($data){
         DB::beginTransaction();

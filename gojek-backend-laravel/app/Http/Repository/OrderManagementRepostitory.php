@@ -179,7 +179,7 @@ public function updateOrderViewStatus($arg)
     {
 
         $perPage = Constant::PERPAGE;
-        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.orderStatus','Users.Mobile','Users.Email','Booking.created_at','Booking.updated_at','Booking.confirmedTime')
+        $data    = Orders::select('Booking.id as orderId','Booking.orderReferenceId','Booking.netAmount','Booking.Status as orderStatus','Users.Mobile','Users.Email','Booking.created_at','Booking.updated_at','Booking.confirmedTime')
                           ->leftjoin('Users','Booking.UserId','=','Users.id')
                         //   ->where('Orders.orderStatus','<>','DELIVERED')
                         //   ->whereDate('Orders.created_at', DB::raw('CURDATE()'))

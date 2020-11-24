@@ -66,6 +66,7 @@ Class OrderRepostitory{
             $orders->DestinyLong    = $data->DestinyLong;
             $orders->CreateAt       = now();
             $orders->UpdateAt       = now();
+            // $orders->Status         = 'unassigned';
             $orders->Status         = 'waiting';
             $orders->Type           = 'delivery';
             $orders->ProviderRejectedIds  = "[]";
@@ -408,7 +409,7 @@ public function addRating($data,$userId)
       public function newOrders($outletId)
     {
         $data = Orders::where('outletId',$outletId)
-                        ->where('Status','unassigned')
+                        ->whereIn('Status',['unassigned','waiting'])
                         ->whereNull('confirmedTime')
                         ->orderby('id', 'DESC')
                         ->get();

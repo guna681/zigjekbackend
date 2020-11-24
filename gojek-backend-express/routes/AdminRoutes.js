@@ -579,7 +579,8 @@ module.exports = function (app, validator) {
     const lang = req.headers.lang
     const error = validator.validation(req)
     var limit = 10
-    var page = { page: req.params.page, limit: limit }
+	var type = req.body['type']
+    var page = { page: req.page, limit: limit, type: type }
     if (error.array().length) {
       errorHandler.requestHandler(error.array(), true, lang, (message) => {
         return res.send(message)
@@ -1935,7 +1936,7 @@ module.exports = function (app, validator) {
     var limit = 10
     var data = JSON.parse(req.params.page)
     var page = {typename:data.typename,sort:data.sort,page:data.page,limit:limit,type:data.type,IsDeliveryOpt:data.IsDeliveryOpt}
-    if(error.arrya().length){
+    if(error.array().length){
       errorHandler.requestHandler(error.array(),true,lang,(message)=>{
         return res.send(message)
       })
@@ -2781,7 +2782,21 @@ module.exports = function (app, validator) {
       })
     }
   })
-
+  app.get(`${basePath}/categoryList2`,(req,res)=>{
+     const lang = req.headers.lang
+    const error = validator.validation(req)
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.categoryListCtrl2((result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
   // SubCategory  View
   app.post(`${basePath}/subCategoryView`, [
     validator.check('subCategoryId').isNumeric().trim()

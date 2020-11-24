@@ -57,7 +57,7 @@ Class OutletsOrderService
             $ordersData->orderId          = $orders->Id;
             $ordersData->orderReferenceId = $orders->orderReferenceId;
             $ordersData->netAmount        = $orders->netAmount;
-            $ordersData->orderStatus      = $orders->orderStatus;
+            $ordersData->orderStatus      = $orders->Status;
             $ordersData->acceptedTime     = $orders->acceptedTime;
             $ordersData->rejectedTime     = $orders->rejectedTime;
             $ordersData->pickedupTime     = $orders->pickedupTime;
@@ -128,8 +128,9 @@ Class OutletsOrderService
                          if ($arg->orderStatus != 1) {
             $order=$staffOrderRepostitory->getOrderUsingId($arg->orderId);
             $userRepostitory = new UserRepository();
-            $user =$userRepostitory->getUser($order['userId']);
-
+            $user =$userRepostitory->getUser($order['UserId']);
+            $userDevices =$userRepostitory->getUserDevices($order['UserId']);
+            
             // $staffOrderRepostitory->updateDeliveryStaffEarnings($staffId, $order['providerEarnings']);
 
             //notification
@@ -137,7 +138,7 @@ Class OutletsOrderService
             $notificationData   = array();
             $notificationData['message']     = 'Order cancelled by restaurant'.' '.$order->orderReferenceId;
             $notificationData['os']          = $user['os']; 
-            $notificationData['body']        = '';
+            $notificationData['body']        = 'restaurant_cancelled';
              // $notificationData['body']        =   [
              //                                            'image'      => "NULL",
              //                                            'title'      => $title,
@@ -145,13 +146,34 @@ Class OutletsOrderService
              //                                            'extraKey'   => 'orderId',
              //                                            'extraValue' =>'Null',
              //                                        ];                                           
-            $notificationData['deviceToken'] = $user['deviceToken'];
+            $notificationData['deviceToken'] = $userDevices->GCMId;
             $notificationData['orderId'] = $arg->orderId;
 
             $pushNotification = new FCMPushNotificationServiceProvider();
             $pushNotification->setTitle($title);
             $data->status =$pushNotification->sendPushNotification($notificationData);
          } else {
+
+            $order=$staffOrderRepostitory->getOrderUsingId($arg->orderId);
+            $userRepostitory = new UserRepository();
+            $user =$userRepostitory->getUser($order['UserId']);
+            $userDevices =$userRepostitory->getUserDevices($order['UserId']);
+            // print_r($userDevices->DeviceId);
+            // die;
+
+            $title              = $order->orderReferenceId;
+            $notificationData   = array();
+            $notificationData['message']     = 'Order confirm by restaurant';
+            $notificationData['os']          = $user['os']; 
+            $notificationData['body']        = 'restaurant_confirm';
+            $notificationData['orderReferenceId']          = $order->orderReferenceId;
+                                                     
+            $notificationData['deviceToken'] = $userDevices->GCMId;
+            $notificationData['orderId'] = $arg->orderId;
+
+            $pushNotification = new FCMPushNotificationServiceProvider();
+            $pushNotification->setTitle($title);
+            $data->status =$pushNotification->sendPushNotification($notificationData);
 
               }
             $data->error        = Common::error_false;

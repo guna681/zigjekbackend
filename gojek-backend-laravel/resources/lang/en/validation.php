@@ -173,6 +173,7 @@ return [
 	'invoiceTitle' => 'FoodApp OrderInvoice',
 	'signupTitle' => 'Welcome to foodDeliveryApp',
 	'addSuccess' => 'added Successfully',
+    'forgotPassword'=> 'forget your password',
 	'updateSuccess' => 'updated Successfullly',
 	'deleteSuccess' => 'deleted Successfully',
 	'appName' => 'Food Delivery Application',

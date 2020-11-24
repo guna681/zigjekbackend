@@ -1,4 +1,4 @@
-module.exports =function(){
+module.exports = function () {
     const SortService = require('../../services/Admin/SortService')
     const Common = require('../../Utils/common')
     require('dotenv').config({path:'./../.env'})

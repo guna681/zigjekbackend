@@ -1,9 +1,9 @@
 module.exports=function(){
     const SortRepository=require('../../repository/Admin/SortRepository')
-    const Common =require('../../Utlis/common')
+    const Common =require('../../Utils/common')
     require('dotenv').config({path: './../.env'})
 
-    var SortRepository=new SortRepository();
+    var sortRepository=new SortRepository();
     var common=new Common();
 
     this.commonSortViewService=async (datas,callback) =>{
@@ -11,30 +11,30 @@ module.exports=function(){
         var typename = datas.typename
         if(datas.sort=='AtoZ')
                 {
-                  data.column='FirstName'
-                  data.sort='asc'
+                  datas.column='FirstName'
+                  datas.sort='asc'
                 }
                 else if(datas.sort=='ZtoA'){
-                    data.column='FirstName'
-                    data.sort='asc'
+                    datas.column='FirstName'
+                    datas.sort='desc'
                 }
                 else if(datas.sort=='latest')
                 {
-                    data.column='Id'
-                    data.sort='desc'
+                    datas.column='Id'
+                    datas.sort='desc'
                 }
                 else
                 {
-                    data.column='Id'
-                    data.sort='asc'
+                    datas.column='Id'
+                    datas.sort='asc'
                 }
         switch(typename){
             case 'users':
                var udata={table_name:'Users',sort:datas.sort,column:datas.column,limit:datas.limit,page:datas.page}
                var resresult=[]
                try{
-                   var usersSDCount=await SortRepository.commonSortDataListCount(udata)
-                   var usersSDListSData=await SortRepository.commonSortDataList(udata)
+                   var usersSDCount=await sortRepository.commonSortDataListCount(udata)
+                   var usersSDListSData=await sortRepository.commonSortDataList(udata)
                    if(usersSDListSData.error === false && usersSDCount.error ===false){
                        usersSDListSData.data.forEach((j,index)=>{
                            var resultdata=common.secureChangerList(j.Email,j.Mobile)
@@ -60,11 +60,12 @@ module.exports=function(){
                }
                break 
                case 'providers':
-                 var udata ={table_name:'Provider',sort:datas.sort,column:datas.column,limit:datas.limit,page:datas.page,type:datas.type,IsDeliveryOpt} 
+                 var udata ={table_name:'Provider',sort:datas.sort,column:datas.column,limit:datas.limit,page:datas.page,type:datas.type,IsDeliveryOpt:datas.IsDeliveryOpt} 
                  var resresult=[]
                  try{
-                     var usersSDCount=await SortRepository.commonSortDataListCount(udata)
-                     var usersSDListSData=await SortRepository.commonSortDataList(udata)
+					 
+                     var usersSDCount=await sortRepository.commonSortDataListCount(udata)
+                     var usersSDListSData=await sortRepository.commonSortDataList(udata)
                      if(usersSDListSData.error === false && usersSDCount.error ===false){
                          usersSDListSData.data.forEach((j,index)=>{
                              var resultdata=common.secureChangerList(j.Email,j.Mobile)

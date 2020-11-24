@@ -97,7 +97,9 @@ module.exports = function () {
     var limit = data.limit
     var page = data.page
     var offset = (page - 1) * limit
+	var type = data.type
     return new Promise(function (resolve) {
+      if(type=="all"){
       var knex = new Knex(config)
       knex(doctype).select().limit(limit).offset(offset)
         .then((result) => {
@@ -116,6 +118,28 @@ module.exports = function () {
         }).finally(() => {
           knex.destroy()
         })
+      }
+      else{
+        var knex = new Knex(config)
+      knex(doctype).select().limit(limit).offset(offset)
+        .where('ApplicableTo',type)
+        .then((result) => {
+          if (result.length) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
+      }
     })
   }
   // doctype Select

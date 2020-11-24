@@ -77,6 +77,65 @@ Class RestaurantAdminController extends  Controller
 
     }
 
+            public function  forgotPassword(request $request){
+
+        $response  = new Response();
+        $rules     = ['email'   =>'required|email|exists:Outlets',
+                      'password'=>'required:min:6'];
+        $validator = Validator::make($request->all(),$rules);
+        if($validator->fails()){
+            $data                   =$validator->messages();
+            $response->error        =Common::error_true;
+            $response->errorMessage =$data->first();
+        }else{
+            $restaurantAdminService = new RestaurantAdminService();
+            $response               = $restaurantAdminService->forgotPassword($request);
+        }
+        $responsedata =Defaults::encode($response);
+        return $responsedata;
+
+    }
+
+
+
+        public function  sendEmailOtp(request $request){
+
+        $response  = new Response();
+        $rules     = ['email'   =>'required|email|exists:Outlets'];
+        $validator = Validator::make($request->all(),$rules);
+        if($validator->fails()){
+            $data                   =$validator->messages();
+            $response->error        =Common::error_true;
+            $response->errorMessage =$data->first();
+        }else{
+            $restaurantAdminService = new RestaurantAdminService();
+            $response               = $restaurantAdminService->sendEmailOtp($request);
+        }
+        $responsedata =Defaults::encode($response);
+        return $responsedata;
+
+    }
+
+
+          public function  verifyEmailOtp(request $request){
+
+      $response  = new Response();
+      $rules     = ['email'   =>'required|email|exists:Outlets',
+                    'otp'=>'required:min:6' ];
+      $validator = Validator::make($request->all(),$rules);
+      if($validator->fails()){
+          $data                   =$validator->messages();
+          $response->error        =Common::error_true;
+          $response->errorMessage =$data->first();
+      }else{
+          $restaurantAdminService = new RestaurantAdminService();
+          $response               = $restaurantAdminService->verifyEmailOtp($request);
+      }
+      $responsedata =Defaults::encode($response);
+      return $responsedata;
+
+  }
+
 
     /**
      * Get the outlet Profile details api
