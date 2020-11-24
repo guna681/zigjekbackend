@@ -533,7 +533,7 @@ module.exports = function () {
   //CategoryListView with and without subcategory
   this.CategoryListView2 =() => {
     var output = {}
-    return new Promise(function (resolve) {
+    return new Promise(function(resolve){
       var knex=new Knex(config)
       knex(serviceCategory)
       .where('Status','1')
