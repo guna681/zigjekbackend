@@ -85,6 +85,8 @@ final class Constant{
 
     Const SIGNUP                      = 'signup';
     Const ORDERINVOICE                = 'order';
+    Const FORGOTPASSWORD              = 'forgotPassword';
+    
 
     //ouath login
 

@@ -5,6 +5,9 @@ use App\Http\Repository\RestaurantRepostitory;
 use App\Http\Service\DataService;
 use App\Http\Utility\Common;
 use App\Restaurant;
+use App\Http\Service\MailService;
+use App\Http\Utility\Defaults;
+use App\Http\Utility\Constant;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Libraries\ServiceProviders\GuzzleServiceProvider;
 use App\Http\Repository\OutletsRepostitory;
@@ -85,6 +88,83 @@ Class  RestaurantAdminService{
             $data->error        = Common::error_true;
             $data->errorMessage = __('validation.curpass');
 			}        
+        return $data;
+    }
+
+
+            public function forgotPassword($arg){
+        $outletsRepostitory    = new OutletsRepostitory();
+        $data                  = new DataService();        
+        $restaurantsdata           = $outletsRepostitory->existLogin($arg->email);
+            if($restaurantsdata) {
+                $restaurants           = $outletsRepostitory->putPassword($arg);            
+                if($restaurants){
+                    $data->error        = Common::error_false;
+                    $data->errorMessage = __('validation.sucess');
+                }else{
+                    $data->error        = Common::error_true;
+                    $data->errorMessage = __('validation.failure');
+                }
+            } else {
+            $data->error        = Common::error_true;
+            $data->errorMessage = __('validation.curpass');
+            }        
+        return $data;
+    }
+
+       public function sendEmailOtp($arg){
+        $outletsRepostitory    = new OutletsRepostitory();
+        $data                  = new DataService(); 
+        $arg->otpNumber        = Defaults::otpnumber();
+         $restaurantsdata           = $outletsRepostitory->existLogin($arg->email);
+            if($restaurantsdata) {
+         try{
+            $title = __('validation.forgotPassword');
+            $mailService = new MailService();
+            $mailService->setTitle($title);
+            $mailService->setReceiver($arg->email);
+            $mailService->setTemplate(Constant::FORGOTPASSWORD);
+            $messgeContent=array('otp'=> $arg->otpNumber , 'title'=>__('validation.appName'));
+            $mailService->sendMail($messgeContent);
+          //   echo $mailService;
+          // die;
+        } catch(\Exception $e){
+          echo $e;
+          die;
+    // Get error here
+   }
+    $restaurants           = $outletsRepostitory->otpUpdate($arg);  
+          //   echo $restaurants;
+          // die;  
+        if($restaurants){
+            $data->error        = Common::error_false;
+            $data->errorMessage = __('validation.sucess');
+        }else{
+            $data->error        = Common::error_true;
+            $data->errorMessage = __('validation.failure');
+        } 
+            } else {
+            $data->error        = Common::error_true;
+            $data->errorMessage = __('validation.emailNotExits');
+                
+            }
+    
+            
+        return $data;
+    }
+
+
+        public function verifyEmailOtp($arg){
+        $outletsRepostitory    = new OutletsRepostitory();
+        $data                  = new DataService();        
+        $restaurantsdata           = $outletsRepostitory->checkOtp($arg);
+            if($restaurantsdata) {
+                    $data->error        = Common::error_false;
+                    $data->errorMessage = __('validation.sucess');
+                }else{
+                    $data->error        = Common::error_true;
+                    $data->errorMessage = __('validation.failure');
+                }        
         return $data;
     }
 

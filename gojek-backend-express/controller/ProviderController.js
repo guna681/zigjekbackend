@@ -11,6 +11,7 @@ module.exports = function () {
   const UserService = require('../services/UserService')
   const RatingService = require('../services/RatingServices')
   const PaymentHelper = require('../thirdParty/paymentHelper')
+  const BookingRepository = require('../repository/BookingRepository')
   require('dotenv').config({ path: './../.env' })
 
   var paymentHelper = new PaymentHelper()
@@ -25,6 +26,8 @@ module.exports = function () {
   var providerVehicleService = new ProviderVehicleService()
   var common = new Common()
   var userService = new UserService()
+  var bookingRepository = new BookingRepository()
+
 
   this.providerAppSetting = (callback) => {
     var response = {}
@@ -446,6 +449,8 @@ module.exports = function () {
           var statistic = await bookingService.getProviderBookingStatics(providerId)
           var totalEarnings = await walletService.getWalletInfoService(providerId, 'provider')
           earning.totalEarnings = totalEarnings.error === true ? 0 : '$ ' + totalEarnings.data
+          var pendingBookingCount = await bookingRepository.fetchBookingCount(data)
+          earning.currentBookingCount = pendingBookingCount.result[0].count    
           if (statistic.error) {
             earning.earnings = result.data.earnings
           } else {
@@ -611,10 +616,12 @@ module.exports = function () {
             response.error = false
             response.msg = result.msg
           }
+          console.log(response)
           callback(response)
         })
       }
     } catch (err) {
+      console.log(err)
       err.error = true
       err.msg = 'OOPS'
       callback(err)
@@ -1131,12 +1138,13 @@ module.exports = function () {
           receipt.push({ fieldName: 'Sub Total', value: String(Number(bookingInfo.Estimation) + Number(bookingInfo.Tax)) })
           receipt.push({ fieldName: 'Total Amount', value: bookingInfo.CurrencyType + ' ' + bookingInfo.TotalAmount })
         } else if (bookingInfo.Type === 'services') {
-          data['categoryName'] = 'Test'
           data['timeSlot'] = bookingInfo.ServiceTimeSlot
           data['bookingDate'] = bookingInfo.BookingTimestamp
           data['serviceStartImage'] = bookingInfo.ServiceStartImage
           data['serviceEndImage'] = bookingInfo.ServiceEndImage
           var serviceList = await bookingService.getServiceInfo(bookingInfo.ServiceIds)
+          console.log(serviceList.data[0].name,'*****');
+          data['categoryName'] = serviceList.error ? 'Test' : serviceList.data[0].name
           data['serviceList'] = serviceList.error ? [] : serviceList.data
           var addonsList = await bookingService.getAddonsInfo(bookingInfo.ServiceAddons)
           data['serviceAddonsList'] = addonsList.error ? [] : addonsList.data
@@ -1161,6 +1169,7 @@ module.exports = function () {
         response.msg = 'VALID'
         response.data = bookingDetails
       }
+      console.log(response)
       callback(response)
     } catch (err) {
       err.error = true

@@ -700,6 +700,54 @@ module.exports = function () {
     })
   }
 
+//default assign
+  this.getDefaultDeliveryProviderByCellId = (target, providerStatus, weights,providerId,IsDeliveryOpt=0) => {
+    var response = {}
+    return new Promise(async function (resolve) {
+      try {
+        var condition = {}
+        condition.Status = providerStatus
+        if(IsDeliveryOpt!=0){
+          condition.IsDeliveryOpt = IsDeliveryOpt
+        }
+        condition.providerId = providerId
+        var provider = await providerRespository.fetchDefaultDeliveryProviderByCellId(condition)
+    
+        if (provider.error) {
+         
+          response.error = true
+          response.msg = 'NO_PROVIDER_AVAILABLE'
+        } else {
+          var origin = target
+          var destination = provider.result.map(element => {
+            return element.Latitude + ',' + element.Longitude
+          })
+
+          var matrix = await geoHelper.getProviderGeoMatrix(origin, destination)
+
+          var data = provider.result.map((elements, index) => {
+            elements['distance'] = matrix.result[index].distance
+            elements['duration'] = matrix.result[index].duration
+            return common.weightCalculator(elements, weights)
+          })
+
+          data.sort((a, b) => a.total - b.total)
+
+          response.error = false
+          response.data = data
+          response.msg = 'VALID'
+        }
+        resolve(response)
+      } catch (err) {
+        console.log(err)
+        err.error = true
+        err.msg = 'OOPS'
+        resolve(err)
+      }
+    })
+  }
+
+
   this.getActiveDeliveryProviderByCellId = (target, cellId, providerStatus, weights, blockList) => {
     var response = {}
     return new Promise(async function (resolve) {
@@ -1727,10 +1775,12 @@ module.exports = function () {
     }
   }
 
-  this.getProviderListByService = async (data, page, callback) => {
+  this.getProviderListByService = async (data, page,userId, callback) => {
     var response = {}
     try {
-      
+      // var userAddress = await providerRespository.getAddress(userId.Id)
+      // var userLat = userAddress.result[0].latitude
+      // var userLog = userAddress.result[0].longitude
       var providerId = await providerRespository.getServiceProviderIds(data)
       var providerIds = providerId.error ? [] : providerId.result.map((element) => { return element.ProviderId })
       var providerList = await providerRespository.getProviderListByIds(providerIds, page)
@@ -1740,6 +1790,7 @@ module.exports = function () {
         response.msg = 'NO_DATA'
       } else {
         var provider = providerList.result.map((element) => {
+            // var provider = providerList.result.forEach(value => {
           var details = {}
           details.id = element.Id
           details.firstName = element.FirstName
@@ -1748,6 +1799,14 @@ module.exports = function () {
           details.image = element.Image
           details.latitude = element.Latitude === null ? '0' : element.Latitude
           details.longitude = element.Longitude === null ? '0' : element.Longitude
+          // var lat1 = 13.081;
+          // var log1 = 80.2770;
+          // var lat2 = 12.931;
+          // var log2 = 80.2095;
+          // var distance = await providerRespository.getDistanceFromLatLonInKm(userLat,userLog,value.Latitude,value.Longitude)
+          // console.log(distance,'distance')
+          // details.distance = distance
+          // console.log(details,'details')
           return details
         })
         response.error = false
@@ -1756,6 +1815,7 @@ module.exports = function () {
       }
       callback(response)
     } catch (response) {
+      console.log(response)
       response.error = true
       response.msg = 'OOPS'
       callback(response)

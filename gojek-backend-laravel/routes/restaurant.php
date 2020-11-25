@@ -24,7 +24,11 @@ Route::get('getRevenueChart','RestaurantAdmin\DashboardManagementController@getR
 
 Route::post('loginRestaurantAdmin','RestaurantAdmin\RestaurantAdminController@loginRestaurantAdmin');
 Route::post('updateDeviceToken','RestaurantAdmin\RestaurantAdminController@updateDeviceToken')->middleware('auth:restaurant');
-Route::Post('changePassword','RestaurantAdmin\RestaurantAdminController@changePassword')->middleware('auth:restaurant');
+Route::Post('changePassword','RestaurantAdmin\RestaurantAdminController@changePassword');
+Route::Post('forgotPassword','RestaurantAdmin\RestaurantAdminController@forgotPassword');
+
+Route::Post('sendEmailOtp','RestaurantAdmin\RestaurantAdminController@sendEmailOtp');
+Route::Post('verifyEmailOtp','RestaurantAdmin\RestaurantAdminController@verifyEmailOtp');
 
 Route::Post('getOutletProfile','RestaurantAdmin\RestaurantAdminController@getOutletProfile')->middleware('auth:restaurant');
 

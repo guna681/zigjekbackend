@@ -242,6 +242,12 @@ module.exports = {
       'es': 'No hay nuevas reservas disponibles.',
       'pt': 'Nenhuma nova reserva disponível'
     },
+    'OLD_BOOKING': {
+      'default': 'Please Complete Your Last Booking',
+      'ar': 'لا يوجد حجز جديد متاح',
+      'es': 'No hay nuevas reservas disponibles.',
+      'pt': 'Nenhuma nova reserva disponível'
+    },
     'NO_PROVIDER_AVAILABLE': {
       'default': 'No provider available in your current location',
       'ar': 'لا يوجد مزود متاح في موقعك الحالي',

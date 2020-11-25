@@ -42,7 +42,7 @@ return [
     |
     */
 
-    'port' => env('SMTP_PORT', 587),
+    'port' => env('SMTP_PORT', 465),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'admin@uberdoo.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('SMTP_USER', 'admin@uberdoo.com'),
+        'name' => env('MAIL_PASSWORD', 'Example'),
     ],
 
     /*
@@ -71,7 +71,7 @@ return [
     |
     */
 
-    'encryption' => env('SMTP_ENCRYPTION', 'TLS'),
+    'encryption' => env('SMTP_ENCRYPTION', 'SSL'),
 
     /*
     |--------------------------------------------------------------------------
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => env('SMTP_USER'),
+    'username' => 'admin@uberdoo.com',
 
-    'password' => env('SMTP_PASSWORD'),
+    'password' => 'Uber@1994',
 
     /*
     |--------------------------------------------------------------------------

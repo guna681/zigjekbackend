@@ -266,7 +266,79 @@ class DishRepostitory extends Dishes
     }
 
 
-    public function updateDishes($data, $outletId)
+//     public function updateDishes($data, $outletId)
+//     {
+
+//         DB::beginTransaction();
+
+
+//         if ($data->isRecommended == 1 && $data->image != "null" ) {
+//             $defaults = new Defaults();
+//             $images = $defaults->imageUpload($data->image, Constant::DISHIMAGE);
+//             $updateImage = Dishes::where(['id'=> $data->dishId])->update(['image'=>$images]);
+                
+//         }
+
+//         try {
+
+//             $update = Dishes::where(['id'=> $data->dishId, 'outletId' => $outletId])
+//                              ->update(['name' => $data->name,          'price'     => $data->price, 'quantity'     => $data->quantity,
+//                               'isRecommended' => $data->isRecommended, 'isVeg'     => $data->isVeg, 'categoryId'   => $data->categoryId,
+//                               'showFromTime'  => $data->showFromTime, 'showToTime' => $data->showToTime, 'status'  => $data->status,'slashedPrice'=>$data->slashedPrice]);
+
+
+//         } catch (\Illuminate\Database\QueryException $ex) {
+//             $jsonresp = $ex->getMessage();    
+//             DB::rollBack();
+//             return false;
+//         }
+
+         
+// if ($data->isCustomisation == 1) {
+
+//         foreach(json_decode($data->customisationCategory) as $key=>$customdata){
+
+
+//               foreach($customdata->customisationItem as $value) {
+
+
+//                   if ($value->isId === 'Yes') {
+
+
+//                     $value->customisationCategoryId  = $customdata->customisationCategoryId;
+                  
+//                     $this->customisationUpdate($value);                 
+//                   } else {
+//                     $value->dishId = $data->dishId;
+//                    $value->customisationCategoryId  = $customdata->customisationCategoryId;
+//                     $this->customisationInsert($value);                    
+//                   }
+//               }
+
+//         }
+// } else {
+// 	// public function removeCartDishes($data)
+//  //  {
+//                   Log::debug($data->dishId);
+//              $delete = DB::table('Dishes_Customisation')->where('dishId', $data->dishId)->delete();
+
+//       // $delete=DishesCustomisation::where('dishId','=',$data->dishId);
+//                   // ->delete();
+//                   // ->toSql();
+//                   // $color = ProductColor::find( $color_id );
+//                   // $delete->delete();
+//                   Log::debug($delete);
+//                   Log::debug('******');
+
+//   // }
+// }
+
+//         DB::Commit();
+//         return true;
+
+//     }
+
+        public function updateDishes($data, $outletId)
     {
 
         DB::beginTransaction();
@@ -294,44 +366,65 @@ class DishRepostitory extends Dishes
         }
 
          
-if ($data->isCustomisation == 1) {
+     if ($data->isCustomisation == 1) {
+               
 
         foreach(json_decode($data->customisationCategory) as $key=>$customdata){
+            $customisationCategoryId=null;
 
+            if(count($customdata->customisationItem)>0 && $customdata->customisationItem[0]->categoriesMainId ==null)
+        {
+
+           
+            $get =  DB::table('Customisation_Category')->select("*")->where('id',$customdata->customisationCategoryId)->first();
+            try {
+                $dishesCustomisationCategories = new DishesCustomisationCategories();
+                $dishesCustomisationCategories->name = $get->name;
+                $dishesCustomisationCategories->dishId = $data->dishId;
+                $dishesCustomisationCategories->isDelete = $customdata->customisationItem[0]->isDelete;
+                $dishesCustomisationCategories->categoriesPathId = $get->id;
+                $dishesCustomisationCategories->categoriesType = $get->type;
+                $dishesCustomisationCategories->save();
+                $customisationCategoryId=$dishesCustomisationCategories->id;
+            } catch (\Illuminate\Database\QueryException $ex) {
+                $jsonresp = $ex->getMessage();
+                DB::rollBack();
+                return false;
+            }
+        }else
+        {
+            // $customisationCategory = DB::table('Customisation_Category')->select("*")->where('id',$customdata->customisationCategoryId)->first();
+            // $update=['name'=>$customisationCategory->name,'isMandatory'=>0,'categoriesType'=>$customisationCategory->type,'categoriesPathId'=>$customisationCategory->id];
+            // $update['isDelete']= isset($customdata->isDelete)?$customdata->isDelete:0;
+            // $categoryupdate = DishesCustomisationCategories::
+            //                  where(['id'=>$customdata->customisationCategoryId])
+            //                    ->update($update);
+        }
 
               foreach($customdata->customisationItem as $value) {
-
-
+        
                   if ($value->isId === 'Yes') {
 
 
                     $value->customisationCategoryId  = $customdata->customisationCategoryId;
+            
+                    $value->customisationCategoryDelete = isset($customdata->isDelete)?$customdata->isDelete:0;
                   
                     $this->customisationUpdate($value);                 
                   } else {
                     $value->dishId = $data->dishId;
                    $value->customisationCategoryId  = $customdata->customisationCategoryId;
-                    $this->customisationInsert($value);                    
+                    $this->customisationInsert($value,$customisationCategoryId);                    
                   }
               }
 
         }
-} else {
-	// public function removeCartDishes($data)
- //  {
-                  Log::debug($data->dishId);
-             $delete = DB::table('Dishes_Customisation')->where('dishId', $data->dishId)->delete();
+        } else {
+        // $destroy = DishesCustomisationCategories::where(['dishId' => $data->dishId])
+        //                     ->delete();
+        $destroy = DishesCustomisationCategories::where(['dishId' => $data->dishId])->update(['isDelete'=>1]);
+        }
 
-      // $delete=DishesCustomisation::where('dishId','=',$data->dishId);
-                  // ->delete();
-                  // ->toSql();
-                  // $color = ProductColor::find( $color_id );
-                  // $delete->delete();
-                  Log::debug($delete);
-                  Log::debug('******');
-
-  // }
-}
 
         DB::Commit();
         return true;

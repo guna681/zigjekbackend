@@ -7,11 +7,14 @@ module.exports = function (server, validator) {
   var bookingController = new BookingController()
 
   setInterval(async () => {
+    await bookingController.taxiBookingDefaultHandler();
+    await bookingController.deliveryBookingDefaultHandler();
     bookingController.taxiBookingHandler((result) => {
       errorController.ctrlHandler([result], result.error, 'default', (message) => {
         // console.log('Booking Service', message)
       })
     })
+
     bookingController.deliveryBookingHandler((result) => {
       errorController.ctrlHandler([result], result.error, 'default', (message) => {
         // console.log('Booking Service', message)
@@ -181,4 +184,43 @@ module.exports = function (server, validator) {
       })
     }
   })
+
+   server.get(basePath + 'newOnGoingBooking', server.auth, (request, response) => {
+    const error = validator.validation(request)
+    const lang = request.headers.lang
+    if (error.array().length) {
+      errorController.requestHandler(error.array(), true, lang, (message) => {
+        return response.send(message)
+      })
+    } else {
+      var body = request.body
+      body.auth = request.params.auth
+      bookingController.providerOngoingBookingCtrl1(body, (result) => {
+        errorController.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
+  })
+
+  server.post(basePath + 'checkBooking', [
+    validator.check('bookingNo')
+      .isLength({ min: 1, max: 11 }).withMessage('INVALID: $[1],Booking No.'),
+  ], server.auth, (request, response) => {
+    const error = validator.validation(request)
+    const lang = request.headers.lang
+    if (error.array().length) {
+      errorController.requestHandler(error.array(), true, lang, (message) => {
+        return response.send(message)
+      })
+    } else {
+      var body = request.body
+      body.auth = request.params.auth
+      bookingController.checkBookingCtrl(body, (result) => {
+        errorController.ctrlHandler([result], result.error, lang, (message) => {
+          return response.send(message)
+        })
+      })
+    }
+  })  
 }

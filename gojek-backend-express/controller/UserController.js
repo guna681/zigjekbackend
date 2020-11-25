@@ -1052,7 +1052,7 @@ module.exports = function () {
         data = { SubCategoryId: req.subCategoryId }
       }
       var page = req.page
-      providerService.getProviderListByService(data, page, (result) => {
+      providerService.getProviderListByService(data, page,req.auth, (result) => {
         if (result.error) {
           response.error = true
           response.msg = result.msg
@@ -1061,6 +1061,7 @@ module.exports = function () {
           response.msg = result.msg
           response.data = result.data
         }
+        console.log(response,'response');
         callback(response)
       })
     } catch (err) {

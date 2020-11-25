@@ -2781,7 +2781,21 @@ module.exports = function (app, validator) {
       })
     }
   })
-
+  app.get(`${basePath}/categoryList2`,(req,res)=>{
+     const lang = req.headers.lang
+    const error = validator.validation(req)
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      servicesController.categoryListCtrl2((result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
   // SubCategory  View
   app.post(`${basePath}/subCategoryView`, [
     validator.check('subCategoryId').isNumeric().trim()

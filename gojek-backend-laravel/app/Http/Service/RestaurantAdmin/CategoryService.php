@@ -7,6 +7,7 @@ use App\Http\Repository\CategoryRepostitory;
 use App\Http\Service\DataService;
 use App\Http\Utility\Common;
 use Symfony\Component\VarDumper\Cloner\Data;
+Use Log;
 
 Class CategoryService
 {

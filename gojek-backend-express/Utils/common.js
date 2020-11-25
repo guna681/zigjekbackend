@@ -123,7 +123,8 @@ module.exports = function () {
     return new Promise(function (resolve) {
       try {
         authy.phones().verification_start(mobileNumber, countryCode, { via: 'sms', locale: 'en' }, function (err, res) {
-          console.log(res)
+          console.log(res,'**')
+          console.log(err,'**')
           if (res) {
         response.error = false
         response.data = res
@@ -135,6 +136,7 @@ module.exports = function () {
           resolve(response)
         })
       } catch (err) {
+        console.log(err)
         err.error = true
         err.msg = 'FAILED'
         resolve(err)

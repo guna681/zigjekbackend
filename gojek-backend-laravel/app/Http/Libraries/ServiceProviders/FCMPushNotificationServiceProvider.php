@@ -62,6 +62,7 @@ Class FCMPushNotificationServiceProvider
                                              // $data['body']['extraKey'] =>$data['body']['extraValue']
                                          ],                   
                   ];
+                //   print_r($fields);
         return $fields;
     }
 

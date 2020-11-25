@@ -170,9 +170,48 @@ module.exports = function () {
         trx(booking)
           .transacting(trx)
           .where(data)
+          //.where('Status', 'assigned')
           .whereIn('Status', status)
           .whereIn('Type', ['taxi', 'delivery', 'services'])
-          .having('CreateAt', '<', knex.fn.now())
+          // .having('CreateAt', '<', knex.fn.now())
+          .limit(limit)
+          .then(trx.commit)
+          .catch((err) => {
+            trx.rollback()
+            throw err
+          })
+      })
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
+  this.fetchBookingUsingState1 = (data, status, limit) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex.transaction((trx) => {
+        trx(booking)
+          .transacting(trx)
+          // .where(data)
+          .where('isCurrentBooking', '1')
+          .whereIn('Status', status)
+          .whereIn('Type', ['taxi', 'delivery', 'services'])
+          // .having('CreateAt', '<', knex.fn.now())
           .limit(limit)
           .then(trx.commit)
           .catch((err) => {
@@ -209,11 +248,12 @@ module.exports = function () {
           .where(data)
           .whereIn('Status', status)
           .whereIn('Type', type)
-          .having('CreateAt', '<', knex.fn.now())
+          // .having('CreateAt', '<', knex.fn.now())
           .limit(limit)
           .orderByRaw('FIELD(Status,"unassigned","waiting") DESC')
           .then(trx.commit)
           .catch((err) => {
+            console.log('err',err);
             trx.rollback()
             throw err
           })
@@ -238,6 +278,7 @@ module.exports = function () {
   }
 
   this.fetchBookingUsingType = (data, limit, type) => {
+    console.log(data.ProviderId,'ProviderId')
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
@@ -275,6 +316,33 @@ module.exports = function () {
     })
   }
 
+  this.fetchBookingCount = (data) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+       knex(booking)
+        // .whereRaw(`JSON_CONTAINS(AssignedProviderIds, '["?"]')`, [data.auth.Id])
+        .where('ProviderId',data.auth.Id)
+        .where('Status', 'assigned')
+        .count("Id as count")
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(err)
+        })
+        .finally(() => {
+          knex.destroy()
+        })
+    })
+  }
   this.updateBookingState = (conditon, data) => {
     var output = {}
     return new Promise(function (resolve) {
@@ -1074,4 +1142,35 @@ module.exports = function () {
         })
     })
   }
+
+  this.getCurrentBooking = (data, page) => {
+    var output = {}
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
+      knex(booking)
+        .select()
+        .where('ProviderId',data.auth.Id)
+        .where('Booking.Type', 'services')
+        .whereNotIn('Status', ['cancelled','completed','reject'])
+        .orderBy('CreateAt', 'asc')
+        .limit(1)
+        .then((result) => {
+          if (result.length > 0) {
+            output.error = false
+            output.result = result
+          } else {
+            output.error = false
+            output.result = result
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          resolve(output)
+        }).finally(() => {
+          knex.destroy()
+        })
+    })
+  }
+
 }

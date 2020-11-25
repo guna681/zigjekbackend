@@ -144,8 +144,9 @@ module.exports = function () {
     var response = {}
     var resresult = []
     try {
-      var providersCount = await providersRepository.providersPushNotificationListCount(data)
+      var providersCount = await providersRepository.providersPushNotificationListCount1(data)
       var providersListSData = await providersRepository.providersPushNotificationListView(data)
+	  //providersCount=await providersRepository.providersPushNotificationListCount1(data)
       if (providersListSData.error === false && providersCount.error === false) {
             if (process.env.SECURECHANGER == '1') {  
         providersListSData.data.forEach((j, index) => {
@@ -163,7 +164,7 @@ module.exports = function () {
         })
     }
         var result = []
-        result.push({ data: providersListSData.data }, { Count: providersCount.data[0].count })
+		result.push({ data: providersListSData.data }, { Count: providersCount.data[0].count })
         response.error = false
         response.data = result
         response.msg = 'VALID'

@@ -193,6 +193,27 @@ class OutletsRepostitory extends Outlets
         return true;
     }
 
+     public function otpUpdate($data)
+    {
+        DB::beginTransaction();
+        try {
+            $query = Outlets::where('email', $data->email)->update(['otp' => $data->otpNumber]);
+
+        } catch (\Illuminate\Database\QueryException $ex) {
+            $jsonresp = $ex->getMessage();
+            DB::rollBack();
+            return false;
+        }
+        DB::commit();
+        return true;
+    }
+
+    public function checkOtp($data)
+    {
+        $data = Outlets::where(['email' => trim($data->email), 'otp' => $data->otp ])->first();
+        return $data;
+    }
+
 
     public function updateOutletsEarnings($Amount, $outletId) {
         
