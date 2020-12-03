@@ -4,54 +4,62 @@ module.exports = function () {
   var appConfigRepository = new AppConfigRepository()
 
   this.appConfig = (type, callback) => {
-    var condition = {}
-    condition.Type = type
-    async.parallel({
-      authConfig: function (done) {
-        var configType = ['AUTH_TYPE', 'OTP_TIMER', 'MAP_API_KEY', 'WAITING_TIME', 'MAX_RANGE', 'SOS_NUMBER', 'STRIPE_PUBLIC']
-        var config = {}
-        appConfigRepository.authType(condition, configType, (result) => {
-          if (result.error) {
-            done(true, null)
-          } else {
-            result.result.forEach(value => {
-              config[value.FieldName.toLowerCase()] = value.Value
-            })
-            done(null, config)
-          }
-        })
-      },
-      slider: function (done) {
-        appConfigRepository.fetchSlider(condition, (result) => {
-          if (result.error) {
-            done(true, null)
-          } else {
-            done(null, result.result)
-          }
-        })
-      },
-      currency: function (done) {
-        appConfigRepository.currencySymbol( (result) => {
-          if (result.error) {
-            done(true, null)
-          } else {
-            done(null, result.result)
-          }
-        })
-      }
-    }, function (err, result) {
-      var response = {}
-      if (err) {
-        response.error = true
-        response.result = null
-        response.msg = 'OOPS'
-      } else {
-        response.error = false
-        response.result = result
-        response.msg = 'VALID'
-      }
-      callback(response)
-    })
+    try {
+      var condition = {}
+      condition.Type = type
+      async.parallel({
+        authConfig: function (done) {
+          var configType = ['AUTH_TYPE', 'OTP_TIMER', 'MAP_API_KEY', 'WAITING_TIME', 'MAX_RANGE', 'SOS_NUMBER', 'STRIPE_PUBLIC']
+          var config = {}
+          appConfigRepository.authType(condition, configType, (result) => {
+            if (result.error) {
+              done(true, null)
+            } else {
+              result.result.forEach(value => {
+                config[value.FieldName.toLowerCase()] = value.Value
+              })
+              done(null, config)
+            }
+          })
+        },
+        slider: function (done) {
+          appConfigRepository.fetchSlider(condition, (result) => {
+            if (result.error) {
+              done(true, null)
+            } else {
+              done(null, result.result)
+            }
+          })
+        },
+        currency: function (done) {
+          appConfigRepository.currencySymbol((result) => {
+            if (result.error) {
+              done(true, null)
+            } else {
+              done(null, result.result)
+            }
+          })
+        }
+      }, function (err, result) {
+        var response = {}
+        console.log(err)
+        if (err) {
+          response.error = true
+          response.result = null
+          response.msg = 'OOPS'
+        } else {
+          response.error = false
+          response.result = result
+          response.msg = 'VALID'
+        }
+        callback(response)
+      })
+    } catch (err) {
+      console.log(err)
+      err.error = true
+      err.msg = 'OOPS'
+      callback(err)
+    }
   }
 
   this.authTypeChecking = async (name) => {

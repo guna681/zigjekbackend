@@ -227,15 +227,22 @@ module.exports = function () {
       try {
         var data = {}
         var uid = uuid()
+        var imageFileName
         var storage = multer.diskStorage({
           destination: (req, file, cb) => {
+            console.log(process.env.IMAGE_PATH + req.body['user'].split('|')[0])
             cb(null, process.env.IMAGE_PATH + req.body['user'].split('|')[0])
           },
           filename: (req, file, cb) => {
             if (req.body['user'].split('|')[1] !== 'Replace') {
+              console.log('uid', uid + '.' + file.originalname.split('.').reverse()[0])
               cb(null, uid + '.' + file.originalname.split('.').reverse()[0])
             } else {
-              cb(null, req.body['user'].split('|')[2])
+              console.log('uid', uid + '.' + file.originalname.split('.').reverse()[0])
+              console.log('original', req.body['user'].split('|')[2])
+              // cb(null, req.body['user'].split('|')[2])
+              imageFileName = uid + '.' + file.originalname.split('.').reverse()[0]
+              cb(null, uid + '.' + file.originalname.split('.').reverse()[0])
             }
           }
         })
@@ -247,7 +254,7 @@ module.exports = function () {
           } else {
             data.error = false
             data.msg = process.env.HOST + ':' + process.env.PORT + '/' + image.file.path.replace('public/', '')
-            data.imageName = image.file.originalname
+            data.imageName = imageFileName
           }
           resolve(data)
         })

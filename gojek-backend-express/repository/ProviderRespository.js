@@ -41,7 +41,6 @@ module.exports = function () {
         .where({ Id: providerId })
         .select()
         .then((result) => {
-          
           if (result.length > 0) {
             output.error = false
             output.result = result
@@ -60,58 +59,56 @@ module.exports = function () {
     })
   }
 
-      this.fetchProviderDetails = (req) => {
-
+  this.fetchProviderDetails = (req) => {
     var output = {}
     if (req.CategoryId) {
-    return new Promise(function (resolve) {
-      var knex = new Knex(config)
+      return new Promise(function (resolve) {
+        var knex = new Knex(config)
         knex(provider).select('*')
-        .leftJoin(providerService, 'ProviderService.ProviderId', 'Provider.Id')
-        .where({ 'Provider.Id': req.providerId })
-        .then((result) => {
-          console.log(result)
-          if (result.length > 0) {
-            output.error = false
-            output.result = result
-          } else {
-            output.error = true
-          }
-          resolve(output)
-        })
-        .catch((err) => {
-          err.error = true
-          resolve(err)
-        })
-        .finally(() => {
-          knex.destroy()
-        })
-    })
+          .leftJoin(providerService, 'ProviderService.ProviderId', 'Provider.Id')
+          .where({ 'Provider.Id': req.providerId })
+          .then((result) => {
+            console.log(result)
+            if (result.length > 0) {
+              output.error = false
+              output.result = result
+            } else {
+              output.error = true
+            }
+            resolve(output)
+          })
+          .catch((err) => {
+            err.error = true
+            resolve(err)
+          })
+          .finally(() => {
+            knex.destroy()
+          })
+      })
     } else {
-          return new Promise(function (resolve) {
-      var knex = new Knex(config)
-      knex(provider)
-        .where({ Id: req.providerId })
-        .select()
-        .then((result) => {
-          if (result.length > 0) {
-            output.error = false
-            output.result = result
-          } else {
-            output.error = true
-          }
-          resolve(output)
-        })
-        .catch((err) => {
-          err.error = true
-          resolve(err)
-        })
-        .finally(() => {
-          knex.destroy()
-        })
-    })
+      return new Promise(function (resolve) {
+        var knex = new Knex(config)
+        knex(provider)
+          .where({ Id: req.providerId })
+          .select()
+          .then((result) => {
+            if (result.length > 0) {
+              output.error = false
+              output.result = result
+            } else {
+              output.error = true
+            }
+            resolve(output)
+          })
+          .catch((err) => {
+            err.error = true
+            resolve(err)
+          })
+          .finally(() => {
+            knex.destroy()
+          })
+      })
     }
-
   }
 
   this.fetchProvider = (data) => {
@@ -520,7 +517,7 @@ module.exports = function () {
           }
           resolve(output)
         }).catch((err) => {
-          console.log(err);
+          console.log(err)
           err.error = true
           resolve(err)
         })
@@ -530,7 +527,6 @@ module.exports = function () {
     })
   }
 
-  
   this.fetchDeliveryProviderByCellId = (data, cellID, blockList) => {
     var output = {}
     return new Promise(function (resolve) {
@@ -549,7 +545,7 @@ module.exports = function () {
           }
           resolve(output)
         }).catch((err) => {
-          console.log(err);
+          console.log(err)
           err.error = true
           resolve(err)
         })
@@ -760,7 +756,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(providerDocuments)
-        .select('DocTypeId', 'Status')
+        .select('DocTypeId', 'Status', 'file')
         .where({ ProviderId: providerId })
         .then((result) => {
           if (result.length > 0) {
@@ -1290,6 +1286,7 @@ module.exports = function () {
         .then((result) => {
           if (result.length > 0) {
             output.error = false
+            output.data = result
           } else {
             output.error = true
           }
@@ -1465,8 +1462,7 @@ module.exports = function () {
     })
   }
 
-
- this.getAddress = (data) => {
+  this.getAddress = (data) => {
     var response = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
@@ -1491,29 +1487,27 @@ module.exports = function () {
           knex.destroy()
         })
     })
-  } 
+  }
 
-
-this.getDistanceFromLatLonInKm = (lat1,lon1,lat2,lon2) => {
+  this.getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
     var response = {}
     return new Promise(function (resolve) {
+      var R = 6371 // Radius of the earth in km
+      var dLat = deg2rad(lat2 - lat1) // deg2rad below
+      var dLon = deg2rad(lon2 - lon1)
+      var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2)
 
-  var R = 6371; // Radius of the earth in km
-  var dLat = deg2rad(lat2-lat1);  // deg2rad below
-  var dLon = deg2rad(lon2-lon1); 
-  var a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2)
-    ; 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-  var d = R * c; // Distance in km
-  response.result = d;
-  // return d;
-})
-}
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+      var d = R * c // Distance in km
+      response.result = d
+      // return d;
+    })
+  }
 
-function deg2rad(deg) {
-  return deg * (Math.PI/180)
-}   
+  function deg2rad (deg) {
+    return deg * (Math.PI / 180)
+  }
 }

@@ -925,6 +925,8 @@ module.exports = function (server, validator) {
       .isLength({ min: 1, max: 255 }).withMessage('INVALID: $[1],Address 2'),
     validator.check('city')
       .isLength({ min: 1, max: 50 }).withMessage('INVALID: $[1],City'),
+    validator.check('zipCode')
+      .isLength({ min: 1, max: 50 }).withMessage('INVALID: $[1],zipCode'),
     validator.check('province')
       .isLength({ min: 1, max: 50 }).withMessage('INVALID: $[1],Province'),
     validator.check('landmark')

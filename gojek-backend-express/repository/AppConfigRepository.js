@@ -99,12 +99,12 @@ module.exports = function () {
       })
   }
 
-    this.currencySymbol = (callback) => {
+  this.currencySymbol = (callback) => {
     var response = {}
     var knex = new Knex(config)
     knex(country)
       .select()
-      .where('status','1')
+      .where('isDefault', '1')
       .then((result) => {
         if (result.length > 0) {
           response.error = false
@@ -115,6 +115,7 @@ module.exports = function () {
         callback(response)
       })
       .catch((err) => {
+        console.log(err)
         err.error = false
         callback(err)
       })

@@ -1,7 +1,6 @@
 module.exports = function (app, validator) {
   const basePath = '/api/admin'
   const ErrorHandler = require('../Utils/error')
-  const Common = require('../Utils/common')
   require('dotenv').config({ path: './../.env' })
   const AdminAppConfigCtrl = require('../controller/Admin/AdminAppConfigCtrl')
   const AdminAuthController = require('../controller/Admin/AdminAuthController')
@@ -1349,23 +1348,23 @@ module.exports = function (app, validator) {
     }
   })
   // // Admin Providers View
-  // app.get(`${basePath}/providerListView/:page`, app.adminauth, (req, res) => {
-  //   const lang = req.headers.lang
-  //   const error = validator.validation(req)
-  //   var limit = 10
-  //   var page = { page: req.params.page, limit: limit }
-  //   if (error.array().length) {
-  //     errorHandler.requestHandler(error.array(), true, lang, (message) => {
-  //       return res.send(message)
-  //     })
-  //   } else {
-  //     providersController.providerListPageViewCtrl(page, (result) => {
-  //       errorHandler.ctrlHandler([result], result.error, lang, (message) => {
-  //         return res.send(message)
-  //       })
-  //     })
-  //   }
-  // })
+  app.get(`${basePath}/providerListView/:page`, app.adminauth, (req, res) => {
+    const lang = req.headers.lang
+    const error = validator.validation(req)
+    var limit = 10
+    var page = { page: req.params.page, limit: limit }
+    if (error.array().length) {
+      errorHandler.requestHandler(error.array(), true, lang, (message) => {
+        return res.send(message)
+      })
+    } else {
+      providersController.providerListPageViewCtrl(page, (result) => {
+        errorHandler.ctrlHandler([result], result.error, lang, (message) => {
+          return res.send(message)
+        })
+      })
+    }
+  })
   // Admin Email Template Update
   app.post(`${basePath}/providerListView`, [
     validator.check('page').isLength({ min: 1, max: 50 })
@@ -3103,7 +3102,5 @@ module.exports = function (app, validator) {
         })
       })
     }
-  }) 
-
-
+  })
 }

@@ -1160,9 +1160,11 @@ module.exports = function () {
             return doc.DocTypeId === element.Id
           })
           var value = recentUploads.result.find((element1) => element.FieldName === element1.PaymentField)
+          console.log(value)
           doc['value'] = value ? value.Value : null
           doc['isApproved'] = compareDoc ? compareDoc.Status : 'new'
           doc['type'] = element.Type
+          doc['fileUrl'] = compareDoc ? compareDoc.file : null
           return doc
         })
         response.error = false
@@ -1751,7 +1753,22 @@ module.exports = function () {
       var addressInfo = await providerRespository.fetchProviderAddressInfo(provider)
       info.push({ info: 'Address', key: 'ADDRESS', isPending: addressInfo.error })
       var documentInfo = await providerRespository.fetchProviderDocumentInfo(provider)
-      info.push({ info: 'Document', key: 'DOCUMENT', isPending: documentInfo.error })
+      var documentType = documentInfo.error ? documentInfo : await providerRespository.fetchProviderDocList('provider')
+      if (documentType.error) {
+        info.push({ info: 'Document', key: 'DOCUMENT', isPending: documentInfo.error })
+      } else {
+        var documentState
+        var docList = documentType.result
+        var i
+        for (i = 0; i < docList.length; i++) {
+          var compareDoc = documentInfo.data.filter(doc => doc.DocTypeId === docList[i].id && doc.Status === 'approved')
+          if (compareDoc.length === 0) {
+            documentState = true
+            break
+          }
+        }
+        info.push({ info: 'Document', key: 'DOCUMENT', isPending: documentState })
+      }
       var bankInfo = await providerRespository.fetchProviderBankInfo(provider)
       info.push({ info: 'Bank', key: 'BANK', isPending: bankInfo.error })
       if (type === 'taxi') {
@@ -1790,7 +1807,7 @@ module.exports = function () {
         response.msg = 'NO_DATA'
       } else {
         var provider = providerList.result.map((element) => {
-            // var provider = providerList.result.forEach(value => {
+          // var provider = providerList.result.forEach(value => {
           var details = {}
           details.id = element.Id
           details.firstName = element.FirstName
