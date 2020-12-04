@@ -16,8 +16,6 @@ module.exports = function () {
   }
   var Knex = require('knex')
   const appslider = 'AppSlider'
-  // admin AppSLider
-  // Insert
   this.appSliderAdd = (data) => {
     var output = {}
     return new Promise(function (resolve) {

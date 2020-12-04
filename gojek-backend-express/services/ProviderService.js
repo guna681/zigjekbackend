@@ -1757,11 +1757,13 @@ module.exports = function () {
       if (documentType.error) {
         info.push({ info: 'Document', key: 'DOCUMENT', isPending: documentInfo.error })
       } else {
-        var documentState
+        var documentState = false
         var docList = documentType.result
         var i
+        console.log('docList', docList.length)
         for (i = 0; i < docList.length; i++) {
-          var compareDoc = documentInfo.data.filter(doc => doc.DocTypeId === docList[i].id && doc.Status === 'approved')
+          var compareDoc = documentInfo.data.filter(doc => doc.DocTypeId === docList[i].Id && doc.Status === 'approved')
+          console.log('compareDoc', compareDoc)
           if (compareDoc.length === 0) {
             documentState = true
             break
