@@ -221,7 +221,7 @@ module.exports = function () {
           knex.destroy()
         })
     })
-  } 
+  }
 
   this.deleteUser = (data) => {
     var output = {}

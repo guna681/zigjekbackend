@@ -811,6 +811,7 @@ module.exports = function () {
       }
       callback(response)
     } catch (err) {
+      console.log(err)
       err.error = true
       err.msg = 'OOPS'
       callback(err)

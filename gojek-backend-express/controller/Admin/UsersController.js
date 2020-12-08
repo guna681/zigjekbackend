@@ -5,7 +5,6 @@ module.exports = function () {
 
   var usersService = new UsersService();
   var common = new Common()
-
   this.usersListViewCtrl = (req, callback) => {
     var response = {}
     usersService.usersListViewService(req, (result) => {
@@ -104,7 +103,7 @@ module.exports = function () {
       }
       callback(response)
     })
-  } 
+  }
 
   this.deleteUserCtrl = (req, callback) => {
     var response = {}
@@ -119,5 +118,5 @@ module.exports = function () {
       }
       callback(response)
     })
-  }  
+  }
 }

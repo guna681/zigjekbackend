@@ -530,30 +530,30 @@ module.exports = function () {
         })
     })
   }
-  //CategoryListView with and without subcategory
-  this.CategoryListView2 =() => {
+  // CategoryListView with and without subcategory
+  this.CategoryListView2 = () => {
     var output = {}
-    return new Promise(function(resolve){
-      var knex=new Knex(config)
+    return new Promise(function (resolve) {
+      var knex = new Knex(config)
       knex(serviceCategory)
-      .where('Status','1')
-      .where('Type','SERVICE')
-      .then((result)=>{
-        if(result){
-          output.error=false
-          output.data=result
-        } else {
-          output.error=true
-        }
-        resolve(output)
-      })
-      .catch((err) =>{
-        err.error= true
-        err.data = null
-        resolve(err)
-      }).finally(()=>{
-        knex.destroy()
-      })
+        .where('Status', '1')
+        .where('Type', 'SERVICE')
+        .then((result) => {
+          if (result) {
+            output.error = false
+            output.data = result
+          } else {
+            output.error = true
+          }
+          resolve(output)
+        })
+        .catch((err) => {
+          err.error = true
+          err.data = null
+          resolve(err)
+        }).finally(() => {
+          knex.destroy()
+        })
     })
   }
 
@@ -574,8 +574,8 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
+          console.log(err)
           err.error = true
-          err.data = null
           resolve(err)
         }).finally(() => {
           knex.destroy()
