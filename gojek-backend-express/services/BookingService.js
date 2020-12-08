@@ -119,7 +119,7 @@ module.exports = function () {
     }
   }
 
-  this.getBookingWaitlist = (type, status , userId) => {
+  this.getBookingWaitlist = (type, status, userId) => {
     var response = {}
     return new Promise(async function (resolve) {
       try {
@@ -158,7 +158,6 @@ module.exports = function () {
     })
   }
 
-
   this.deliveryBookingDefaultHandler = async (callback) => {
     var response = {}
     try {
@@ -171,12 +170,12 @@ module.exports = function () {
       const type = ['delivery']
       var status = ['waiting', 'unassigned']
       var providerList
-      var providerId=123
-      var UserId=123
+      var providerId = 123
+      var UserId = 123
       var providerInfo
       var providerDetails = null
 
-      var waitingList = await bookingService.getDefaultBookingWaitlist(type, status,UserId) // new function
+      var waitingList = await bookingService.getDefaultBookingWaitlist(type, status, UserId) // new function
       if (waitingList.error) {
         response.error = true
         response.msg = waitingList.msg
@@ -187,7 +186,7 @@ module.exports = function () {
 
         bookingService.changeBookingStatus(bookingId, bookingProcess)
 
-        providerList = await providerService.getDefaultDeliveryProviderByCellId(source, activeProviderStatus, weights,providerId) // new function
+        providerList = await providerService.getDefaultDeliveryProviderByCellId(source, activeProviderStatus, weights, providerId) // new function
         if (providerList.error) {
           bookingService.changeBookingStatus(bookingId, bookingUnassigned)
           providerService.releaseProviderService(assignedList)
@@ -225,8 +224,7 @@ module.exports = function () {
     }
   }
 
-  
-  this.getDefaultBookingWaitlist = (type, status,UserId) => {
+  this.getDefaultBookingWaitlist = (type, status, UserId) => {
     var response = {}
     return new Promise(async function (resolve) {
       try {
@@ -298,9 +296,9 @@ module.exports = function () {
       condition.Id = data.bookingNo
       var status = data.action
       var message
-      if (data.isCurrentBooking){
+      if (data.isCurrentBooking) {
         console.log('&&*&&')
-        update.isCurrentBooking = 1;
+        update.isCurrentBooking = 1
       }
 
       if (status === 'accept') {
@@ -332,7 +330,7 @@ module.exports = function () {
         message = 'BOOKING_REJECT'
       }
       var booking = await bookingRepository.updateBookingState(condition, update)
-      console.log(booking,'***')
+      console.log(booking, '***')
       if (booking.error) {
         response.error = true
         response.msg = 'UPDATE_ERROR: $[1],booking status'
@@ -473,7 +471,7 @@ module.exports = function () {
     })
   }
 
-    this.getProviderBooking1 = async (providerId, status, type) => {
+  this.getProviderBooking1 = async (providerId, status, type) => {
     var response = {}
     return new Promise(async function (resolve) {
       try {
@@ -489,70 +487,67 @@ module.exports = function () {
         } else {
           var booking = bookingDetails.result.map(element => {
             var data = {}
-            if (element.Type == 'services'){
-
+            if (element.Type == 'services') {
               if (element.isCurrentBooking == 1) {
-            data['bookingId'] = element.Id
-            data['fromLocation'] = element.FromLocation
-            data['toLocation'] = element.ToLocation
-            data['sourceLat'] = element.SourceLat
-            data['sourceLong'] = element.SourceLong
-            data['destinyLat'] = element.DestinyLat
-            data['destinyLong'] = element.DestinyLong
-            data['type'] = element.Type
-            data['status'] = element.Status
-            data['startTime'] = common.timeStampFormatter(element.UpdateAt)
-            data['currentTime'] = common.timeStampFormatter(new Date())
-            data['outletId'] = element.outletId
-            data['serviceCategoryId'] = element.ServiceCategoryId
-            if (status.includes(element.Status)) {
-              data['paymentMode'] = element.PaymentMode
-              data['estimation'] = (element.CurrencyType + element.Estimation).toString()
-              data['userId'] = element.UserId
-            }
-              } else {
-
                 data['bookingId'] = element.Id
-            data['fromLocation'] = element.FromLocation
-            data['toLocation'] = element.ToLocation
-            data['sourceLat'] = element.SourceLat
-            data['sourceLong'] = element.SourceLong
-            data['destinyLat'] = element.DestinyLat
-            data['destinyLong'] = element.DestinyLong
-            data['type'] = element.Type
-            data['status'] = element.Status
-            data['startTime'] = common.timeStampFormatter(element.UpdateAt)
-            data['currentTime'] = common.timeStampFormatter(new Date())
-            data['outletId'] = element.outletId
-            data['serviceCategoryId'] = element.ServiceCategoryId
-            if (status.includes(element.Status)) {
-              data['paymentMode'] = element.PaymentMode
-              data['estimation'] = (element.CurrencyType + element.Estimation).toString()
-              data['userId'] = element.UserId
-            }
+                data['fromLocation'] = element.FromLocation
+                data['toLocation'] = element.ToLocation
+                data['sourceLat'] = element.SourceLat
+                data['sourceLong'] = element.SourceLong
+                data['destinyLat'] = element.DestinyLat
+                data['destinyLong'] = element.DestinyLong
+                data['type'] = element.Type
+                data['status'] = element.Status
+                data['startTime'] = common.timeStampFormatter(element.UpdateAt)
+                data['currentTime'] = common.timeStampFormatter(new Date())
+                data['outletId'] = element.outletId
+                data['serviceCategoryId'] = element.ServiceCategoryId
+                if (status.includes(element.Status)) {
+                  data['paymentMode'] = element.PaymentMode
+                  data['estimation'] = (element.CurrencyType + element.Estimation).toString()
+                  data['userId'] = element.UserId
+                }
+              } else {
+                data['bookingId'] = element.Id
+                data['fromLocation'] = element.FromLocation
+                data['toLocation'] = element.ToLocation
+                data['sourceLat'] = element.SourceLat
+                data['sourceLong'] = element.SourceLong
+                data['destinyLat'] = element.DestinyLat
+                data['destinyLong'] = element.DestinyLong
+                data['type'] = element.Type
+                data['status'] = element.Status
+                data['startTime'] = common.timeStampFormatter(element.UpdateAt)
+                data['currentTime'] = common.timeStampFormatter(new Date())
+                data['outletId'] = element.outletId
+                data['serviceCategoryId'] = element.ServiceCategoryId
+                if (status.includes(element.Status)) {
+                  data['paymentMode'] = element.PaymentMode
+                  data['estimation'] = (element.CurrencyType + element.Estimation).toString()
+                  data['userId'] = element.UserId
+                }
               }
-
             } else {
-             data['bookingId'] = element.Id
-            data['fromLocation'] = element.FromLocation
-            data['toLocation'] = element.ToLocation
-            data['sourceLat'] = element.SourceLat
-            data['sourceLong'] = element.SourceLong
-            data['destinyLat'] = element.DestinyLat
-            data['destinyLong'] = element.DestinyLong
-            data['type'] = element.Type
-            data['status'] = element.Status
-            data['startTime'] = common.timeStampFormatter(element.UpdateAt)
-            data['currentTime'] = common.timeStampFormatter(new Date())
-            data['outletId'] = element.outletId
-            data['serviceCategoryId'] = element.ServiceCategoryId
-            if (status.includes(element.Status)) {
-              data['paymentMode'] = element.PaymentMode
-              data['estimation'] = (element.CurrencyType + element.Estimation).toString()
-              data['userId'] = element.UserId
+              data['bookingId'] = element.Id
+              data['fromLocation'] = element.FromLocation
+              data['toLocation'] = element.ToLocation
+              data['sourceLat'] = element.SourceLat
+              data['sourceLong'] = element.SourceLong
+              data['destinyLat'] = element.DestinyLat
+              data['destinyLong'] = element.DestinyLong
+              data['type'] = element.Type
+              data['status'] = element.Status
+              data['startTime'] = common.timeStampFormatter(element.UpdateAt)
+              data['currentTime'] = common.timeStampFormatter(new Date())
+              data['outletId'] = element.outletId
+              data['serviceCategoryId'] = element.ServiceCategoryId
+              if (status.includes(element.Status)) {
+                data['paymentMode'] = element.PaymentMode
+                data['estimation'] = (element.CurrencyType + element.Estimation).toString()
+                data['userId'] = element.UserId
+              }
             }
-            }
-           
+
             return data
           })
           response.error = false
@@ -810,13 +805,13 @@ module.exports = function () {
     })
   }
 
-    this.codeTypeUpdate = (codType, bookingId) => {
-      console.log(codType);
+  this.codeTypeUpdate = (codType, bookingId) => {
+    console.log(codType)
     var response = {}
     return new Promise(async function (resolve) {
       try {
         var booking = await bookingRepository.updateCodType(codType, bookingId)
-        console.log(booking,'OUT')
+        console.log(booking, 'OUT')
         if (booking.error) {
           response.error = true
         } else {
@@ -1375,25 +1370,22 @@ module.exports = function () {
     })
   }
 
-
   this.checkBookingService = async (data) => {
     var response = {}
     return new Promise(async function (resolve) {
       try {
         var provider = await bookingRepository.getCurrentBooking(data)
-        // console.log(data.bookingNo);
-        // console.log(provider);
         if (provider.error) {
           response.error = true
           response.msg = 'UPDATE_ERROR: $[1],Provider Id'
         } else {
-          if (provider.result[0].Id == data.bookingNo) {
+          // if (provider.result[0].Id == data.bookingNo) {
           response.error = false
           response.msg = 'NEW_BOOKING'
-          } else {
-          response.error = true
-          response.msg = 'OLD_BOOKING'
-          }
+          // } else {
+          //   response.error = true
+          //   response.msg = 'OLD_BOOKING'
+          // }
         }
         console.log(response)
         resolve(response)
@@ -1403,5 +1395,4 @@ module.exports = function () {
       }
     })
   }
-
 }

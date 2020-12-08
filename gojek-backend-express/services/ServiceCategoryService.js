@@ -15,26 +15,26 @@ module.exports = function () {
         var serviceCategory = await serviceRepository.fetchServiceCategory()
         var appsliderPSelectSData = await serviceRepository.bannerAdsPageView()
         serviceTitle.result.map(element => {
-            if (element.Id == 4) {
-          var title = {}
-          var category = []
-          title.title = element.Title
-          title.color = element.Color
-          serviceCategory.result.filter(categories => {
-            var list = {}
-            if (element.Id) {
-              list.id = categories.Id
-              list.name = categories.Name
-              list.icon = categories.Icon
-              list.type = categories.Type
-              list.hasSubCategory = categories.HasSubCategory
-              list.isFixedPricing = categories.IsFixedPricing
-              category.push(list)
-            }
-          })
-          title.data = category
-          services.push(title)
-        }
+          if (element.Id == 4) {
+            var title = {}
+            var category = []
+            title.title = element.Title
+            title.color = element.Color
+            serviceCategory.result.filter(categories => {
+              var list = {}
+              if (element.Id) {
+                list.id = categories.Id
+                list.name = categories.Name
+                list.icon = categories.Icon
+                list.type = categories.Type
+                list.hasSubCategory = categories.HasSubCategory
+                list.isFixedPricing = categories.IsFixedPricing
+                category.push(list)
+              }
+            })
+            title.data = category
+            services.push(title)
+          }
         })
 
         var data = {}
@@ -135,25 +135,25 @@ module.exports = function () {
         serviceList = await serviceRepository.fetchServiceListing(data)
         serviceIds = serviceList.error ? [] : serviceList.result.map((element) => { return element.id })
       }
-      console.log(serviceIds,'serviceIds')
-       if (serviceIds == undefined) {
-console.log('in')
- response.error = true
-        response.msg = 'NO_DATA'
-      } else {
-console.log('out')
-var serviceImage = await serviceRepository.fetchServiceImages(serviceIds)
-      console.log(serviceImage)
-     
-      if (serviceList.error) {
+      console.log(serviceIds, 'serviceIds')
+      if (serviceIds == undefined) {
+        console.log('in')
         response.error = true
         response.msg = 'NO_DATA'
       } else {
-        var service = serviceList.result.map((element) => { element.serviceImage = serviceImage.result.filter((element1) => element.id === element1.serviceId); return element })
-        response.error = false
-        response.msg = 'VALID'
-        response.data = service
-      }
+        console.log('out')
+        var serviceImage = await serviceRepository.fetchServiceImages(serviceIds)
+        console.log(serviceImage)
+
+        if (serviceList.error) {
+          response.error = true
+          response.msg = 'NO_DATA'
+        } else {
+          var service = serviceList.result.map((element) => { element.serviceImage = serviceImage.result.filter((element1) => element.id === element1.serviceId); return element })
+          response.error = false
+          response.msg = 'VALID'
+          response.data = service
+        }
       }
       callback(response)
     } catch (err) {

@@ -1149,9 +1149,9 @@ module.exports = function () {
       var knex = new Knex(config)
       knex(booking)
         .select()
-        .where('ProviderId',data.auth.Id)
+        .where('ProviderId', data.auth.Id)
         .where('Booking.Type', 'services')
-        .whereNotIn('Status', ['cancelled','completed','reject'])
+        .whereNotIn('Status', ['cancelled', 'completed', 'reject'])
         .orderBy('CreateAt', 'asc')
         .limit(1)
         .then((result) => {
@@ -1172,5 +1172,4 @@ module.exports = function () {
         })
     })
   }
-
 }

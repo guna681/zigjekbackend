@@ -774,10 +774,10 @@ module.exports = function () {
       var image = JSON.parse(data.image)
       var resData = {
         categoryId: data.categoryId,
-        SubCategoryId: data.subCategoryId?data.subCategoryId:null,
+        SubCategoryId: data.subCategoryId ? data.subCategoryId : null,
         SubTitle: data.subTitle,
         Name: data.name,
-        Image: image[0]?image[0].Path:null,
+        Image: image[0] ? image[0].Path : null,
         Price: data.price,
         IsFixedPrice: data.isFixedPrice,
         PricePerHour: data.pricePerHour,
@@ -787,7 +787,7 @@ module.exports = function () {
         CurrencyType: process.env.CURRENCY,
         Description: data.description,
         Duration: data.duration,
-        commission:data.commission
+        commission: data.commission
       }
       var appsliderData = await servicesRepository.addServices(resData)
       if (appsliderData.error === false) {
