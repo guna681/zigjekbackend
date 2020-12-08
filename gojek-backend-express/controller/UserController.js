@@ -43,39 +43,39 @@ module.exports = function () {
 
   this.mobileValidation = (mobile, callback) => {
     if (process.env.ISTWILIO == '0') {
-    var response = {}
-    userService.checkUserExists(mobile, (result) => {
-      if (result.error) {
-        response.error = true
-        response.msg = result.msg
-      } else {
-        response.error = false
-        response.msg = result.msg
-        response.data = result.data
-      }
-      callback(response)
-    })
-    } else {
-          var response = {}
-    var name = 'user'
-    userService.checkUserExists(mobile, async (result) => {
-      var authtyperesult = await appConfigService.authTypeChecking(name)
-      if (result.error) {
-        if (authtyperesult.error) {
+      var response = {}
+      userService.checkUserExists(mobile, (result) => {
+        if (result.error) {
           response.error = true
-          response.msg = 'OOPS'
+          response.msg = result.msg
         } else {
-          if (authtyperesult.data['Value'] === 'OTP') {
-            common.sendOtpMobile(mobile.number, mobile.ext)
-            response.error = true
-            response.msg = result.msg
-          } else {
-            // common.sendOtpMobile(mobile.number, mobile.ext)
-            response.error = false
-            response.msg = result.msg
-          }
+          response.error = false
+          response.msg = result.msg
+          response.data = result.data
         }
-      } else {
+        callback(response)
+      })
+    } else {
+      var response = {}
+      var name = 'user'
+      userService.checkUserExists(mobile, async (result) => {
+        var authtyperesult = await appConfigService.authTypeChecking(name)
+        if (result.error) {
+          if (authtyperesult.error) {
+            response.error = true
+            response.msg = 'OOPS'
+          } else {
+            if (authtyperesult.data['Value'] === 'OTP') {
+              common.sendOtpMobile(mobile.number, mobile.ext)
+              response.error = true
+              response.msg = result.msg
+            } else {
+            // common.sendOtpMobile(mobile.number, mobile.ext)
+              response.error = false
+              response.msg = result.msg
+            }
+          }
+        } else {
         // if (authtyperesult.error) {
         //   response.error = true
         //   response.msg = 'OOPS'
@@ -89,10 +89,9 @@ module.exports = function () {
             response.msg = result.msg
           }
         // }
-      }
-      callback(response)
-    })
-
+        }
+        callback(response)
+      })
     }
   }
 
@@ -174,72 +173,70 @@ module.exports = function () {
     var ext = req.countryCode
     if (process.env.ISTWILIO == '0') {
     // var otpResendMobile = await common.sendOtpMobile(mobile, ext)
-    var otpResendMobile = false
-    if (otpResendMobile) {
-      response.error = true
-      response.msg = 'OTP_FAIL'
+      var otpResendMobile = false
+      if (otpResendMobile) {
+        response.error = true
+        response.msg = 'OTP_FAIL'
+      } else {
+        response.error = false
+        response.msg = 'OTP_SENT'
+      }
+      callback(response)
     } else {
-      response.error = false
-      response.msg = 'OTP_SENT'
+      common.sendOtpMobile(req.mobile, req.countryCode)
+      // var otpResendMobile = await common.sendOtpMobile(mobile, ext)
+      var otpResendMobile = false
+      if (otpResendMobile) {
+        response.error = true
+        response.msg = 'OTP_FAIL'
+      } else {
+        response.error = false
+        response.msg = 'OTP_SENT'
+      }
+      callback(response)
     }
-    callback(response)
-  } else {
-        common.sendOtpMobile(req.mobile, req.countryCode)
-    // var otpResendMobile = await common.sendOtpMobile(mobile, ext)
-    var otpResendMobile = false
-    if (otpResendMobile) {
-      response.error = true
-      response.msg = 'OTP_FAIL'
-    } else {
-      response.error = false
-      response.msg = 'OTP_SENT'
-    }
-    callback(response)
-}
-}
+  }
 
   this.otpValidate = async (req, callback) => {
     var response = {}
     var data = req
     if (process.env.ISTWILIO == '0') {
-    userService.verifyOTP(data, (result) => {
-      if (result.error) {
-        response.error = true
-        response.msg = result.msg
-      } else {
-        response.error = false
-        response.msg = result.msg
-        response.data = result.data
-      }
-      callback(response)
-    })
-   
-} else {
-   var otpVerifynumber = await common.otpVerify(data.mobile, data.countryCode, data.otp)
-    if (otpVerifynumber.error) {
-      response.error = true
-      response.msg = 'OTP_VERIFY'
-      callback(response)
+      userService.verifyOTP(data, (result) => {
+        if (result.error) {
+          response.error = true
+          response.msg = result.msg
+        } else {
+          response.error = false
+          response.msg = result.msg
+          response.data = result.data
+        }
+        callback(response)
+      })
     } else {
+      var otpVerifynumber = await common.otpVerify(data.mobile, data.countryCode, data.otp)
+      if (otpVerifynumber.error) {
+        response.error = true
+        response.msg = 'OTP_VERIFY'
+        callback(response)
+      } else {
       //  response.error = false
       // response.msg = 'OTP'
       // callback(response)
-      data.otp = '1234'
-    userService.verifyOTP(data, (result) => {
-      if (result.error) {
-        response.error = true
-        response.msg = result.msg
-      } else {
-        response.error = false
-        response.msg = result.msg
-        response.data = result.data
+        data.otp = '1234'
+        userService.verifyOTP(data, (result) => {
+          if (result.error) {
+            response.error = true
+            response.msg = result.msg
+          } else {
+            response.error = false
+            response.msg = result.msg
+            response.data = result.data
+          }
+          callback(response)
+        })
       }
-      callback(response)
-    })
     }
   }
-
-}
 
   this.pwdValidate = (req, callback) => {
     var response = {}
@@ -262,31 +259,30 @@ module.exports = function () {
     var response = {}
     var data = req
     if (process.env.ISTWILIO == '0') {
-    userService.generateForgotOtp(data, (result) => {
-      if (result.error) {
-        response.error = true
-        response.msg = result.msg
-      } else {
-        response.error = false
-        response.msg = result.msg
-      }
-      callback(response)
-    })
-  } else {
-        userService.generateForgotOtp(data, (result) => {
-      if (result.error) {
-        response.error = true
-        response.msg = result.msg
-      } else {
-        common.sendOtpMobile(req.mobile, req.countryCode)
-        response.error = false
-        response.msg = result.msg
-      }
-      callback(response)
-    })
-
+      userService.generateForgotOtp(data, (result) => {
+        if (result.error) {
+          response.error = true
+          response.msg = result.msg
+        } else {
+          response.error = false
+          response.msg = result.msg
+        }
+        callback(response)
+      })
+    } else {
+      userService.generateForgotOtp(data, (result) => {
+        if (result.error) {
+          response.error = true
+          response.msg = result.msg
+        } else {
+          common.sendOtpMobile(req.mobile, req.countryCode)
+          response.error = false
+          response.msg = result.msg
+        }
+        callback(response)
+      })
+    }
   }
-}
 
   this.UpdatePwd = (req, callback) => {
     var response = {}
@@ -1052,7 +1048,7 @@ module.exports = function () {
         data = { SubCategoryId: req.subCategoryId }
       }
       var page = req.page
-      providerService.getProviderListByService(data, page,req.auth, (result) => {
+      providerService.getProviderListByService(data, page, req.auth, (result) => {
         if (result.error) {
           response.error = true
           response.msg = result.msg
@@ -1061,7 +1057,7 @@ module.exports = function () {
           response.msg = result.msg
           response.data = result.data
         }
-        console.log(response,'response');
+        console.log(response, 'response')
         callback(response)
       })
     } catch (err) {

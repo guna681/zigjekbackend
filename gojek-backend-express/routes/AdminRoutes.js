@@ -3058,9 +3058,9 @@ module.exports = function (app, validator) {
         })
       })
     }
-  })  
+  })
 
- app.post(`${basePath}/disableProvider`, [
+  app.post(`${basePath}/disableProvider`, [
     validator.check('Id').trim().isLength({ min: 1 })
       .withMessage('INVALID: $[1],id'),
     validator.check('isDisable').trim().isLength({ min: 1 })

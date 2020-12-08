@@ -495,14 +495,14 @@ module.exports = function () {
         })
     })
   }
-  
- this.disableProvider = (data) => {
+
+  this.disableProvider = (data) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(provider)
-        .where('Id',data.Id)
-        .update('isDisable',data.isDisable)
+        .where('Id', data.Id)
+        .update('isDisable', data.isDisable)
         .then((result) => {
           if (result) {
             output.error = false
@@ -527,8 +527,8 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(provider)
-        .where('Id',data.Id)
-        .update('isDeleted',data.isDeleted)
+        .where('Id', data.Id)
+        .update('isDeleted', data.isDeleted)
         .then((result) => {
           if (result) {
             output.error = false
@@ -547,5 +547,4 @@ module.exports = function () {
         })
     })
   }
-  
 }

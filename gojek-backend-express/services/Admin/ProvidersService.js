@@ -14,13 +14,13 @@ module.exports = function () {
       var providersCount = await providersRepository.providersListCount(data)
       var providersListSData = await providersRepository.providersPageListView(data)
       if (providersListSData.error === false && providersCount.error === false) {
-            if (process.env.SECURECHANGER == '1') {
-        providersListSData.data.forEach((j, index) => {
-          var resultdata = common.secureChangerList(j.Email, j.Mobile)
-          j.Mobile = resultdata['mobile']
-          j.Email = resultdata['email']
-        })
-    }
+        if (process.env.SECURECHANGER == '1') {
+          providersListSData.data.forEach((j, index) => {
+            var resultdata = common.secureChangerList(j.Email, j.Mobile)
+            j.Mobile = resultdata['mobile']
+            j.Email = resultdata['email']
+          })
+        }
         var result = []
         result.push({ data: providersListSData.data }, { Count: providersCount.data[0].count })
         response.error = false
@@ -146,25 +146,25 @@ module.exports = function () {
     try {
       var providersCount = await providersRepository.providersPushNotificationListCount1(data)
       var providersListSData = await providersRepository.providersPushNotificationListView(data)
-	  //providersCount=await providersRepository.providersPushNotificationListCount1(data)
+	  // providersCount=await providersRepository.providersPushNotificationListCount1(data)
       if (providersListSData.error === false && providersCount.error === false) {
-            if (process.env.SECURECHANGER == '1') {  
-        providersListSData.data.forEach((j, index) => {
-          var resultdata = common.secureChangerList(j.Email, j.Mobile)
-          j.Mobile = resultdata['mobile']
-          j.Email = resultdata['email']
-          resresult.push({ Id: j.Id,
-            FirstName: j.FirstName,
-            LastName: j.LastName,
-            Image: j.Image,
-            Mobile: j.Mobile,
-            Latitude: j.Latitude,
-            Longitude: j.Longitude,
-            Bearing: j.Bearing })
-        })
-    }
+        if (process.env.SECURECHANGER == '1') {
+          providersListSData.data.forEach((j, index) => {
+            var resultdata = common.secureChangerList(j.Email, j.Mobile)
+            j.Mobile = resultdata['mobile']
+            j.Email = resultdata['email']
+            resresult.push({ Id: j.Id,
+              FirstName: j.FirstName,
+              LastName: j.LastName,
+              Image: j.Image,
+              Mobile: j.Mobile,
+              Latitude: j.Latitude,
+              Longitude: j.Longitude,
+              Bearing: j.Bearing })
+          })
+        }
         var result = []
-		result.push({ data: providersListSData.data }, { Count: providersCount.data[0].count })
+        result.push({ data: providersListSData.data }, { Count: providersCount.data[0].count })
         response.error = false
         response.data = result
         response.msg = 'VALID'
@@ -240,14 +240,14 @@ module.exports = function () {
     try {
       var providerdetailsData = await providersRepository.getProviderView(data)
       if (providerdetailsData.error === false) {
-            if (process.env.SECURECHANGER == '1') {
-        var providerResult = common.secureChangerList(providerdetailsData.data[0].Email, providerdetailsData.data[0].Mobile)
-        providerdetailsData.data[0].Email = providerResult['email']
-        providerdetailsData.data[0].Mobile = providerResult['mobile']
-        response.data = providerdetailsData.data[0]
-      } else {
-        response.data = providerdetailsData.data[0]
-      }
+        if (process.env.SECURECHANGER == '1') {
+          var providerResult = common.secureChangerList(providerdetailsData.data[0].Email, providerdetailsData.data[0].Mobile)
+          providerdetailsData.data[0].Email = providerResult['email']
+          providerdetailsData.data[0].Mobile = providerResult['mobile']
+          response.data = providerdetailsData.data[0]
+        } else {
+          response.data = providerdetailsData.data[0]
+        }
         response.error = false
         response.msg = 'VALID'
       } else {
@@ -362,7 +362,7 @@ module.exports = function () {
     }
   }
 
-    this.disableProviderService = async (data, callback) => {
+  this.disableProviderService = async (data, callback) => {
     var response = {}
     try {
       var providervehicledocdetailsData = await providersRepository.disableProvider(data)
@@ -381,7 +381,6 @@ module.exports = function () {
       callback(err)
     }
   }
-
 
   this.deleteProviderService = async (data, callback) => {
     var response = {}
@@ -402,6 +401,6 @@ module.exports = function () {
       err.msg = 'OOPS'
       callback(err)
     }
-  } 
+  }
 
 }
