@@ -36,7 +36,11 @@ module.exports = function () {
       check.Ext = mobile.ext
       await userRepository.delOtp(check)
       check.OTP = common.generateOTP()
-      var user = await userRepository.validateUser(mobile)
+      var userInfo = {}
+      userInfo.number = mobile.number
+      userInfo.ext = mobile.ext
+      userInfo.isDeleted = '0'
+      var user = await userRepository.validateUser(userInfo)
       if (user.error) {
         check.Type = 'register'
         await userRepository.addOtp(check)

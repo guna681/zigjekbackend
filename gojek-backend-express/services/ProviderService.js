@@ -37,6 +37,7 @@ module.exports = function () {
       var condition = {}
       condition.Mobile = data.number
       condition.ExtCode = data.ext
+      condition.isDeleted = '0'
       var provider = await providerRespository.fetchProvider(condition)
 
       var providerOtp = {}

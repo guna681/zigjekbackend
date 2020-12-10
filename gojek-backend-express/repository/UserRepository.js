@@ -56,6 +56,7 @@ module.exports = function () {
         .select('Mobile', 'ExtCode', 'Language')
         .where('Mobile', data.number)
         .where('ExtCode', data.ext)
+        .where('isDeleted', data.isDeleted)
         .then((result) => {
           if (result.length > 0) {
             response.error = false
