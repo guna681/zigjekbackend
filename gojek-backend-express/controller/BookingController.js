@@ -11,7 +11,6 @@ module.exports = function () {
   const AdminAppConfigRepository = require('../repository/Admin/AdminAppConfigRepository')
   const BookingRepository = require('../repository/BookingRepository')
 
-
   var pushNotification = new PushNotification()
   var paymentHelper = new PaymentHelper()
   var bookingService = new BookingService()
@@ -22,7 +21,7 @@ module.exports = function () {
   var transactionService = new TransactionService()
   var bookingRepository = new BookingRepository()
   var common = new Common()
-  var adminAppConfigRepository = new AdminAppConfigRepository();
+  var adminAppConfigRepository = new AdminAppConfigRepository()
 
 
   this.getAvailabeRide = (req, callback) => {
@@ -98,46 +97,46 @@ module.exports = function () {
           content.title = 'Trip has started'
           content.body = 'Your trip has been started. Have a safe journey'
         } else if (data.action === 'complete') {
-          console.log('complete',data.type)
+          console.log('complete', data.type)
           // if (data.type == 'delivery') {
           // console.log('delivery')
-             var condition = {}
-      condition.Id = data.bookingNo
-      var booking = await bookingService.getBookingInfo(condition)
-        var bookingInfo = booking.data[0]
-        if (bookingInfo.RideName == 'Food Delivery') {
-        var adminCommission = await bookingRepository.selectOutlet(bookingInfo.outletId)
-        console.log(adminCommission.result[0].restaurantCommission,'****')
+          var condition = {}
+          condition.Id = data.bookingNo
+          var booking = await bookingService.getBookingInfo(condition)
+          var bookingInfo = booking.data[0]
+          if (bookingInfo.RideName == 'Food Delivery') {
+            var adminCommission = await bookingRepository.selectOutlet(bookingInfo.outletId)
+            console.log(adminCommission.result[0].restaurantCommission, '****')
 
-        var adminEarning = bookingInfo.TotalAmount/adminCommission.result[0].restaurantCommission
-        console.log(adminEarning,'adminEarning', bookingInfo.ProviderEarning)
-        var sum = +bookingInfo.ProviderEarning + +adminEarning
-        console.log(sum,'sum')
-        var outletEarning = bookingInfo.TotalAmount - sum
-// console.log(outletEarning,'outletEarning')
-// console.log(adminEarning,'adminEarning')
+            var adminEarning = bookingInfo.TotalAmount / adminCommission.result[0].restaurantCommission
+            console.log(adminEarning, 'adminEarning', bookingInfo.ProviderEarning)
+            var sum = +bookingInfo.ProviderEarning + +adminEarning
+            console.log(sum, 'sum')
+            var outletEarning = bookingInfo.TotalAmount - sum
+            // console.log(outletEarning,'outletEarning')
+            // console.log(adminEarning,'adminEarning')
 
-          var earningCondition = {}
-        earningCondition.id = bookingInfo.outletId
-        var earningData = {}
-        earningData.outletEarning = outletEarning
+            var earningCondition = {}
+            earningCondition.id = bookingInfo.outletId
+            var earningData = {}
+            earningData.outletEarning = outletEarning
 
-        var adminEarningData = {}
-        adminEarningData.adminEarning = adminEarning
-        console.log(adminEarningData,'adminEarning')
-        
-        var booking = await bookingRepository.updateOutletEarning(earningCondition, earningData)
-        console.log(booking,'booking')
-        var updateBookingEarningData = {}
-        updateBookingEarningData.id = data.bookingNo
-        updateBookingEarningData.outletEarning = outletEarning
-        updateBookingEarningData.adminEarning = adminEarning
-        var updateadminEarning = await bookingRepository.updateAdminEarning(adminEarningData)
-        console.log(updateadminEarning,'updateadminEarning')
+            var adminEarningData = {}
+            adminEarningData.adminEarning = adminEarning
+            console.log(adminEarningData, 'adminEarning')
 
-        var updateBookingEarning = await bookingRepository.updateBookingEarning(updateBookingEarningData)
-        }
-        
+            var booking = await bookingRepository.updateOutletEarning(earningCondition, earningData)
+            console.log(booking, 'booking')
+            var updateBookingEarningData = {}
+            updateBookingEarningData.id = data.bookingNo
+            updateBookingEarningData.outletEarning = outletEarning
+            updateBookingEarningData.adminEarning = adminEarning
+            var updateadminEarning = await bookingRepository.updateAdminEarning(adminEarningData)
+            console.log(updateadminEarning, 'updateadminEarning')
+
+            var updateBookingEarning = await bookingRepository.updateBookingEarning(updateBookingEarningData)
+          }
+
 
           // }
           content.data = 'payment_completed'
@@ -162,9 +161,9 @@ module.exports = function () {
             if (!providerWallet.error) {
               providerWalletInfo.type = 'debit'
               if (result.data[0].rideName == null) {
-              providerWalletInfo.description = 'Credit to wallet Service'
+                providerWalletInfo.description = 'Credit to wallet Service'
               } else {
-              providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
+                providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
               }
               providerTnx = await transactionService.createTransaction(providerWalletInfo)
             }
@@ -177,9 +176,9 @@ module.exports = function () {
             userWalletInfo.type = 'debit'
             if (result.data[0].rideName == null) {
               providerWalletInfo.description = 'Credit to wallet Service'
-              } else {
+            } else {
               providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
-              }
+            }
             var userTnx = await transactionService.createTransaction(userWalletInfo)
             if (!userTnx.error) {
               var userTnxStatus = {}
@@ -195,9 +194,9 @@ module.exports = function () {
               walletService.creditWalletService(providerWalletInfo)
               providerWalletInfo.type = 'credit'
               if (result.data[0].rideName == null) {
-              providerWalletInfo.description = 'Credit to wallet Service'
+                providerWalletInfo.description = 'Credit to wallet Service'
               } else {
-              providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
+                providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
               }
               providerTnx = await transactionService.createTransaction(providerWalletInfo)
               if (!providerTnx.error) {
@@ -221,9 +220,9 @@ module.exports = function () {
               walletService.creditWalletService(providerWalletInfo)
               providerWalletInfo.type = 'credit'
               if (result.data[0].rideName == null) {
-              providerWalletInfo.description = 'Credit to wallet Service'
+                providerWalletInfo.description = 'Credit to wallet Service'
               } else {
-              providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
+                providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
               }
               providerTnx = transactionService.createTransaction(providerWalletInfo)
 
@@ -235,7 +234,7 @@ module.exports = function () {
               }
             }
           } else if (data.codType === 'cardOnDelivery') {
-             providerWalletInfo = {}
+            providerWalletInfo = {}
             providerWalletInfo.userId = providerId
             providerWalletInfo.userType = 'provider'
             var appconfigPSelectSData = await adminAppConfigRepository.appConfigPageView()
@@ -245,9 +244,9 @@ module.exports = function () {
             if (!providerWallet.error) {
               providerWalletInfo.type = 'debit'
               if (result.data[0].rideName == null) {
-              providerWalletInfo.description = 'Credit to wallet Service'
+                providerWalletInfo.description = 'Credit to wallet Service'
               } else {
-              providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
+                providerWalletInfo.description = 'Credit to wallet - ' + result.data[0].rideName
               }
               providerTnx = await transactionService.createTransaction(providerWalletInfo)
             }
@@ -306,7 +305,7 @@ module.exports = function () {
         }
       ]
       var waitingList = await bookingService.getBookingWaitlist(type, status)
-      console.log('waitingList-test',waitingList);
+      console.log('waitingList-test', waitingList)
      
       if (waitingList.error) {
         response.error = true
@@ -325,9 +324,9 @@ module.exports = function () {
         var mergeProviderBlockList = blockList.concat(assignedList)
         let providerBlockList = (List) => List.filter((key, value) => List.indexOf(key) === value)
         bookingService.changeBookingStatus(bookingId, bookingProcess)
-       
+
         providerList = await providerService.getActiveProviderByCellId(source, neighbouringCellID, rideType, activeProviderStatus, weights, providerBlockList(mergeProviderBlockList))
-       
+
         if (providerList.error) {
           content.data = 'booking_cancelled'
           content.title = 'Booking Cancelled'
@@ -370,65 +369,64 @@ module.exports = function () {
     }
   }
 
-
   this.taxiBookingDefaultHandler = async () => {
     var response = {}
-       return new Promise(async function (resolve) {
-    try {
-      var content = {}
-      const bookingProcess = 'processing'
-      const bookingAssigned = 'assigned'
-      const bookingCancel = 'cancelled'
-      const blockProviderStatus = 'blocked'
-      const activeProviderStatus = 'active'
-      const type = ['taxi']
-      var status = ['waiting']
-      var providerList
-      var providerId=326
-      var UserId=334
-      var userDeviceInfo
-      var providerInfo
-      var providerDetails = null
-      const weights = [
-        {
-          key: 'distance',
-          value: -5
-        },
-        {
-          key: 'duration',
-          value: -4
-        },
-        {
-          key: 'review',
-          value: 7
-        },
-        {
-          key: 'tripCount',
-          value: -3
-        }
-      ]
-      var waitingList = await bookingService.getDefaultBookingWaitlist(type, status,UserId) // new function
-      // console.log('waitingList',waitingList);
-      if (waitingList.error) {
-        response.error = true
-        response.msg = waitingList.msg
-      } else {
-        var booking = waitingList.data[0]
-        var bookingId = booking.id
-        var cellId = booking.cellId
-        var blockList = booking.blockList === null ? [] : booking.blockList
-        var assignedList = booking.assignedList === null ? [] : booking.assignedList
-        var rideType = booking.rideId
-        var source = [booking.lat + ',' + booking.lng]
-        var neighbouringS2CellID = await common.getNeighborsUsingS2Key(booking.lat, booking.lng)
-        var neighbouringCellID = neighbouringS2CellID.key
-        neighbouringCellID.push(cellId)
-        var mergeProviderBlockList = blockList.concat(assignedList)
-        let providerBlockList = (List) => List.filter((key, value) => List.indexOf(key) === value)
-        bookingService.changeBookingStatus(bookingId, bookingProcess)
+    return new Promise(async function (resolve) {
+      try {
+        var content = {}
+        const bookingProcess = 'processing'
+        const bookingAssigned = 'assigned'
+        const bookingCancel = 'cancelled'
+        const blockProviderStatus = 'blocked'
+        const activeProviderStatus = 'active'
+        const type = ['taxi']
+        var status = ['waiting']
+        var providerList
+        var providerId = 326
+        var UserId = 334
+        var userDeviceInfo
+        var providerInfo
+        var providerDetails = null
+        const weights = [
+          {
+            key: 'distance',
+            value: -5
+          },
+          {
+            key: 'duration',
+            value: -4
+          },
+          {
+            key: 'review',
+            value: 7
+          },
+          {
+            key: 'tripCount',
+            value: -3
+          }
+        ]
+        var waitingList = await bookingService.getDefaultBookingWaitlist(type, status, UserId) // new function
+        // console.log('waitingList',waitingList);
+        if (waitingList.error) {
+          response.error = true
+          response.msg = waitingList.msg
+        } else {
+          var booking = waitingList.data[0]
+          var bookingId = booking.id
+          var cellId = booking.cellId
+          var blockList = booking.blockList === null ? [] : booking.blockList
+          var assignedList = booking.assignedList === null ? [] : booking.assignedList
+          var rideType = booking.rideId
+          var source = [booking.lat + ',' + booking.lng]
+          var neighbouringS2CellID = await common.getNeighborsUsingS2Key(booking.lat, booking.lng)
+          var neighbouringCellID = neighbouringS2CellID.key
+          neighbouringCellID.push(cellId)
+          var mergeProviderBlockList = blockList.concat(assignedList)
+          let providerBlockList = (List) => List.filter((key, value) => List.indexOf(key) === value)
+          bookingService.changeBookingStatus(bookingId, bookingProcess)
 
-        providerList = await providerService.getDefaultDeliveryProviderByCellId(source, activeProviderStatus, weights,providerId,0) // new function
-        console.log('providerList',providerList);
+          providerList = await providerService.getDefaultDeliveryProviderByCellId(source, activeProviderStatus, weights, providerId, 0) // new function
+          console.log('providerList', providerList)
         if (providerList.error) {
           // content.data = 'booking_cancelled'
           // content.title = 'Booking Cancelled'
@@ -439,134 +437,131 @@ module.exports = function () {
           // providerService.releaseProviderService(assignedList)
           // response.error = true
           // response.msg = providerList.msg
-        } else {
-          var providerId = providerList.data[0].ProviderId
-          providerInfo = await providerService.getProviderInfo(providerId)
-          if (!providerInfo.error) {
-            providerDetails = providerInfo.data
+          } else {
+            var providerId = providerList.data[0].ProviderId
+            providerInfo = await providerService.getProviderInfo(providerId)
+            if (!providerInfo.error) {
+              providerDetails = providerInfo.data
+            }
           }
+          var assign = await bookingService.updateProviderInBooking(bookingId, providerId, providerDetails)
+          content.data = 'incoming_booking'
+          content.title = 'Booking Alert'
+          content.body = 'You have new booking request'
+          content.orderId = JSON.stringify(bookingId)
+          var providerToken = await providerService.getProivderMessageToken(providerId)
+          pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default')
+          providerService.providerLocationStatusUpdate(providerId, blockProviderStatus)
+          bookingService.changeBookingStatus(bookingId, bookingAssigned)
+          var providerUnblockList = assignedList.indexOf(providerId)
+          if (providerUnblockList > -1) {
+            assignedList.splice(providerList, 1)
+          }
+          providerService.releaseProviderService(assignedList)
+          response.error = false
+          response.msg = assign.msg
         }
-        var assign = await bookingService.updateProviderInBooking(bookingId, providerId, providerDetails)
-        content.data = 'incoming_booking'
-        content.title = 'Booking Alert'
-        content.body = 'You have new booking request'
-        content.orderId = JSON.stringify(bookingId)
-        var providerToken = await providerService.getProivderMessageToken(providerId)
-        pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default')
-        providerService.providerLocationStatusUpdate(providerId, blockProviderStatus)
-        bookingService.changeBookingStatus(bookingId, bookingAssigned)
-        var providerUnblockList = assignedList.indexOf(providerId)
-        if (providerUnblockList > -1) {
-          assignedList.splice(providerList, 1)
-        }
-        providerService.releaseProviderService(assignedList)
-        response.error = false
-        response.msg = assign.msg
-      }
-      resolve(response)
-    } catch (err) {
-      err.error = true
-      err.msg = 'OOPS'
+        resolve(response)
+      } catch (err) {
+        err.error = true
+        err.msg = 'OOPS'
       // callback(err)
-    }
-  });
+      }
+    })
   }
-
 
   this.deliveryBookingDefaultHandler = async () => {
     var response = {}
     return new Promise(async function (resolve) {
-    try {
-      var content = {}
-      const bookingProcess = 'processing'
-      const bookingAssigned = 'assigned'
-      const blockProviderStatus = 'blocked'
-      const activeProviderStatus = 'active'
-      const bookingUnassigned = 'unassigned'
-      const type = ['delivery']
-      var status = ['waiting', 'unassigned']
-      var providerList
-      var providerId=326
-      var UserId=334
-      var providerInfo
-      var providerDetails = null
-      const weights = [
-        {
-          key: 'distance',
-          value: -5
-        },
-        {
-          key: 'duration',
-          value: -4
-        },
-        {
-          key: 'review',
-          value: 7
-        },
-        {
-          key: 'tripCount',
-          value: -3
-        }
-      ]
-      var waitingList = await bookingService.getDefaultBookingWaitlist(type, status,UserId) // new function
-      // console.log('waitingList',waitingList);
-      if (waitingList.error) {
-        response.error = true
-        response.msg = waitingList.msg
-      } else {
-        var booking = waitingList.data[0]
-        var bookingId = booking.id
-        var assignedList = booking.assignedList === null ? [] : booking.assignedList
-        var source = [booking.lat + ',' + booking.lng]
-        bookingService.changeBookingStatus(bookingId, bookingProcess)
-
-        providerList = await providerService.getDefaultDeliveryProviderByCellId(source, activeProviderStatus, weights,providerId,1) // new function
-        // console.log('providerList',providerList);
-        if (providerList.error) {
-          bookingService.changeBookingStatus(bookingId, bookingUnassigned)
-          providerService.releaseProviderService(assignedList)
-          response.error = true
-          response.msg = providerList.msg
-        } else {
-          providerId = providerList.data[0].ProviderId
-          providerInfo = await providerService.getProviderInfo(providerId)
-          if (!providerInfo.error) {
-            providerDetails = providerInfo.data
+      try {
+        var content = {}
+        const bookingProcess = 'processing'
+        const bookingAssigned = 'assigned'
+        const blockProviderStatus = 'blocked'
+        const activeProviderStatus = 'active'
+        const bookingUnassigned = 'unassigned'
+        const type = ['delivery']
+        var status = ['waiting', 'unassigned']
+        var providerList
+        var providerId = 326
+        var UserId = 334
+        var providerInfo
+        var providerDetails = null
+        const weights = [
+          {
+            key: 'distance',
+            value: -5
+          },
+          {
+            key: 'duration',
+            value: -4
+          },
+          {
+            key: 'review',
+            value: 7
+          },
+          {
+            key: 'tripCount',
+            value: -3
           }
-        }
-        var assign = await bookingService.updateProviderInBooking(bookingId, providerId, providerDetails)
-        console.log('providerList',assign);
+        ]
+        var waitingList = await bookingService.getDefaultBookingWaitlist(type, status, UserId) // new function
+        // console.log('waitingList',waitingList);
+        if (waitingList.error) {
+          response.error = true
+          response.msg = waitingList.msg
+        } else {
+          var booking = waitingList.data[0]
+          var bookingId = booking.id
+          var assignedList = booking.assignedList === null ? [] : booking.assignedList
+          var source = [booking.lat + ',' + booking.lng]
+          bookingService.changeBookingStatus(bookingId, bookingProcess)
+
+          providerList = await providerService.getDefaultDeliveryProviderByCellId(source, activeProviderStatus, weights, providerId, 1) // new function
+          // console.log('providerList',providerList);
+          if (providerList.error) {
+            bookingService.changeBookingStatus(bookingId, bookingUnassigned)
+            providerService.releaseProviderService(assignedList)
+            response.error = true
+            response.msg = providerList.msg
+          } else {
+            providerId = providerList.data[0].ProviderId
+            providerInfo = await providerService.getProviderInfo(providerId)
+            if (!providerInfo.error) {
+              providerDetails = providerInfo.data
+            }
+          }
+          var assign = await bookingService.updateProviderInBooking(bookingId, providerId, providerDetails)
+          console.log('providerList', assign)
         content.data = 'incoming_booking'
-        content.title = 'Booking Alert'
-        content.body = 'You have new booking request'
-        content.orderId = JSON.stringify(bookingId)
-        var providerToken = await providerService.getProivderMessageToken(providerId)
-        pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default')
-        providerService.providerLocationStatusUpdate(providerId, blockProviderStatus)
-        bookingService.changeBookingStatus(bookingId, bookingAssigned)
-        var providerUnblockList = assignedList.indexOf(providerId)
-        if (providerUnblockList > -1) {
-          assignedList.splice(providerList, 1)
+          content.title = 'Booking Alert'
+          content.body = 'You have new booking request'
+          content.orderId = JSON.stringify(bookingId)
+          var providerToken = await providerService.getProivderMessageToken(providerId)
+          pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default')
+          providerService.providerLocationStatusUpdate(providerId, blockProviderStatus)
+          bookingService.changeBookingStatus(bookingId, bookingAssigned)
+          var providerUnblockList = assignedList.indexOf(providerId)
+          if (providerUnblockList > -1) {
+            assignedList.splice(providerList, 1)
+          }
+          providerService.releaseProviderService(assignedList)
+          response.error = false
+          response.msg = assign.msg
         }
-        providerService.releaseProviderService(assignedList)
-        response.error = false
-        response.msg = assign.msg
-      }
-      resolve(response);
+        resolve(response)
       // callback(response)
     } catch (err) {
-      console.log(err);
+        console.log(err)
       err.error = true
-      err.msg = 'OOPS'
-      resolve(err);
+        err.msg = 'OOPS'
+        resolve(err)
       // callback(err)
     }
-  });
+    })
   }
 
-  
   this.deliveryBookingHandler = async (callback) => {
-    
     var response = {}
     try {
       var content = {}
@@ -600,7 +595,7 @@ module.exports = function () {
         }
       ]
       var waitingList = await bookingService.getBookingWaitlist(type, status)
-      console.log('delivery-test',waitingList);
+      console.log('delivery-test', waitingList)
       if (waitingList.error) {
         response.error = true
         response.msg = waitingList.msg
@@ -677,7 +672,6 @@ module.exports = function () {
     var bookingStatus = ['assigned', 'accepted', 'pickedup', 'arrived', 'dropped']
     try {
       var booking = await bookingService.getProviderBooking(data.auth.Id, bookingStatus, type)
-      console.log(booking);
       if (booking.error || (booking.data.type === 'services' && booking.data.status === 'accepted')) {
         response.error = true
         response.msg = 'NO_BOOKING'
@@ -724,7 +718,7 @@ module.exports = function () {
     }
   }
 
-    this.providerOngoingBookingCtrl1 = async (req, callback) => {
+  this.providerOngoingBookingCtrl1 = async (req, callback) => {
     var response = {}
     var data = req
     var type = data.auth.Type
@@ -735,7 +729,7 @@ module.exports = function () {
         response.error = true
         response.msg = 'NO_BOOKING'
       } else {
-        this.formdatedata = typeof this.formdatedata === 'undefined' ? null : this.formdatedata
+        // this.formdatedata = typeof this.formdatedata === 'undefined' ? null : this.formdatedata
         var bookingInfo = booking.data
         var status = bookingInfo.status
         var userId = bookingInfo.userId
@@ -746,22 +740,16 @@ module.exports = function () {
           } else {
             delete bookingInfo.userId
             if (bookingInfo.paymentMode === 'wallet' || booking.data.paymentMode === 'card') {
-              // console.log('2')
               bookingInfo.estimation = '0.00'
             }
             if (bookingInfo.type === 'delivery' && ['assigned', 'accepted', 'pickedup'].includes(bookingInfo.status)) {
-              console.log('1')
               var outletInfo = await bookingService.getOutletInfo(bookingInfo.outletId)
               bookingInfo.displayName = outletInfo.error ? userInfo.data.firstName + ' ' + userInfo.data.lastName : outletInfo.data.name
               userInfo.data.mobile = outletInfo.error ? userInfo.data.mobile : outletInfo.data.contactNumber
             } else {
-              console.log('0')
-              console.log(bookingInfo,'bookingInfo')
-
               if (bookingInfo.paymentMode === 'wallet' || bookingInfo.paymentMode === 'Card') {
-              console.log('2')
-              bookingInfo.estimation = '0.00'
-            }
+                bookingInfo.estimation = '0.00'
+              }
               bookingInfo.displayName = userInfo.data.firstName + ' ' + userInfo.data.lastName
             }
             if (bookingInfo.type === 'services') {
@@ -773,7 +761,6 @@ module.exports = function () {
         } else {
           bookingInfo.userInfo = userInfo.error ? null : userInfo.data
         }
-        console.log(bookingInfo,'******')
         var bookResponse = bookingInfo
         response.error = false
         response.msg = booking.msg
@@ -787,11 +774,10 @@ module.exports = function () {
     }
   }
 
-  this.checkBookingCtrl = async(req, callback) => {
+  this.checkBookingCtrl = async (req, callback) => {
     var data = req
     var response = {}
     try {
-
       var bookingType = await bookingService.checkBookingService(data)
       if (bookingType.error) {
         response.error = true
@@ -802,10 +788,9 @@ module.exports = function () {
       }
       callback(response)
     } catch (err) {
-       err.error = true
+      err.error = true
       err.msg = 'OOPS'
       callback(err)
     }
-
-  }   
+  }
 }

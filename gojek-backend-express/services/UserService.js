@@ -80,7 +80,7 @@ module.exports = function () {
       user.Language = data.languageName
       user.Password = data.password ? await common.hashPassword(data.password, 11) : null
       user.Status = 'verified'
-
+      user.Image = data.image
       var details = {}
       details.Mobile = data.mobile
       details.Type = 'register'

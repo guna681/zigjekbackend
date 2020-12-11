@@ -117,6 +117,9 @@ module.exports = function (server, validator) {
       .isLength({ min: 1, max: 255 }).withMessage('TEXT_LIMIT: $[1] $[2] $[3],firstname,1,50'),
     validator.check('lastName')
       .isLength({ min: 1, max: 255 }).withMessage('TEXT_LIMIT: $[1] $[2] $[3],lastname,1,50'),
+    validator.check('image')
+      .isURL().withMessage('INVALID: $[1], Image URL')
+      .optional(),
     validator.check('isDeliveryOpt').optional()
       .isNumeric().withMessage('NUMERIC: $[1], Delivery Opted')
       .isLength({ min: 0, max: 1 }).withMessage('TEXT_LIMIT: $[1] $[2] $[3],languageName,0,10'),

@@ -188,6 +188,7 @@ module.exports = function () {
       providerData.Password = data.password ? await common.hashPassword(data.password, 11) : null
       providerData.IsDeliveryOpt = data.isDeliveryOpt
       providerData.Type = data.type
+      providerData.Image = data.image
 
       if (otpstatus.error) {
         response.error = true
@@ -1209,7 +1210,8 @@ module.exports = function () {
     try {
       var senddata = {
         LoginType: data.loginType,
-        SocialToken: data.socialToken
+        SocialToken: data.socialToken,
+        isDeleted: 0
       }
       var provider = await providerRespository.fetchProvider(senddata)
       if (provider.error) {

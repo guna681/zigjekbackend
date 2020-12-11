@@ -26,13 +26,13 @@ module.exports = function () {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-    var query = knex(provider).count(`Id as count`)
+      var query = knex(provider).count(`Id as count`)
       // .where(`Type`, 'taxi')
       // .where(`IsDeliveryOpt`, IsDeliveryOpt)
       if (data.Status == 'pending') {
-       data.Status = ['pending']
+        data.Status = ['pending']
       } else {
-       data.Status = ['approved', 'verified', 'reject'] 
+        data.Status = ['approved', 'verified', 'reject']
       }
       if (data.type == 'taxi') {
         if (data.IsDeliveryOpt == 0) {
@@ -48,14 +48,14 @@ module.exports = function () {
         query.where('Type', data.type)
       }
       query.then((result) => {
-          if (result.length) {
-            output.error = false
-            output.data = result
-          } else {
-            output.error = true
-          }
-          resolve(output)
-        })
+        if (result.length) {
+          output.error = false
+          output.data = result
+        } else {
+          output.error = true
+        }
+        resolve(output)
+      })
         .catch((err) => {
           err.error = true
           err.data = null
@@ -72,10 +72,10 @@ module.exports = function () {
     var page = data.page
     var offset = (page - 1) * limit
     if (data.Status == 'pending') {
-       data.Status = ['pending']
-      } else {
-       data.Status = ['approved', 'verified', 'reject'] 
-      }
+      data.Status = ['pending']
+    } else {
+      data.Status = ['approved', 'verified', 'reject']
+    }
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       var query = knex(provider).select()
@@ -90,9 +90,10 @@ module.exports = function () {
           query.where('Type', data.type)
         }
       } else {
-          query.where('Type', data.type)
-          query.whereIn('Status', data.Status)
+        query.where('Type', data.type)
+        query.whereIn('Status', data.Status)
       }
+      query.where('isDeleted', '0')
       query.then((result) => {
         if (result.length) {
           output.error = false
@@ -476,7 +477,7 @@ module.exports = function () {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-      var query = knex(provider).count(`Id as count`).where('IsActive','yes')
+      var query = knex(provider).count(`Id as count`).where('IsActive', 'yes')
       query.then((result) => {
         if (result.length) {
           output.error = false
