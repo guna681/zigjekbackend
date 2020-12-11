@@ -14,7 +14,7 @@ module.exports = function () {
   const serviceCategory = 'ServiceCategory'
   const serviceSubCategory = 'ServiceSubCategory'
   const providerService = 'ProviderService'
-  const address = 'Address'
+  const address = 'ProviderAddress'
 
   const config = {
     client: 'mysql2',
@@ -1468,8 +1468,7 @@ module.exports = function () {
       var knex = new Knex(config)
       knex(address)
         .select()
-        .where('currentAddress', '1')
-        .where('userId', data)
+        .whereIn('ProviderId', data)
         .then((result) => {
           if (result.length > 0) {
             response.error = false

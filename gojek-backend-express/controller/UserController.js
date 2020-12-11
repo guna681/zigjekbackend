@@ -1057,7 +1057,6 @@ module.exports = function () {
           response.msg = result.msg
           response.data = result.data
         }
-        console.log(response, 'response')
         callback(response)
       })
     } catch (err) {

@@ -1800,35 +1800,26 @@ module.exports = function () {
   this.getProviderListByService = async (data, page,userId, callback) => {
     var response = {}
     try {
-      // var userAddress = await providerRespository.getAddress(userId.Id)
-      // var userLat = userAddress.result[0].latitude
-      // var userLog = userAddress.result[0].longitude
       var providerId = await providerRespository.getServiceProviderIds(data)
       var providerIds = providerId.error ? [] : providerId.result.map((element) => { return element.ProviderId })
       var providerList = await providerRespository.getProviderListByIds(providerIds, page)
-
+      var providerAddress = await providerRespository.getAddress(providerIds)
+      console.log(providerAddress)
       if (providerList.error) {
         response.error = true
         response.msg = 'NO_DATA'
       } else {
         var provider = providerList.result.map((element) => {
-          // var provider = providerList.result.forEach(value => {
+          var proAddrs = providerAddress.error ? [{ Latitude: 0, Longitude: 0 }] : providerAddress.result.filter(ele => ele.ProviderId === element.Id)
+          console.log(element.Id)
           var details = {}
           details.id = element.Id
           details.firstName = element.FirstName
           details.lastName = element.LastName
           details.rating = element.Rating
           details.image = element.Image
-          details.latitude = element.Latitude === null ? '0' : element.Latitude
-          details.longitude = element.Longitude === null ? '0' : element.Longitude
-          // var lat1 = 13.081;
-          // var log1 = 80.2770;
-          // var lat2 = 12.931;
-          // var log2 = 80.2095;
-          // var distance = await providerRespository.getDistanceFromLatLonInKm(userLat,userLog,value.Latitude,value.Longitude)
-          // console.log(distance,'distance')
-          // details.distance = distance
-          // console.log(details,'details')
+          details.latitude = proAddrs.length > 0 ? proAddrs[0].Latitude : '0'
+          details.longitude = proAddrs.length > 0 ? proAddrs[0].Longitude : '0'
           return details
         })
         response.error = false
