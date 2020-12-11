@@ -138,7 +138,7 @@ class UserRepository
 
     public function getMobileNumber($data)
     {
-        $data = User::where(['Mobile'=>$data->mobileNumber,'ExtCode'=>$data->countryCode])->first();
+        $data = User::where(['Mobile'=>$data->mobileNumber,'ExtCode'=>$data->countryCode, 'isDeleted' => 0])->first();
         return $data;
     }
 
