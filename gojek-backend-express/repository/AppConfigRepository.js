@@ -115,7 +115,6 @@ module.exports = function () {
         callback(response)
       })
       .catch((err) => {
-        console.log(err)
         err.error = false
         callback(err)
       })

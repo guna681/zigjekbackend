@@ -68,7 +68,6 @@ module.exports = function () {
           .leftJoin(providerService, 'ProviderService.ProviderId', 'Provider.Id')
           .where({ 'Provider.Id': req.providerId })
           .then((result) => {
-            console.log(result)
             if (result.length > 0) {
               output.error = false
               output.result = result
@@ -478,12 +477,15 @@ module.exports = function () {
   this.fetchProviderByCellId = (data, cellID, blockList, rideTypeIds) => {
     var output = {}
     return new Promise(function (resolve) {
+      console.log(data)
       var knex = new Knex(config)
       knex(provideLocationUpdate)
-        .where(data)
-        .whereNotIn('ProviderId', blockList)
-        .whereIn('S2CellId', cellID)
-        .whereRaw(`JSON_CONTAINS(RideTypeId, '["?"]')`, [rideTypeIds])
+        .leftJoin(provider, `${provideLocationUpdate}.ProviderId`, 'Provider.Id')
+        .where(`${provideLocationUpdate}.Status`, data.Status)
+        .whereNotIn(`${provideLocationUpdate}.ProviderId`, blockList)
+        .whereIn(`${provideLocationUpdate}.S2CellId`, cellID)
+        .whereRaw(`JSON_CONTAINS(${provideLocationUpdate}.RideTypeId, '["?"]')`, [rideTypeIds])
+        .where(`${provider}.Status`, 'verified')
         .then((result) => {
           if (result.length > 0) {
             output.error = false
@@ -493,6 +495,7 @@ module.exports = function () {
           }
           resolve(output)
         }).catch((err) => {
+          console.log(err)
           err.error = true
           resolve(err)
         })
@@ -517,7 +520,6 @@ module.exports = function () {
           }
           resolve(output)
         }).catch((err) => {
-          console.log(err)
           err.error = true
           resolve(err)
         })
@@ -536,7 +538,6 @@ module.exports = function () {
         .whereNotIn('ProviderId', blockList)
         .whereIn('S2CellId', cellID)
         .then((result) => {
-          // console.log(result);
           if (result.length > 0) {
             output.error = false
             output.result = result
@@ -545,7 +546,6 @@ module.exports = function () {
           }
           resolve(output)
         }).catch((err) => {
-          console.log(err)
           err.error = true
           resolve(err)
         })

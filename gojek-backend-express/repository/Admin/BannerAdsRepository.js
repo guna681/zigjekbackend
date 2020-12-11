@@ -94,7 +94,6 @@ module.exports = function () {
   }
   // Update
   this.bannerAdsEdit = (data) => {
-  	console.log(data)
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)

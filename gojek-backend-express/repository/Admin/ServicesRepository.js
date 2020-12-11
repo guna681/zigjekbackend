@@ -574,7 +574,6 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
-          console.log(err)
           err.error = true
           resolve(err)
         }).finally(() => {

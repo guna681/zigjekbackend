@@ -136,7 +136,7 @@ module.exports = function () {
     })
   }
 
-    this.getBookingInfo = (data) => {
+  this.getBookingInfo = (data) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
@@ -170,7 +170,7 @@ module.exports = function () {
         trx(booking)
           .transacting(trx)
           .where(data)
-          //.where('Status', 'assigned')
+          // .where('Status', 'assigned')
           .whereIn('Status', status)
           .whereIn('Type', ['taxi', 'delivery', 'services'])
           // .having('CreateAt', '<', knex.fn.now())
@@ -253,7 +253,6 @@ module.exports = function () {
           .orderByRaw('FIELD(Status,"unassigned","waiting") DESC')
           .then(trx.commit)
           .catch((err) => {
-            console.log('err',err);
             trx.rollback()
             throw err
           })
@@ -278,7 +277,6 @@ module.exports = function () {
   }
 
   this.fetchBookingUsingType = (data, limit, type) => {
-    console.log(data.ProviderId,'ProviderId')
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
@@ -320,11 +318,11 @@ module.exports = function () {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
-       knex(booking)
+      knex(booking)
         // .whereRaw(`JSON_CONTAINS(AssignedProviderIds, '["?"]')`, [data.auth.Id])
-        .where('ProviderId',data.auth.Id)
+        .where('ProviderId', data.auth.Id)
         .where('Status', 'assigned')
-        .count("Id as count")
+        .count('Id as count')
         .then((result) => {
           if (result.length > 0) {
             output.error = false
@@ -396,12 +394,12 @@ module.exports = function () {
     })
   }
 
-    this.updateAdminEarning = (data) => {
+  this.updateAdminEarning = (data) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(admin)
-        .where('Roles','1')
+        .where('Roles', '1')
         .update({ totalAmount: knex.raw('?? + ?', ['totalAmount', data.adminEarning]), balanceAmount: knex.raw('?? + ?', ['balanceAmount', data.adminEarning]) })
         .then((result) => {
           if (result > 0) {
@@ -422,13 +420,12 @@ module.exports = function () {
     })
   }
 
-      this.updateBookingEarning = (data) => {
-        console.log(data)
+  this.updateBookingEarning = (data) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(booking)
-        .where('Id',data.id)
+        .where('Id', data.id)
         .update({ outletEarnings: data.outletEarning, adminServiceCharge: data.adminEarning })
         .then((result) => {
           if (result > 0) {
@@ -449,15 +446,13 @@ module.exports = function () {
     })
   }
 
-   this.selectOutlet = (data) => {
-     console.log(data,'***')
+  this.selectOutlet = (data) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(outlet)
         .where('id', data)
         .then((result) => {
-          // console.log(result)
           if (result) {
             output.error = false
             output.result = result
@@ -467,7 +462,6 @@ module.exports = function () {
           resolve(output)
         })
         .catch((err) => {
-          console.log(err)
           err.error = true
           resolve(err)
         })
@@ -594,7 +588,7 @@ module.exports = function () {
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(booking)
-        .update({ ProviderRejectedIds: knex.raw('JSON_MERGE(ProviderRejectedIds, "?")', [providerId.toSting()]),orderStatus: 'rejected' })
+        .update({ ProviderRejectedIds: knex.raw('JSON_MERGE(ProviderRejectedIds, "?")', [providerId.toSting()]), orderStatus: 'rejected' })
         .where('Id', bookingId)
         .then((result) => {
           if (result[0] > 0) {
@@ -614,12 +608,12 @@ module.exports = function () {
     })
   }
 
-    this.updateCodType = (codType, bookingId) => {
+  this.updateCodType = (codType, bookingId) => {
     var output = {}
     return new Promise(function (resolve) {
       var knex = new Knex(config)
       knex(booking)
-        .update('PaymentMode', codType )
+        .update('PaymentMode', codType)
         .where('Id', bookingId)
         .then((result) => {
           if (result[0] > 0) {

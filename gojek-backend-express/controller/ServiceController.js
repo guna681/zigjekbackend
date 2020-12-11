@@ -66,18 +66,17 @@ module.exports = function () {
   this.getServiceInGroupCtrl = (req, callback) => {
     var response = {}
     serviceCategoryService.getServiceListingInGroup(req, (result) => {
-      console.log(result)
       if (result.error) {
         response.error = true
         response.msg = result.msg
       } else {
         response.error = false
-        if(result) {
-        response.data = result.data 
-        response.msg = result.msg
+        if (result) {
+          response.data = result.data
+          response.msg = result.msg
         } else {
-        response.data = [] 
-        response.msg = 'no data founded'
+          response.data = []
+          response.msg = 'no data founded'
         }
       }
       callback(response)

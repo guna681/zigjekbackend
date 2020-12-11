@@ -95,8 +95,6 @@ module.exports = function () {
         data.UserType = type
         var wallet = await walletRepository.fetchWalletInfo(data)
         var walletInfo = wallet.error ? await walletRepository.fetchWalletInfo(data) : wallet
-        console.log(wallet)
-        console.log(walletInfo)
         if (walletInfo.error) {
           response.error = true
           response.msg = 'ERROR_WALLET'

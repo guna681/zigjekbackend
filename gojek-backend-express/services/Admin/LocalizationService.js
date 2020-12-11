@@ -20,9 +20,7 @@ module.exports = function () {
         // CountryFlagImage: data.CountryFlagImage,
         status: data.IsActive
       }
-      console.log(country,'*')
-      var adminICountryData = await localizationRepository.adminCountryInsert(country) 
-      console.log(adminICountryData,'**&*&*&*&*&&................******')
+      var adminICountryData = await localizationRepository.adminCountryInsert(country)
       if (adminICountryData.error === false) {
         response.error = false
         response.data = adminICountryData.data[0]
@@ -297,9 +295,7 @@ module.exports = function () {
         // CountryFlagImage: data.CountryFlagImage,
         status: data.IsActive
       }
-      console.log(country)
-      var adminICountryData = await localizationRepository.adminCountryInsert(country) 
-      console.log(adminICountryData)
+      var adminICountryData = await localizationRepository.adminCountryInsert(country)
       if (adminICountryData.error === false) {
         response.error = false
         response.data = adminICountryData.data[0]
@@ -331,15 +327,13 @@ module.exports = function () {
         // CountryFlagImage: data.CountryFlagImage,
         status: data.IsActive
       }
-      var where={
-        id:data.Id
+      var where = {
+        id: data.Id
       }
-      console.log(country)
-      var country=Object();
-      country.data=data1;
-      country.where=where;
-      var adminICountryData = await localizationRepository.adminCountryUpdate(country) 
-      console.log(adminICountryData)
+      var country = Object()
+      country.data = data1
+      country.where = where
+      var adminICountryData = await localizationRepository.adminCountryUpdate(country)
       if (adminICountryData.error === false) {
         response.error = false
         response.data = adminICountryData.data[0]

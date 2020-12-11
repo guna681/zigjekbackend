@@ -28,7 +28,6 @@ module.exports = function () {
       knex(country)
         .insert(data)
         .then((result) => {
-          console.log(result)
           if (result.length) {
             output.error = false
             output.data = result

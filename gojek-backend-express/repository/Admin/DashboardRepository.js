@@ -84,7 +84,6 @@ module.exports = function () {
           } else {
             output.error = true
           }
-          console.log(result)
           resolve(output)
         })
         .catch((err) => {
@@ -110,7 +109,6 @@ module.exports = function () {
           } else {
             output.error = true
           }
-          console.log(result)
           resolve(output)
         })
         .catch((err) => {

@@ -702,21 +702,20 @@ module.exports = function () {
     })
   }
 
-//default assign
-  this.getDefaultDeliveryProviderByCellId = (target, providerStatus, weights,providerId,IsDeliveryOpt=0) => {
+  // default assign
+  this.getDefaultDeliveryProviderByCellId = (target, providerStatus, weights, providerId, IsDeliveryOpt = 0) => {
     var response = {}
     return new Promise(async function (resolve) {
       try {
         var condition = {}
         condition.Status = providerStatus
-        if(IsDeliveryOpt!=0){
+        if (IsDeliveryOpt != 0) {
           condition.IsDeliveryOpt = IsDeliveryOpt
         }
         condition.providerId = providerId
         var provider = await providerRespository.fetchDefaultDeliveryProviderByCellId(condition)
-    
+
         if (provider.error) {
-         
           response.error = true
           response.msg = 'NO_PROVIDER_AVAILABLE'
         } else {
@@ -741,14 +740,12 @@ module.exports = function () {
         }
         resolve(response)
       } catch (err) {
-        console.log(err)
         err.error = true
         err.msg = 'OOPS'
         resolve(err)
       }
     })
   }
-
 
   this.getActiveDeliveryProviderByCellId = (target, cellId, providerStatus, weights, blockList) => {
     var response = {}
@@ -1162,7 +1159,6 @@ module.exports = function () {
             return doc.DocTypeId === element.Id
           })
           var value = recentUploads.result.find((element1) => element.FieldName === element1.PaymentField)
-          console.log(value)
           doc['value'] = value ? value.Value : null
           doc['isApproved'] = compareDoc ? compareDoc.Status : 'new'
           doc['type'] = element.Type
@@ -1763,10 +1759,8 @@ module.exports = function () {
         var documentState = false
         var docList = documentType.result
         var i
-        console.log('docList', docList.length)
         for (i = 0; i < docList.length; i++) {
           var compareDoc = documentInfo.data.filter(doc => doc.DocTypeId === docList[i].Id && doc.Status === 'approved')
-          console.log('compareDoc', compareDoc)
           if (compareDoc.length === 0) {
             documentState = true
             break
@@ -1797,21 +1791,19 @@ module.exports = function () {
     }
   }
 
-  this.getProviderListByService = async (data, page,userId, callback) => {
+  this.getProviderListByService = async (data, page, userId, callback) => {
     var response = {}
     try {
       var providerId = await providerRespository.getServiceProviderIds(data)
       var providerIds = providerId.error ? [] : providerId.result.map((element) => { return element.ProviderId })
       var providerList = await providerRespository.getProviderListByIds(providerIds, page)
       var providerAddress = await providerRespository.getAddress(providerIds)
-      console.log(providerAddress)
       if (providerList.error) {
         response.error = true
         response.msg = 'NO_DATA'
       } else {
         var provider = providerList.result.map((element) => {
           var proAddrs = providerAddress.error ? [{ Latitude: 0, Longitude: 0 }] : providerAddress.result.filter(ele => ele.ProviderId === element.Id)
-          console.log(element.Id)
           var details = {}
           details.id = element.Id
           details.firstName = element.FirstName
@@ -1828,7 +1820,6 @@ module.exports = function () {
       }
       callback(response)
     } catch (response) {
-      console.log(response)
       response.error = true
       response.msg = 'OOPS'
       callback(response)
@@ -1843,8 +1834,8 @@ module.exports = function () {
         response.error = true
         response.msg = 'NO_DATA'
       } else {
-          var provider = { ProviderId: providerId }
-      var providerSerivce = await providerRespository.fetchProviderServiceInfo(provider)
+        var provider = { ProviderId: providerId }
+        var providerSerivce = await providerRespository.fetchProviderServiceInfo(provider)
         var profile = providerProfile.result.map((element) => {
           var data = {}
           data.id = element.Id

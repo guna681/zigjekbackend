@@ -13,16 +13,18 @@ module.exports = function () {
   }
 
   this.sendPushNotificationByDeviceType = (deviceInfo, content, sound) => {
-    if (content.type == undefined) {
-       var type = ''
-    } else {
-        var type = content.type
-    }
-    if (content.orderId == undefined) {
-       var orderId = ''
-    } else {
-        var orderId = content.orderId
-    }
+    // var orderId = ''
+    // var type = ''
+    // if (content.type === undefined) {
+    //   type = ''
+    // } else {
+    //   type = content.type
+    // }
+    // if (content.orderId === undefined) {
+    //   orderId = ''
+    // } else {
+    //   orderId = content.orderId
+    // }
     var response = {}
     return new Promise(function (resolve) {
       try {
@@ -34,9 +36,9 @@ module.exports = function () {
             'data': {
               'title': content.title,
               'body': content.body,
-              'data': content.data,
-              'type': type,
-              'orderId': orderId
+              'data': content.data
+              // 'type': type,
+              // 'orderId': orderId
             },
             'android': {
               'priority': 'high'
@@ -58,16 +60,16 @@ module.exports = function () {
             'token': deviceInfo.token,
             'notification': {
               'title': content.title,
-              'body': content.body,
-              'type': type,
-              'orderId': orderId
+              'body': content.body
+              // 'type': type,
+              // 'orderId': orderId
             },
             'data': {
               'title': content.title,
               'body': content.body,
-              'data': content.data,
-              'type': type,
-              'orderId': orderId
+              'data': content.data
+              // 'type': type,
+              // 'orderId': orderId
             },
             'android': {
               'priority': 'high'

@@ -123,11 +123,9 @@ module.exports = function () {
     return new Promise(function (resolve) {
       try {
         authy.phones().verification_start(mobileNumber, countryCode, { via: 'sms', locale: 'en' }, function (err, res) {
-          console.log(res,'**')
-          console.log(err,'**')
           if (res) {
-        response.error = false
-        response.data = res
+            response.error = false
+            response.data = res
           } else {
             response.error = true
             response.data = null
@@ -136,7 +134,6 @@ module.exports = function () {
           resolve(response)
         })
       } catch (err) {
-        console.log(err)
         err.error = true
         err.msg = 'FAILED'
         resolve(err)
@@ -230,16 +227,12 @@ module.exports = function () {
         var imageFileName
         var storage = multer.diskStorage({
           destination: (req, file, cb) => {
-            console.log(process.env.IMAGE_PATH + req.body['user'].split('|')[0])
             cb(null, process.env.IMAGE_PATH + req.body['user'].split('|')[0])
           },
           filename: (req, file, cb) => {
             if (req.body['user'].split('|')[1] !== 'Replace') {
-              console.log('uid', uid + '.' + file.originalname.split('.').reverse()[0])
               cb(null, uid + '.' + file.originalname.split('.').reverse()[0])
             } else {
-              console.log('uid', uid + '.' + file.originalname.split('.').reverse()[0])
-              console.log('original', req.body['user'].split('|')[2])
               // cb(null, req.body['user'].split('|')[2])
               imageFileName = uid + '.' + file.originalname.split('.').reverse()[0]
               cb(null, uid + '.' + file.originalname.split('.').reverse()[0])

@@ -42,7 +42,6 @@ module.exports = function () {
         }
       }, function (err, result) {
         var response = {}
-        console.log(err)
         if (err) {
           response.error = true
           response.result = null
@@ -55,7 +54,6 @@ module.exports = function () {
         callback(response)
       })
     } catch (err) {
-      console.log(err)
       err.error = true
       err.msg = 'OOPS'
       callback(err)

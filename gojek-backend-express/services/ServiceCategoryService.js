@@ -135,16 +135,11 @@ module.exports = function () {
         serviceList = await serviceRepository.fetchServiceListing(data)
         serviceIds = serviceList.error ? [] : serviceList.result.map((element) => { return element.id })
       }
-      console.log(serviceIds, 'serviceIds')
       if (serviceIds == undefined) {
-        console.log('in')
         response.error = true
         response.msg = 'NO_DATA'
       } else {
-        console.log('out')
         var serviceImage = await serviceRepository.fetchServiceImages(serviceIds)
-        console.log(serviceImage)
-
         if (serviceList.error) {
           response.error = true
           response.msg = 'NO_DATA'
@@ -157,10 +152,8 @@ module.exports = function () {
       }
       callback(response)
     } catch (err) {
-      console.log(err)
       response.error = true
       response.msg = 'OOPS'
-      console.log(response)
       callback(response)
     }
   }

@@ -83,7 +83,6 @@ module.exports = function () {
             }
           }
         } else {
-          console.log()
           if (authtyperesult.error) {
             response.error = true
             response.msg = 'OOPS'
@@ -149,9 +148,7 @@ module.exports = function () {
     var response = {}
     var data = req
     var otpVerifynumber = await common.otpVerify(data.mobile, data.countryCode, data.otp)
-    console.log(otpVerifynumber)
     if (otpVerifynumber.error) {
-      console.log('IN')
       // response.error = true
       // response.msg = 'OTP'
       providerService.providerOtpVerify(data, (result) => {
@@ -166,16 +163,12 @@ module.exports = function () {
         callback(response)
       })
     } else {
-      console.log('OUt')
       data.otp = '1234'
       providerService.providerOtpVerify(data, (result) => {
-        console.log(result, '***')
         if (result.error) {
-          console.log('in', '@')
           response.error = true
           response.msg = result.msg
         } else {
-          console.log('OUT', '@')
           response.error = false
           response.msg = result.msg
           response.data = result.data
@@ -613,12 +606,10 @@ module.exports = function () {
             response.error = false
             response.msg = result.msg
           }
-          console.log(response)
           callback(response)
         })
       }
     } catch (err) {
-      console.log(err)
       err.error = true
       err.msg = 'OOPS'
       callback(err)
@@ -1140,7 +1131,6 @@ module.exports = function () {
           data['serviceStartImage'] = bookingInfo.ServiceStartImage
           data['serviceEndImage'] = bookingInfo.ServiceEndImage
           var serviceList = await bookingService.getServiceInfo(bookingInfo.ServiceIds)
-          console.log(serviceList.data[0].name, '*****')
           data['categoryName'] = serviceList.error ? 'Test' : serviceList.data[0].name
           data['serviceList'] = serviceList.error ? [] : serviceList.data
           var addonsList = await bookingService.getAddonsInfo(bookingInfo.ServiceAddons)
@@ -1166,7 +1156,6 @@ module.exports = function () {
         response.msg = 'VALID'
         response.data = bookingDetails
       }
-      console.log(response)
       callback(response)
     } catch (err) {
       err.error = true

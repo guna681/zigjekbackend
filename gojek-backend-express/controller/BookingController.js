@@ -23,7 +23,6 @@ module.exports = function () {
   var common = new Common()
   var adminAppConfigRepository = new AdminAppConfigRepository()
 
-
   this.getAvailabeRide = (req, callback) => {
     var data = req
     var response = {}
@@ -59,13 +58,11 @@ module.exports = function () {
   this.providerBookingStatusCtrl = (req, callback) => {
     var response = {}
     var data = req
-    // console.log(data,'***')
     bookingService.providerBookingUpdateService(data, async (result) => {
       if (result.error) {
         response.error = true
         response.msg = result.msg
       } else {
-        // console.log(result)
         var providerUnblock
         var providerWalletInfo
         var providerTnxStatus
@@ -97,24 +94,15 @@ module.exports = function () {
           content.title = 'Trip has started'
           content.body = 'Your trip has been started. Have a safe journey'
         } else if (data.action === 'complete') {
-          console.log('complete', data.type)
-          // if (data.type == 'delivery') {
-          // console.log('delivery')
           var condition = {}
           condition.Id = data.bookingNo
           var booking = await bookingService.getBookingInfo(condition)
           var bookingInfo = booking.data[0]
           if (bookingInfo.RideName == 'Food Delivery') {
             var adminCommission = await bookingRepository.selectOutlet(bookingInfo.outletId)
-            console.log(adminCommission.result[0].restaurantCommission, '****')
-
             var adminEarning = bookingInfo.TotalAmount / adminCommission.result[0].restaurantCommission
-            console.log(adminEarning, 'adminEarning', bookingInfo.ProviderEarning)
             var sum = +bookingInfo.ProviderEarning + +adminEarning
-            console.log(sum, 'sum')
             var outletEarning = bookingInfo.TotalAmount - sum
-            // console.log(outletEarning,'outletEarning')
-            // console.log(adminEarning,'adminEarning')
 
             var earningCondition = {}
             earningCondition.id = bookingInfo.outletId
@@ -123,20 +111,16 @@ module.exports = function () {
 
             var adminEarningData = {}
             adminEarningData.adminEarning = adminEarning
-            console.log(adminEarningData, 'adminEarning')
 
             var booking = await bookingRepository.updateOutletEarning(earningCondition, earningData)
-            console.log(booking, 'booking')
             var updateBookingEarningData = {}
             updateBookingEarningData.id = data.bookingNo
             updateBookingEarningData.outletEarning = outletEarning
             updateBookingEarningData.adminEarning = adminEarning
             var updateadminEarning = await bookingRepository.updateAdminEarning(adminEarningData)
-            console.log(updateadminEarning, 'updateadminEarning')
 
             var updateBookingEarning = await bookingRepository.updateBookingEarning(updateBookingEarningData)
           }
-
 
           // }
           content.data = 'payment_completed'
@@ -305,8 +289,7 @@ module.exports = function () {
         }
       ]
       var waitingList = await bookingService.getBookingWaitlist(type, status)
-      console.log('waitingList-test', waitingList)
-     
+
       if (waitingList.error) {
         response.error = true
         response.msg = waitingList.msg
@@ -369,106 +352,105 @@ module.exports = function () {
     }
   }
 
-  this.taxiBookingDefaultHandler = async () => {
-    var response = {}
-    return new Promise(async function (resolve) {
-      try {
-        var content = {}
-        const bookingProcess = 'processing'
-        const bookingAssigned = 'assigned'
-        const bookingCancel = 'cancelled'
-        const blockProviderStatus = 'blocked'
-        const activeProviderStatus = 'active'
-        const type = ['taxi']
-        var status = ['waiting']
-        var providerList
-        var providerId = 326
-        var UserId = 334
-        var userDeviceInfo
-        var providerInfo
-        var providerDetails = null
-        const weights = [
-          {
-            key: 'distance',
-            value: -5
-          },
-          {
-            key: 'duration',
-            value: -4
-          },
-          {
-            key: 'review',
-            value: 7
-          },
-          {
-            key: 'tripCount',
-            value: -3
-          }
-        ]
-        var waitingList = await bookingService.getDefaultBookingWaitlist(type, status, UserId) // new function
-        // console.log('waitingList',waitingList);
-        if (waitingList.error) {
-          response.error = true
-          response.msg = waitingList.msg
-        } else {
-          var booking = waitingList.data[0]
-          var bookingId = booking.id
-          var cellId = booking.cellId
-          var blockList = booking.blockList === null ? [] : booking.blockList
-          var assignedList = booking.assignedList === null ? [] : booking.assignedList
-          var rideType = booking.rideId
-          var source = [booking.lat + ',' + booking.lng]
-          var neighbouringS2CellID = await common.getNeighborsUsingS2Key(booking.lat, booking.lng)
-          var neighbouringCellID = neighbouringS2CellID.key
-          neighbouringCellID.push(cellId)
-          var mergeProviderBlockList = blockList.concat(assignedList)
-          let providerBlockList = (List) => List.filter((key, value) => List.indexOf(key) === value)
-          bookingService.changeBookingStatus(bookingId, bookingProcess)
+  // this.taxiBookingDefaultHandler = async () => {
+  //   var response = {}
+  //   return new Promise(async function (resolve) {
+  //     try {
+  //       var content = {}
+  //       const bookingProcess = 'processing'
+  //       const bookingAssigned = 'assigned'
+  //       const bookingCancel = 'cancelled'
+  //       const blockProviderStatus = 'blocked'
+  //       const activeProviderStatus = 'active'
+  //       const type = ['taxi']
+  //       var status = ['waiting']
+  //       var providerList
+  //       var providerId = 326
+  //       var UserId = 334
+  //       var userDeviceInfo
+  //       var providerInfo
+  //       var providerDetails = null
+  //       const weights = [
+  //         {
+  //           key: 'distance',
+  //           value: -5
+  //         },
+  //         {
+  //           key: 'duration',
+  //           value: -4
+  //         },
+  //         {
+  //           key: 'review',
+  //           value: 7
+  //         },
+  //         {
+  //           key: 'tripCount',
+  //           value: -3
+  //         }
+  //       ]
+  //       var waitingList = await bookingService.getDefaultBookingWaitlist(type, status, UserId) // new function
+  //       if (waitingList.error) {
+  //         response.error = true
+  //         response.msg = waitingList.msg
+  //       } else {
+  //         var booking = waitingList.data[0]
+  //         var bookingId = booking.id
+  //         var cellId = booking.cellId
+  //         var blockList = booking.blockList === null ? [] : booking.blockList
+  //         var assignedList = booking.assignedList === null ? [] : booking.assignedList
+  //         var rideType = booking.rideId
+  //         var source = [booking.lat + ',' + booking.lng]
+  //         var neighbouringS2CellID = await common.getNeighborsUsingS2Key(booking.lat, booking.lng)
+  //         var neighbouringCellID = neighbouringS2CellID.key
+  //         neighbouringCellID.push(cellId)
+  //         var mergeProviderBlockList = blockList.concat(assignedList)
+  //         let providerBlockList = (List) => List.filter((key, value) => List.indexOf(key) === value)
+  //         bookingService.changeBookingStatus(bookingId, bookingProcess)
 
-          providerList = await providerService.getDefaultDeliveryProviderByCellId(source, activeProviderStatus, weights, providerId, 0) // new function
-          console.log('providerList', providerList)
-        if (providerList.error) {
-          // content.data = 'booking_cancelled'
-          // content.title = 'Booking Cancelled'
-          // content.body = 'Sorry we dont have service at your location. Please try after some time'
-          // userDeviceInfo = await userService.getUserDeviceToken(waitingList.data[0].userId)
-          // pushNotification.sendPushNotificationByDeviceType(userDeviceInfo.data, content)
-          // bookingService.changeBookingStatus(bookingId, bookingCancel)
-          // providerService.releaseProviderService(assignedList)
-          // response.error = true
-          // response.msg = providerList.msg
-          } else {
-            var providerId = providerList.data[0].ProviderId
-            providerInfo = await providerService.getProviderInfo(providerId)
-            if (!providerInfo.error) {
-              providerDetails = providerInfo.data
-            }
-          }
-          var assign = await bookingService.updateProviderInBooking(bookingId, providerId, providerDetails)
-          content.data = 'incoming_booking'
-          content.title = 'Booking Alert'
-          content.body = 'You have new booking request'
-          content.orderId = JSON.stringify(bookingId)
-          var providerToken = await providerService.getProivderMessageToken(providerId)
-          pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default')
-          providerService.providerLocationStatusUpdate(providerId, blockProviderStatus)
-          bookingService.changeBookingStatus(bookingId, bookingAssigned)
-          var providerUnblockList = assignedList.indexOf(providerId)
-          if (providerUnblockList > -1) {
-            assignedList.splice(providerList, 1)
-          }
-          providerService.releaseProviderService(assignedList)
-          response.error = false
-          response.msg = assign.msg
-        }
-        resolve(response)
-      } catch (err) {
-        err.error = true
-        err.msg = 'OOPS'
-      // callback(err)
-      }
-    })
-  }
+  //         providerList = await providerService.getDefaultDeliveryProviderByCellId(source, activeProviderStatus, weights, providerId, 0) // new function
+  //         if (providerList.error) {
+  //         // content.data = 'booking_cancelled'
+  //         // content.title = 'Booking Cancelled'
+  //         // content.body = 'Sorry we dont have service at your location. Please try after some time'
+  //         // userDeviceInfo = await userService.getUserDeviceToken(waitingList.data[0].userId)
+  //         // pushNotification.sendPushNotificationByDeviceType(userDeviceInfo.data, content)
+  //         // bookingService.changeBookingStatus(bookingId, bookingCancel)
+  //         // providerService.releaseProviderService(assignedList)
+  //         // response.error = true
+  //         // response.msg = providerList.msg
+  //         } else {
+  //           var providerId = providerList.data[0].ProviderId
+  //           providerInfo = await providerService.getProviderInfo(providerId)
+  //           if (!providerInfo.error) {
+  //             providerDetails = providerInfo.data
+  //           }
+  //         }
+  //         var assign = await bookingService.updateProviderInBooking(bookingId, providerId, providerDetails)
+  //         content.data = 'incoming_booking'
+  //         content.title = 'Booking Alert'
+  //         content.body = 'You have new booking request'
+  //         content.orderId = JSON.stringify(bookingId)
+  //         content.type = undefined
+  //         var providerToken = await providerService.getProivderMessageToken(providerId)
+  //         pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default')
+  //         providerService.providerLocationStatusUpdate(providerId, blockProviderStatus)
+  //         bookingService.changeBookingStatus(bookingId, bookingAssigned)
+  //         var providerUnblockList = assignedList.indexOf(providerId)
+  //         if (providerUnblockList > -1) {
+  //           assignedList.splice(providerList, 1)
+  //         }
+  //         providerService.releaseProviderService(assignedList)
+  //         response.error = false
+  //         response.msg = assign.msg
+  //       }
+  //       resolve(response)
+  //     } catch (err) {
+  //       err.error = true
+  //       err.msg = 'OOPS'
+  //     // callback(err)
+  //     }
+  //   })
+  // }
 
   this.deliveryBookingDefaultHandler = async () => {
     var response = {}
@@ -506,7 +488,6 @@ module.exports = function () {
           }
         ]
         var waitingList = await bookingService.getDefaultBookingWaitlist(type, status, UserId) // new function
-        // console.log('waitingList',waitingList);
         if (waitingList.error) {
           response.error = true
           response.msg = waitingList.msg
@@ -518,7 +499,6 @@ module.exports = function () {
           bookingService.changeBookingStatus(bookingId, bookingProcess)
 
           providerList = await providerService.getDefaultDeliveryProviderByCellId(source, activeProviderStatus, weights, providerId, 1) // new function
-          // console.log('providerList',providerList);
           if (providerList.error) {
             bookingService.changeBookingStatus(bookingId, bookingUnassigned)
             providerService.releaseProviderService(assignedList)
@@ -532,8 +512,7 @@ module.exports = function () {
             }
           }
           var assign = await bookingService.updateProviderInBooking(bookingId, providerId, providerDetails)
-          console.log('providerList', assign)
-        content.data = 'incoming_booking'
+          content.data = 'incoming_booking'
           content.title = 'Booking Alert'
           content.body = 'You have new booking request'
           content.orderId = JSON.stringify(bookingId)
@@ -551,13 +530,12 @@ module.exports = function () {
         }
         resolve(response)
       // callback(response)
-    } catch (err) {
-        console.log(err)
-      err.error = true
+      } catch (err) {
+        err.error = true
         err.msg = 'OOPS'
         resolve(err)
       // callback(err)
-    }
+      }
     })
   }
 
@@ -595,7 +573,6 @@ module.exports = function () {
         }
       ]
       var waitingList = await bookingService.getBookingWaitlist(type, status)
-      console.log('delivery-test', waitingList)
       if (waitingList.error) {
         response.error = true
         response.msg = waitingList.msg
