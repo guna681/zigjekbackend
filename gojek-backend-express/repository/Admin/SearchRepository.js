@@ -91,12 +91,14 @@ module.exports = function () {
       } else if (data.type == 'services') {
         query.where('Type', data.type)
       }
+      query.where('isDeleted', 0)
       query.then((result) => {
         if (result.length) {
           output.error = false
           output.data = result
         } else {
-          output.error = true
+          output.error = false
+          output.data = []
         }
         resolve(output)
       })
@@ -162,12 +164,14 @@ module.exports = function () {
       } else if (data.type == 'services') {
         query.where('Type', data.type)
       }
+      query.where('isDeleted', 0)
       query.then((result) => {
         if (result.length) {
           output.error = false
           output.data = result
         } else {
-          output.error = true
+          output.error = false
+          output.data = []
         }
         resolve(output)
       })

@@ -3,8 +3,7 @@ module.exports = function () {
   const Common = require('../../Utils/common')
   require('dotenv').config({ path: './../.env' })
 
-  var searchService = new SearchService();
-  var common = new Common();
+  var searchService = new SearchService()
 
   this.commonSearchViewCtrl = (req, callback) => {
     var response = {}
