@@ -16,15 +16,11 @@ class CategoryRepostitory
 
 
         $perPage = Constant::PERPAGE;
-        $categories =DB::table('MenuCategories_Path')
-                        ->select('MenuCategories_Path.categoryId','Outlet_MenuCategories.status','Outlet_MenuCategories.name as categoryName')
-                        ->Join('Outlet_MenuCategories', 'MenuCategories_Path.pathId', '=', 'Outlet_MenuCategories.id')
-
+        $categories =DB::table('Outlet_MenuCategories')
+                        ->select('Outlet_MenuCategories.id as categoryId','Outlet_MenuCategories.status','Outlet_MenuCategories.name as categoryName')
                         ->where('outletId',$outletId)
-                        ->whereNull('MenuCategories_Path.deleted_at')
+                        ->whereNull('Outlet_MenuCategories.deleted_at')
                         ->paginate($perPage, ['*'], 'page', $pageNumber);
-
-
         return $categories;
 
     }

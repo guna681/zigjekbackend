@@ -205,7 +205,7 @@ module.exports = function () {
   //       content.body = 'You have new booking request'
   //       content.orderId = JSON.stringify(bookingId)
   //       var providerToken = await providerService.getProivderMessageToken(providerId)
-  //       pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default')
+  //       pushNotification.CategoryController(providerToken.data, content, 'default')
   //       providerService.providerLocationStatusUpdate(providerId, blockProviderStatus)
   //       bookingService.changeBookingStatus(bookingId, bookingAssigned)
   //       var providerUnblockList = assignedList.indexOf(providerId)
