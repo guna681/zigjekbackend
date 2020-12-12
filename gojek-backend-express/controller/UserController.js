@@ -493,7 +493,7 @@ module.exports = function () {
         if (!deviceInfo.error) {
           var providerUnblock = 'active'
           providerService.providerLocationStatusUpdate(providerId, providerUnblock, () => {})
-          pushNotification.sendPushNotificationByDeviceType(deviceInfo.data, content)
+          pushNotification.sendPushNotificationByDeviceType(deviceInfo.data, content, bookingInfo.data[0].Type)
         }
         response.error = false
         response.msg = cancel.msg
@@ -640,6 +640,7 @@ module.exports = function () {
         } else if (bookingInfo.Type === 'delivery') {
           data['description'] = bookingInfo.Description
           data['orderId'] = bookingInfo.Id
+          data['orderReferenceId'] = booking.orderReferenceId
           data['outletName'] = bookingInfo.OutletName
           var dishList = await bookingService.getBookingDishes(req.bookingNo)
           data['dishes'] = dishList.error ? [] : dishList.data.map(element => { element.displayPrice = bookingInfo.CurrencyType + element.dishTotal; return element })
@@ -1016,13 +1017,13 @@ module.exports = function () {
         content.body = 'You have new booking request'
         if (req.providerId) {
           var providerInfo = await providerService.getProivderMessageToken(req.providerId)
-          pushNotification.sendPushNotificationByDeviceType(providerInfo.data, content)
+          pushNotification.sendPushNotificationByDeviceType(providerInfo.data, content, 'default', 'services')
         } else {
           var availableProvider = await providerService.getServiceProviderBasedOnDistance(req)
           if (availableProvider.error === false) {
             var bookingId = createBooking.data.bookingNo
             var deviceToken = await providerService.getProviderDeviceTokensById(availableProvider.data)
-            if (!deviceToken.error) deviceToken.data.map((element) => pushNotification.sendPushNotificationByDeviceType(element, content, 'default'))
+            if (!deviceToken.error) deviceToken.data.map((element) => pushNotification.sendPushNotificationByDeviceType(element, content, 'default', 'services'))
             bookingService.updateServiceBookingInfo(bookingId, availableProvider.data)
           }
         }

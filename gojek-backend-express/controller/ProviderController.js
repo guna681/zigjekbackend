@@ -541,7 +541,7 @@ module.exports = function () {
         content.data = 'booking_cancelled'
         var userInfo = await userService.getUserDeviceToken(deviceId)
         if (!userInfo.error) {
-          pushNotification.sendPushNotificationByDeviceType(userInfo.data, content)
+          pushNotification.sendPushNotificationByDeviceType(userInfo.data, content, 'default', bookingInfo.data[0].Type)
         }
         response.error = false
         response.msg = cancel.msg

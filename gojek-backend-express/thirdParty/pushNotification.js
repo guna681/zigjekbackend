@@ -12,7 +12,7 @@ module.exports = function () {
     })
   }
 
-  this.sendPushNotificationByDeviceType = (deviceInfo, content, sound) => {
+  this.sendPushNotificationByDeviceType = (deviceInfo, content, sound, type = 'taxi') => {
     // var orderId = ''
     // var type = ''
     // if (content.type === undefined) {
@@ -36,8 +36,8 @@ module.exports = function () {
             'data': {
               'title': content.title,
               'body': content.body,
-              'data': content.data
-              // 'type': type,
+              'data': content.data,
+              'type': type
               // 'orderId': orderId
             },
             'android': {
@@ -60,8 +60,8 @@ module.exports = function () {
             'token': deviceInfo.token,
             'notification': {
               'title': content.title,
-              'body': content.body
-              // 'type': type,
+              'body': content.body,
+              'type': type
               // 'orderId': orderId
             },
             'data': {

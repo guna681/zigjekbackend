@@ -669,7 +669,7 @@ module.exports = function () {
         // condition.RideTypeId = rideType
         condition.Status = providerStatus
         var provider = await providerRespository.fetchProviderByCellId(condition, cellId, blockList, rideType)
-
+        console.log(provider)
         if (provider.error) {
           response.error = true
           response.msg = 'NO_PROVIDER_AVAILABLE'
@@ -1803,7 +1803,7 @@ module.exports = function () {
         response.msg = 'NO_DATA'
       } else {
         var provider = providerList.result.map((element) => {
-          var proAddrs = providerAddress.error ? [{ Latitude: 0, Longitude: 0 }] : providerAddress.result.filter(ele => ele.ProviderId === element.Id)
+          var proAddrs = providerAddress.error ? [{ Latitude: '0', Longitude: '0' }] : providerAddress.result.filter(ele => ele.ProviderId === element.Id)
           var details = {}
           details.id = element.Id
           details.firstName = element.FirstName
@@ -1836,6 +1836,8 @@ module.exports = function () {
       } else {
         var provider = { ProviderId: providerId }
         var providerSerivce = await providerRespository.fetchProviderServiceInfo(provider)
+        var providerAddress = providerSerivce.error ? { error: true } : await providerRespository.getAddress([providerId])
+        console.log(providerAddress)
         var profile = providerProfile.result.map((element) => {
           var data = {}
           data.id = element.Id
@@ -1846,8 +1848,8 @@ module.exports = function () {
           data.mobile = element.Mobile
           data.countryCode = element.ExtCode
           data.rating = element.Rating
-          data.latitude = element.Latitude
-          data.longitude = element.Longitude
+          data.latitude = providerAddress.error ? '0' : providerAddress.result[0].Latitude
+          data.longitude = providerAddress.error ? '0' : providerAddress.result[0].Longitude
           // data.about = 'Best in class service is 100 % customer satisfaction.'
           data.about = providerSerivce.data[0].QuickPitch
           return data
@@ -1856,8 +1858,10 @@ module.exports = function () {
         response.msg = 'VALID'
         response.data = profile[0]
       }
+      console.log(response)
       callback(response)
     } catch (response) {
+      console.log(response)
       response.error = true
       response.msg = 'OOPS'
       callback(response)

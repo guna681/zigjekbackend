@@ -246,7 +246,7 @@ module.exports = function () {
         if (userToken.error === false) {
           content.type = data.type
           content.orderId = JSON.stringify(bookingId)
-          pushNotification.sendPushNotificationByDeviceType(userToken.data, content)
+          pushNotification.sendPushNotificationByDeviceType(userToken.data, content, 'default', result.data[0].Type)
         }
         response.error = false
         response.msg = result.msg
@@ -315,7 +315,7 @@ module.exports = function () {
           content.title = 'Booking Cancelled'
           content.body = 'Sorry we dont have service at your location. Please try after some time'
           userDeviceInfo = await userService.getUserDeviceToken(waitingList.data[0].userId)
-          pushNotification.sendPushNotificationByDeviceType(userDeviceInfo.data, content)
+          pushNotification.sendPushNotificationByDeviceType(userDeviceInfo.data, content, 'default', booking.Type)
           bookingService.changeBookingStatus(bookingId, bookingCancel)
           providerService.releaseProviderService(assignedList)
           response.error = true
@@ -333,7 +333,7 @@ module.exports = function () {
         content.body = 'You have new booking request'
         content.orderId = JSON.stringify(bookingId)
         var providerToken = await providerService.getProivderMessageToken(providerId)
-        pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default')
+        pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default', booking.Type)
         providerService.providerLocationStatusUpdate(providerId, blockProviderStatus)
         bookingService.changeBookingStatus(bookingId, bookingAssigned)
         var providerUnblockList = assignedList.indexOf(providerId)
@@ -517,7 +517,7 @@ module.exports = function () {
           content.body = 'You have new booking request'
           content.orderId = JSON.stringify(bookingId)
           var providerToken = await providerService.getProivderMessageToken(providerId)
-          pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default')
+          pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default', booking.type)
           providerService.providerLocationStatusUpdate(providerId, blockProviderStatus)
           bookingService.changeBookingStatus(bookingId, bookingAssigned)
           var providerUnblockList = assignedList.indexOf(providerId)
@@ -609,7 +609,7 @@ module.exports = function () {
         content.body = 'You have new booking request'
         content.orderId = JSON.stringify(bookingId)
         var providerToken = await providerService.getProivderMessageToken(providerId)
-        pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default')
+        pushNotification.sendPushNotificationByDeviceType(providerToken.data, content, 'default', booking.type)
         providerService.providerLocationStatusUpdate(providerId, blockProviderStatus)
         bookingService.changeBookingStatus(bookingId, bookingAssigned)
         var providerUnblockList = assignedList.indexOf(providerId)
