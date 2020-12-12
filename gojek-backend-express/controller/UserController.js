@@ -635,8 +635,8 @@ module.exports = function () {
         if (bookingInfo.Type === 'taxi') {
           receipt.push({ fieldName: 'Tax', value: bookingInfo.Tax })
           receipt.push({ fieldName: 'Fare', value: String(bookingInfo.Estimation) })
-          receipt.push({ fieldName: 'Sub Total', value: String(Number(bookingInfo.Estimation) + Number(bookingInfo.Tax)) })
-          receipt.push({ fieldName: 'Total Amount', value: bookingInfo.CurrencyType + ' ' + bookingInfo.TotalAmount })
+          // receipt.push({ fieldName: 'Sub Total', value: String(Number(bookingInfo.Estimation) + Number(bookingInfo.Tax)) })
+          receipt.push({ fieldName: 'Total Amount', value: process.env.CURRENCY + ' ' + bookingInfo.TotalAmount })
         } else if (bookingInfo.Type === 'delivery') {
           data['description'] = bookingInfo.Description
           data['orderId'] = bookingInfo.Id
@@ -645,9 +645,9 @@ module.exports = function () {
           var dishList = await bookingService.getBookingDishes(req.bookingNo)
           data['dishes'] = dishList.error ? [] : dishList.data.map(element => { element.displayPrice = bookingInfo.CurrencyType + element.dishTotal; return element })
           receipt.push({ fieldName: 'Tax', value: bookingInfo.Tax })
-          receipt.push({ fieldName: 'Fare', value: String(bookingInfo.Estimation) })
-          receipt.push({ fieldName: 'Sub Total', value: String(Number(bookingInfo.Estimation) + Number(bookingInfo.Tax)) })
-          receipt.push({ fieldName: 'Total Amount', value: bookingInfo.CurrencyType + ' ' + bookingInfo.TotalAmount })
+          receipt.push({ fieldName: 'Item Total', value: String(bookingInfo.Estimation) })
+          receipt.push({ fieldName: 'Delivery Charge', value: 0.00 })
+          receipt.push({ fieldName: 'Total Amount', value: process.env.CURRENCY + ' ' + bookingInfo.TotalAmount })
         } else if (bookingInfo.Type === 'services') {
           data['categoryName'] = 'Test'
           data['timeSlot'] = bookingInfo.ServiceTimeSlot
@@ -660,7 +660,7 @@ module.exports = function () {
           data['serviceAddonsList'] = addonsList.error ? [] : addonsList.data
           receipt.push({ fieldName: 'Tax', value: bookingInfo.Tax })
           receipt.push({ fieldName: 'Fare', value: String(bookingInfo.TotalAmount) })
-          receipt.push({ fieldName: 'Total Amount', value: bookingInfo.CurrencyType + ' ' + bookingInfo.TotalAmount })
+          receipt.push({ fieldName: 'Total Amount', value: process.env.CURRENCY + ' ' + bookingInfo.TotalAmount })
         }
         data['receipt'] = receipt
         var bookingDetails = data
@@ -681,6 +681,7 @@ module.exports = function () {
       }
       callback(response)
     } catch (err) {
+      console.log(err)
       err.error = true
       err.msg = 'OOPS'
       callback(err)
